@@ -1,9 +1,13 @@
+import React from "react";
+import Features from "./components/ui/FeatureCard";
+import ImageShowcase from "./components/ui/ImageShowcase";
+
 export default function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black">
-      <h1 className="text-4xl font-bold text-green-500">
-        Tailwind is working ✅
-      </h1>
+    <div>
+      <Features />
+      <ImageShowcase />
+     
     </div>
   )
 }

@@ -1,17 +1,26 @@
 import React from "react";
 import { Icon } from "@iconify/react";
-const Icons = ({ icon, className, width, rotate, hFlip, vFlip }) => {
+
+const Icons = ({
+  icon,
+  className = "",
+  size = 50,          // SINGLE size prop
+  rotate,
+  hFlip,
+  vFlip,
+  noborder,
+//   bodyClass = "p-3",
+}) => {
   return (
-    <>
-      <Icon
-        width={width}
-        rotate={rotate}
-        hFlip={hFlip}
-        icon={icon}
-        className={className}
-        vFlip={vFlip}
-      />
-    </>
+    <Icon
+      icon={icon}
+      width={size}
+      height={size}
+      rotate={rotate}
+      hFlip={hFlip}
+      vFlip={vFlip}
+      className={className}
+    />
   );
 };
 

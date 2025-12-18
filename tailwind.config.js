@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        cursive: ['Pacifico', 'cursive'],
+        cursive: ['Montserrat', 'Arial'],
       },
       animation: {
         // Match the animation duration to the distance traveled

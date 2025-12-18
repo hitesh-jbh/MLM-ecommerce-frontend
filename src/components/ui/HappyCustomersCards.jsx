@@ -12,6 +12,8 @@ export default function HappyCustomersCards() {
     { id: 5, name: "Vikram K.", rating: 5, title: "Premium Quality", review: "Best purchase ever! The fabric quality is amazing and delivery was super fast. 🚀👍" },
   ];
 
+
+  // Swiper Controlling  should be used
   const cardsPerView = 3; // desktop logic
   const totalSlides = Math.ceil(customers.length / cardsPerView);
 

@@ -12,7 +12,7 @@ const Dropdown = ({ options, defaultValue, onChange, className = "" }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) { -
         setIsOpen(false);
       }
     };
@@ -64,38 +64,38 @@ const Dropdown = ({ options, defaultValue, onChange, className = "" }) => {
 
       {/* Dropdown */}
       {isOpen && (
-        <div
-          className="
-            absolute top-full right-0 mt-1 w-60
-            bg-white
-            border border-gray-200
-            shadow-lg
-            rounded-sm
-            z-50
-            py-1
-          "
-        >
-          {options.map((option) => (
-            <button
-              key={option.value}
-              onClick={() => handleSelect(option)}
-              className={`
-                w-full text-left px-4 py-2.5
-                text-[20px]
-                hover:bg-gray-100
-                transition-colors
-                ${
-                  selectedOption.value === option.value
-                    ? "bg-gray-100 font-medium text-gray-900"
-                    : "text-gray-700"
-                }
-              `}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      )}
+      <div
+        className="
+          absolute top-full left-0 mt-1 w-60
+          bg-white
+          border border-gray-200
+          shadow-lg
+          rounded-sm
+          z-50
+          py-1
+        "
+      >
+        {options.map((option) => (
+          <button
+            key={option.value}
+            onClick={() => handleSelect(option)}
+            className={`
+              w-full text-left px-4 py-2.5
+              text-[20px]
+              hover:bg-gray-100
+              transition-colors
+              ${
+                selectedOption.value === option.value
+                  ? "bg-gray-100 font-medium text-gray-900"
+                  : "text-gray-700"
+              }
+            `}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    )}
     </div>
   );
 };

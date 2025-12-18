@@ -6,7 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        cursive: ['Pacifico', 'cursive'],
+      },
     },
   },
   plugins: [],
-}
+};

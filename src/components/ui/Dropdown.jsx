@@ -1,22 +1,18 @@
 import { useState, useRef, useEffect } from "react";
 
-/* ================= SORT DROPDOWN ================= */
-
 const Dropdown = ({ options, defaultValue, onChange, className = "" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(
     options.find((opt) => opt.value === defaultValue) || options[0]
   );
-
   const dropdownRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) { -
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -28,79 +24,56 @@ const Dropdown = ({ options, defaultValue, onChange, className = "" }) => {
   };
 
   return (
-    <div ref={dropdownRef} className={`relative ${className}`}>
-      {/* Button */}
+    <div ref={dropdownRef} className={`relative inline-block ${className}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="
-          flex items-center gap-2
-          px-4 py-2.5
-          bg-white text-gray-800
-          border border-gray-300
-          rounded-sm
-          text-sm font-medium
-          hover:border-gray-400
-          focus:outline-none focus:ring-1 focus:ring-gray-300
+          flex items-center gap-2 px-1 py-2
+          bg-transparent text-gray-900 border-none outline-none
+          /* Font is medium/normal now instead of bold */
+          text-lg md:text-[22px] font-medium 
+          hover:text-gray-600 transition-colors cursor-pointer
         "
       >
-        <span className="text-[20px] ">{selectedOption.label}</span>
-
+        <span className="whitespace-nowrap">{selectedOption.label}</span>
         <svg
-          className={`w-3.5 h-3.5 text-gray-600 transition-transform ${
-            isOpen ? "rotate-180" : ""
-          }`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+          className={`w-4 h-4 md:w-5 md:h-5 text-gray-800 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          fill="none" stroke="currentColor" viewBox="0 0 24 24"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
 
-      {/* Dropdown */}
       {isOpen && (
-      <div
-        className="
-          absolute top-full left-0 mt-1 w-60
-          bg-white
-          border border-gray-200
-          shadow-lg
-          rounded-sm
-          z-50
-          py-1
-        "
-      >
-        {options.map((option) => (
-          <button
-            key={option.value}
-            onClick={() => handleSelect(option)}
-            className={`
-              w-full text-left px-4 py-2.5
-              text-[20px]
-              hover:bg-gray-100
-              transition-colors
-              ${
-                selectedOption.value === option.value
-                  ? "bg-gray-100 font-medium text-gray-900"
-                  : "text-gray-700"
-              }
-            `}
-          >
-            {option.label}
-          </button>
-        ))}
-      </div>
-    )}
+        <div
+          className="
+            absolute top-full left-0 mt-2 
+            /* Width scales wider for large screens */
+            w-[220px] sm:w-[260px] md:w-80 lg:w-[380px]
+            bg-white border border-gray-100 shadow-2xl rounded-md z-50 py-2
+            animate-in fade-in zoom-in duration-150
+          "
+        >
+          {options.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => handleSelect(option)}
+              className={`
+                w-full text-left px-4 md:px-6 py-3 md:py-4
+                /* Text scales significantly larger only on 'lg' and 'xl' devices */
+                text-sm md:text-[18px] lg:text-[22px] xl:text-[24px]
+                hover:bg-gray-50 transition-colors
+                ${selectedOption.value === option.value ? "bg-gray-50 font-bold text-black" : "text-gray-600 font-medium"}
+              `}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
-
-/* ================= DEMO PAGE ================= */
 
 const Demo = () => {
   const [products, setProducts] = useState([
@@ -114,49 +87,27 @@ const Demo = () => {
   const sortOptions = [
     { label: "Featured", value: "featured" },
     { label: "Best selling", value: "best-selling" },
-    { label: "Alphabetically, A-Z", value: "alpha-asc" },
-    { label: "Alphabetically, Z-A", value: "alpha-desc" },
     { label: "Price, low to high", value: "price-asc" },
     { label: "Price, high to low", value: "price-desc" },
-    { label: "Date, old to new", value: "date-asc" },
     { label: "Date, new to old", value: "date-desc" },
   ];
 
   const handleSort = (sortValue) => {
     const sorted = [...products];
-
     switch (sortValue) {
-      case "alpha-asc":
-        sorted.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "alpha-desc":
-        sorted.sort((a, b) => b.name.localeCompare(a.name));
-        break;
-      case "price-asc":
-        sorted.sort((a, b) => a.price - b.price);
-        break;
-      case "price-desc":
-        sorted.sort((a, b) => b.price - a.price);
-        break;
-      case "date-asc":
-        sorted.sort((a, b) => a.date - b.date);
-        break;
-      case "date-desc":
-        sorted.sort((a, b) => b.date - a.date);
-        break;
-      default:
-        break;
+      case "price-asc": sorted.sort((a, b) => a.price - b.price); break;
+      case "price-desc": sorted.sort((a, b) => b.price - a.price); break;
+      case "date-desc": sorted.sort((a, b) => b.date - a.date); break;
+      default: break;
     }
-
     setProducts(sorted);
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-50 px-2 sm:px-4 py-6 md:p-10">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          {/* <h1 className="text-2xl font-semibold text-gray-900">Products</h1> */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 md:mb-10 border-b border-gray-200 pb-4 gap-4">
+          <h2 className="text-xl md:text-3xl font-bold">Our Collection</h2>
           <Dropdown
             options={sortOptions}
             defaultValue="best-selling"
@@ -164,33 +115,18 @@ const Demo = () => {
           />
         </div>
 
-        {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
           {products.map((product) => (
             <div
               key={product.id}
-              className="
-                bg-white
-                rounded-md
-                border border-gray-200
-                p-4
-                hover:shadow-lg
-                transition-shadow
-              "
+              className="bg-white rounded-xl border border-gray-100 p-4 md:p-5 hover:shadow-xl transition-all duration-300 group"
             >
-              <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-md mb-4" />
-
-              <h3 className="text-sm font-medium text-gray-900 mb-1">
-                {product.name}
-              </h3>
-
-              <p className="text-gray-900 font-semibold mb-1">
-                ${product.price.toFixed(2)}
-              </p>
-
-              <p className="text-xs text-gray-500">
-                Added: {product.date.toLocaleDateString()}
-              </p>
+              <div className="aspect-[4/5] bg-gray-100 rounded-lg mb-4 overflow-hidden">
+                 <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 group-hover:scale-105 transition-transform duration-500" />
+              </div>
+              <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-1">{product.name}</h3>
+              <p className="text-lg md:text-xl text-[#ff3f6c] font-bold mb-2">${product.price.toFixed(2)}</p>
+              <p className="text-xs md:text-sm text-gray-500">Added: {product.date.toLocaleDateString()}</p>
             </div>
           ))}
         </div>

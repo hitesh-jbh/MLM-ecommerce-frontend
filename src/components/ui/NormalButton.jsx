@@ -20,7 +20,7 @@ const NormalButton = ({
   const hoverTextColorClass = hoverText === 'white' ? 'hover:text-white' : 
                                hoverText === 'black' ? 'hover:text-black' : '';
 
-  // Only apply fixed width style if width is not "auto" and not a Tailwind class
+  // Responsive Width Logic
   const isTailwindWidth = width.startsWith('w-');
   const inlineStyle = !isTailwindWidth && width !== "auto" ? { width: width } : {};
 
@@ -29,7 +29,6 @@ const NormalButton = ({
       onClick={onClick}
       style={inlineStyle}
       className={`
-        /* Centering Logic */
         flex items-center justify-center inline-flex
         
         ${bg} 
@@ -38,12 +37,19 @@ const NormalButton = ({
         ${!noHover ? hoverTextColorClass : ''}
         ${isTailwindWidth ? width : ''}
         
-        /* Layout & Typography */
-        h-[55px] px-8 text-[20px] rounded-lg font-medium transition-all duration-200
+        /* RESPONSIVE LAYOUT & TYPOGRAPHY */
+        /* Height: 45px on mobile, 55px on desktop */
+        h-[45px] md:h-[55px] 
+        /* Padding: smaller on mobile */
+        px-4 md:px-8 
+        /* Font: 16px on mobile, 20px on desktop */
+        text-[16px] md:text-[20px] 
+        rounded-lg font-medium transition-all duration-200
+        
         ${noBorder ? 'border-none' : 'border border-black'}
         
-        /* Effects */
-        ${!noHover ? 'hover:scale-105 active:scale-95' : 'active:opacity-80'}
+        /* Effects: Hover scale disabled on touch devices for better UX */
+        ${!noHover ? 'md:hover:scale-105 active:scale-95' : 'active:opacity-80'}
         ${className}
       `}
     >
@@ -51,59 +57,63 @@ const NormalButton = ({
     </button>
   );
 };
+export default NormalButton;
 
-export default function App() {
-  const [selectedSize, setSelectedSize] = useState("XXL");
-  const sizes = ["XS", "S", "M", "L", "XL", "XXL", "3XL"];
+// export default function App() {
+//   const [selectedSize, setSelectedSize] = useState("XXL");
+//   const sizes = ["XS", "S", "M", "L", "XL", "XXL", "3XL"];
 
-  return (
-    /* Changed items-center to items-start to prevent auto-stretching */
-    <div className="flex flex-col items-start gap-6 p-10 bg-white">
+//   return (
+//     <div className="flex flex-col items-start gap-4 md:gap-6 p-4 md:p-10 bg-white w-full">
       
-      {/* Takes only space needed for text */}
-      <NormalButton content="Shop Now" bg="bg-black" hoverBg="hover:bg-zinc-800" />
-      
-      {/* Takes only space needed for text */}
-      <NormalButton content="Shop Now" />
+//       {/* Standard Buttons */}
+//       <NormalButton content="Shop Now" bg="bg-black" hoverBg="hover:bg-zinc-800" />
+//       <NormalButton content="Shop Now" />
 
-      <NormalButton content="BUY MORE, SAVE MORE | GET1FREE" bg="bg-black" noHover="true" /> 
+//       {/* Full width promo bar on mobile, auto width on desktop */}
+//       <NormalButton 
+//         content="BUY MORE, SAVE MORE | GET1FREE" 
+//         bg="bg-black" 
+//         noHover={true} 
+//         className="w-full md:w-auto text-[14px] md:text-[20px]" 
+//       /> 
 
-      {/* Takes exactly 600px */}
-      <NormalButton 
-        content="Add to cart"  
-        width="600px" 
-        hoverBg="hover:bg-black" 
-        hoverText="white" 
-      />
+//       {/* Responsive width: Full width on mobile, 600px on desktop */}
+//       <NormalButton 
+//         content="Add to cart"  
+//         width="100%" 
+//         hoverBg="hover:bg-black" 
+//         hoverText="white" 
+//         className="max-w-[600px]"
+//       />
 
-      <NormalButton
-        content={
-          <Icons 
-            icon="heroicons:arrow-up" 
-            size={24} // Adjust size of the arrow here
-          />
-        }
-        bg="bg-black"
-        width="55px"      // Matches the height (h-[55px]) in your NormalButton
-        noHover={true}
-        className="!rounded-full !px-0 flex items-center justify-center" 
-      />
+//       {/* Circle Icon Button */}
+//       <NormalButton
+//         content={<Icons icon="heroicons:arrow-up" size={24} />}
+//         bg="bg-black"
+//         /* Scale size responsive */
+//         className="!h-[45px] !w-[45px] md:!h-[55px] md:!w-[55px] !rounded-full !px-0 flex items-center justify-center" 
+//         noHover={true}
+//       />
 
-      {/* Size Row */}
-      <div className="flex gap-2">
-        {sizes.map((size) => (
-          <NormalButton 
-            key={size}
-            content={size}
-            width="65px" 
-            noBorder={true}
-            noHover={true}
-            bg={selectedSize === size ? "bg-black" : "bg-[#f3f4f6]"} 
-            className={selectedSize === size ? "text-white" : "text-black"}
-            onClick={() => setSelectedSize(size)}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
+//       {/* Responsive Size Row: Wraps to next line on small screens */}
+//       <div className="flex flex-wrap gap-2 w-full">
+//         {sizes.map((size) => (
+          // <NormalButton 
+          //   key={size}
+          //   content={size}
+          //   className={`
+          //     !min-w-[50px] md:!min-w-[65px] 
+          //     !h-[45px] md:!h-[55px]
+          //     ${selectedSize === size ? "text-white" : "text-black"}
+          //   `}
+          //   noBorder={true}
+          //   noHover={true}
+          //   bg={selectedSize === size ? "bg-black" : "bg-[#f3f4f6]"} 
+          //   onClick={() => setSelectedSize(size)}
+          // />
+//         ))}
+//       </div>
+//     </div>
+//   );
+// }

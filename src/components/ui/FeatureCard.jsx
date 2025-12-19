@@ -33,49 +33,49 @@ const FeatureCard = ({ icon: Icon, title, description }) => (
 );
 
 // Main Component
-const FeaturesSection = () => {
-  // Card data with line breaks exactly as per image
-  const cardsData = [
-    {
-      id: 1,
-      icon: FaShippingFast,
-      title: "Free Shipping",
-      description: "Enjoy free shipping with\nprepaid orders"
-    },
-    {
-      id: 2,
-      icon: FaExchangeAlt,
-      title: "Easy & Free Returns",
-      description: "Returns Made Easy & Free"
-    },
-    {
-      id: 3,
-      icon: FaTags,
-      title: "Best Discount",
-      description: "Limited-Time Best Discount"
-    },
-    {
-      id: 4,
-      icon: FaShieldAlt,
-      title: "Payment Safety",
-      description: "100% Safe & Secure Shopping"
-    }
-  ];
+// const FeaturesSection = () => {
+//   // Card data with line breaks exactly as per image
+//   const cardsData = [
+//     {
+//       id: 1,
+//       icon: FaShippingFast,
+//       title: "Free Shipping",
+//       description: "Enjoy free shipping with\nprepaid orders"
+//     },
+//     {
+//       id: 2,
+//       icon: FaExchangeAlt,
+//       title: "Easy & Free Returns",
+//       description: "Returns Made Easy & Free"
+//     },
+//     {
+//       id: 3,
+//       icon: FaTags,
+//       title: "Best Discount",
+//       description: "Limited-Time Best Discount"
+//     },
+//     {
+//       id: 4,
+//       icon: FaShieldAlt,
+//       title: "Payment Safety",
+//       description: "100% Safe & Secure Shopping"
+//     }
+//   ];
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {cardsData.map((card) => (
-          <FeatureCard
-            key={card.id}
-            icon={card.icon}
-            title={card.title}
-            description={card.description}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
+//   return (
+//     <div className="max-w-7xl mx-auto px-4 py-12">
+//       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+//         {cardsData.map((card) => (
+//           <FeatureCard
+//             key={card.id}
+//             icon={card.icon}
+//             title={card.title}
+//             description={card.description}
+//           />
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
 
-export default FeaturesSection;
+export default FeatureCard;

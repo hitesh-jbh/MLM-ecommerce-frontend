@@ -2,44 +2,51 @@ import { ChevronRight } from 'lucide-react';
 
 export default function BuyNowButton() {
     return (
-        /* Removed px-4 and max-w-2xl to allow full width */
-        <div className="w-full py-4"> 
-            <button className="w-full bg-black text-white rounded-2xl py-3 px-4 md:px-8 relative overflow-hidden group hover:bg-gray-900 transition-colors duration-300 min-h-[60px]">
+        /* Reduced vertical padding to keep the layout tight */
+        <div className="w-full py-2"> 
+            <button className="w-full bg-black text-white rounded-xl py-2.5 px-4 md:px-6 relative overflow-hidden group hover:bg-[#111] transition-all duration-300 min-h-[20px] md:min-h-[30px] shadow-sm active:scale-[0.98]">
 
                 {/* Content Container */}
-                <div className="flex items-center justify-between">
-                    {/* Left Side - BUY NOW Text & Icons */}
-                    <div className="flex items-center gap-3 md:gap-6 flex-1">
-                        <span className="text-lg md:text-xl font-bold italic tracking-wide">
-                            BUY NOW
+                <div className="flex items-center justify-between gap-3">
+                    
+                    {/* Left Side Group */}
+                    <div className="flex items-center gap-3 md:gap-5">
+                        <span className="text-sm md:text-base font-bold tracking-[0.1em] uppercase whitespace-nowrap">
+                            Buy Now
                         </span>
 
-                        {/* Payment Icons */}
-                        <div className="flex items-center gap-2">
-                            {/* Google Pay */}
-                            <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-md overflow-hidden">
-                                <img className="w-full h-full object-cover" src="https://play-lh.googleusercontent.com/HArtbyi53u0jnqhnnxkQnMx9dHOERNcprZyKnInd2nrfM7Wd9ivMNTiz7IJP6-mSpwk" alt="GPay" />
+                        {/* Divider Line - Adds a premium look */}
+                        <div className="h-6 w-[1px] bg-gray-800 hidden sm:block"></div>
+
+                        {/* Payment Icons - Clean & Compact */}
+                        <div className="flex items-center -space-x-1.5 md:space-x-1.5">
+                            {/* GPay */}
+                            <div className="w-6 h-6 md:w-8 md:h-8 bg-white rounded-full flex items-center justify-center p-1 ring-2 ring-black overflow-hidden flex-shrink-0">
+                                <img className="w-full h-full object-contain" src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="GPay" />
                             </div>
 
-                            {/* Phonepe */}
-                            <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-md overflow-hidden">
-                                <img className="w-full h-full object-cover" src="https://i.pinimg.com/736x/2a/cf/b6/2acfb6fb41f7fcb82c3230afdecff714.jpg" alt="PhonePe" />
+                            {/* Apple Pay */}
+                            <div className="w-6 h-6 md:w-8 md:h-8 bg-white rounded-full flex items-center justify-center p-1 ring-2 ring-black overflow-hidden flex-shrink-0">
+                                <img className="w-full h-full object-contain" src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_logo.svg" alt="PhonePe" />
                             </div>
 
-                            {/* Paytm */}
-                            <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-md overflow-hidden">
-                                <img className="w-full h-full object-cover" src="https://yt3.googleusercontent.com/tG2jdjkS_OMG1AjdSobofgDMoQkoIyo40ZWXiFAaqwDnzUjLT4gK94Dc6ZcYDUVDNdvzhQlbLNs=s900-c-k-c0x00ffffff-no-rj" alt="Paytm" />
+                            {/* Visa */}
+                            <div className="w-6 h-6 md:w-8 md:h-8 bg-white rounded-full flex items-center justify-center p-1 ring-2 ring-black overflow-hidden flex-shrink-0">
+                                <img className="w-full h-full object-contain" src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Paytm" />
                             </div>
                         </div>
+                    </div>
 
-                        {/* Arrow */}
-                        <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:translate-x-1 transition-transform duration-300" />
+                    {/* Arrow Group */}
+                    <div className="flex items-center gap-1">
+                        <span className="hidden md:block text-[10px] text-gray-500 font-medium uppercase tracking-widest">Secure</span>
+                        <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-white/70 group-hover:text-white group-hover:translate-x-1 transition-all duration-300" />
                     </div>
                 </div>
 
-                {/* Right Side - Powered By (Positioned relative to full-width button) */}
-                <div className="absolute bottom-1 right-4 text-[8px] md:text-[10px] text-gray-400">
-                    Powered By <span className="text-white italic">JBH (Zeesu)</span>
+                {/* Powered By - Subtle & Professional */}
+                <div className="absolute bottom-0.5 right-4 text-[6px] md:text-[8px] text-gray-600 tracking-tighter">
+                    Powered by <span className="text-gray-400 font-medium">JBH[Zeeshu]</span>
                 </div>
             </button>
         </div>

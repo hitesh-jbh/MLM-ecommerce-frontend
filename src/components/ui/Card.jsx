@@ -1,62 +1,55 @@
-export default function Card({ activeLayout }) {
-  const isHorizontal = activeLayout === 1;
+import React from 'react';
 
+const ProductCard = ({ img, title, actualPrice, originalPrice }) => {
   return (
-    <div className="w-full max-w-5xl mx-auto mt-10">
-      <div
-        className={`
-          bg-white rounded-xl overflow-hidden border border-gray-200
-          transition-all duration-500 ease-in-out
-          ${isHorizontal ? 'flex flex-row' : 'flex flex-col'}
-        `}
-      >
-        {/* IMAGE */}
-        <div
-          className={`
-            bg-gray-100 flex items-center justify-center
-            ${isHorizontal ? 'w-1/2 order-2' : 'w-full'}
-          `}
-        >
-          <img
-            src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf"
-            alt="shirt"
-            className="w-full h-full object-cover"
-          />
-        </div>
+    /* Removed flex-shrink-0 and fixed width. 
+       Now it will fill the width of its parent grid cell.
+    */
+    <div className="w-full flex flex-col group cursor-pointer bg-white">
+      
+      {/* IMAGE CONTAINER 
+          Responsive Aspect Ratio: 3/4 on mobile for better vertical scrolling, 
+          4/5 on desktop for a wider look.
+      */}
+      <div className="relative aspect-[3/4] sm:aspect-[4/5] overflow-hidden bg-[#f3f3f3] mb-3 md:mb-4 rounded-lg">
+        <img
+          src={img}
+          alt={title}
+          // Loading="lazy" improves performance on mobile devices
+          loading="lazy"
+          className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105 md:group-hover:scale-110"
+        />
+        
+        {/* Subtle hover overlay for desktop */}
+        <div className="absolute inset-0 bg-black/0 md:group-hover:bg-black/5 transition-colors duration-300" />
+      </div>
 
-        {/* CONTENT */}
-        <div
-          className={`
-            p-6 flex flex-col justify-between
-            ${isHorizontal ? 'w-1/2 order-1' : 'w-full'}
-          `}
-        >
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Men's Full Sleeve Cotton Shirt with ‘California’ Typography
-            </h2>
-
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-red-500 text-lg font-semibold">
-                Rs. 971.00
-              </span>
-              <span className="text-gray-400 line-through">
-                Rs. 1,479.00
-              </span>
-            </div>
-
-            <p className="text-gray-600 text-sm leading-relaxed">
-              Bring elegance and charm to your wardrobe with this men’s cotton
-              shirt featuring a beautifully designed typography pattern.
-              Perfect for casual and streetwear looks.
-            </p>
-          </div>
-
-          <button className="mt-6 w-fit bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition">
-            Buy Now
-          </button>
+      {/* CONTENT */}
+      <div className="flex flex-col px-1">
+        {/* Responsive Typography:
+            text-sm (14px) on mobile, text-lg (18px) on desktop.
+            Line-clamp ensures titles don't break the layout if too long.
+        */}
+        <h3 className="text-sm md:text-lg lg:text-xl leading-tight font-medium text-[#1a1a1a] line-clamp-2 min-h-[40px] md:min-h-[56px] group-hover:text-gray-600 transition-colors">
+          {title}
+        </h3>
+        
+        <div className="flex items-center gap-2 md:gap-3 mt-1 md:mt-2">
+          {/* Actual Price */}
+          <span className="text-[#e63946] text-[10px] md:text-lg font-bold">
+            Rs. {actualPrice}
+          </span>
+        
+          {/* Original Price */}
+          {originalPrice && (
+            <span className="text-gray-400 line-through text-[7px] md:text-sm">
+              Rs. {originalPrice}
+            </span>
+          )}
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default ProductCard;

@@ -7,14 +7,9 @@ const StickyComponent = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Calculate 20% of the total document height
+      // Logic: Show scroll button after 20% of page height
       const scrollThreshold = document.documentElement.scrollHeight * 0.2;
-      
-      if (window.scrollY > scrollThreshold) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+      setIsVisible(window.scrollY > scrollThreshold);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -22,34 +17,30 @@ const StickyComponent = () => {
   }, []);
 
   return (
-    /* Parent Div: Background set to transparent (bg-none) */
-    <div className="fixed bottom-0 left-0 w-full bg-none pointer-events-none z-50 flex justify-between items-end pb-10">
+    <div className="fixed mb-[60px] bottom-0 left-0 w-full bg-transparent pointer-events-none z-[999] flex flex-col sm:flex-row justify-between items-center sm:items-end p-4 md:p-8 lg:p-10 gap-4">
       
-      {/* 2nd Child: ALWAYS VISIBLE - Left side */}
-      <div className="ml-4 md:ml-10 pointer-events-auto">
+      <div className="pointer-events-auto w-full sm:w-auto order-2 sm:order-1">
         <NormalButton 
           content="BUY MORE, SAVE MORE | GET1FREE" 
           bg="bg-black" 
           noHover={true} 
-          className="text-[12px] md:text-[16px] tracking-widest py-3 px-6 shadow-xl" 
+          className="sm:w-auto text-[10px] md:text-[12px] lg:text-[14px] tracking-[0.15em] py-2 px-4 lg:px-8 shadow-2xl rounded-full md:rounded-lg" 
         />
       </div>
 
-      {/* 1st Child: VISIBLE ONLY AFTER 20% SCROLL - Right side */}
       <div 
-        className={`mr-4 md:mr-10 mb-24 transition-all duration-500 pointer-events-auto ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}
+        className={`pointer-events-auto order-1 sm:order-2 self-end sm:self-auto transition-all duration-500 transform ${
+          isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-10 scale-90"
+        } mb-[40px] `}
       >
         <NormalButton
-          content={<Icons icon="heroicons:arrow-up" size={24} />}
-          bg="bg-black"
-          className="!h-[45px] !w-[45px] md:!h-[55px] md:!w-[55px] !rounded-full !px-0 flex items-center justify-center shadow-2xl" 
-          noHover={true}
+          content={<Icons icon="ph:arrow-up-bold" size={20} />}
+          bg="bg-white"
+          className="!h-[40px] !w-[40px] md:!h-[50px] md:!w-[50px] !rounded-full !px-0 flex items-center justify-center shadow-xl border border-gray-100 text-black hover:bg-black hover:text-white transition-colors" 
+          noHover={false}
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         />
       </div>
-
     </div>
   );
 };

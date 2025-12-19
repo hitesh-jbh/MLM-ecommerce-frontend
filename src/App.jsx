@@ -7,6 +7,21 @@ import ScrollingBanner from "./components/ui/ScrollingBannerCarousel.jsx";
 import FeatureSection from "./components/ui/FeatureSection.jsx";
 
 export default function App() {
+  const userData = {
+  profileImage: "https://randomuser.me/api/portraits/men/32.jpg",
+  fullName: "udit kumar",
+  role: "Admin",
+  location: "Leeds, United Kingdom",
+  personalInfo: {
+    firstName: "Natashia",
+    lastName: "Khaleira",
+    dob: "12-10-1990",
+    email: "info@binary-fusion.com",
+    phone: "(+62) 821 2554-5846",
+    role: "student",
+  },
+};
+
   return (
     <>
      <AboutUs />

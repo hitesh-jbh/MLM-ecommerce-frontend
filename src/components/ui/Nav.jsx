@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, User, ShoppingCart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Nav() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -33,7 +34,7 @@ export default function Nav() {
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             
             {/* Logo */}
-            <div className="flex-shrink-0">
+            <Link to="/"><div className="flex-shrink-0">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-black rounded flex items-center justify-center">
                   <span className="text-white font-bold text-sm">GH</span>
@@ -43,23 +44,23 @@ export default function Nav() {
                   <p className="text-gray-600 text-xs tracking-widest">PREMIUM CLOTHING</p>
                 </div>
               </div>
-            </div>
+            </div></Link>
 
             {/* Menu Items */}
             <div className="hidden md:flex items-center gap-8">
-              <a href="#" className="text-black hover:text-gray-600 transition font-medium text-sm">
+              <a href="/" className="text-black hover:text-gray-600 transition font-medium text-sm">
                 Home
               </a>
-              <a href="#" className="text-black hover:text-gray-600 transition font-medium text-sm">
+              <a href="/gentle" className="text-black hover:text-gray-600 transition font-medium text-sm">
                 Gentle Trends
               </a>
-              <a href="#" className="text-black hover:text-gray-600 transition font-medium text-sm">
+              <a href="/luxuria" className="text-black hover:text-gray-600 transition font-medium text-sm">
                 Luxuria
               </a>
-              <a href="#" className="text-black hover:text-gray-600 transition font-medium text-sm">
+              <a href="/contact" className="text-black hover:text-gray-600 transition font-medium text-sm">
                 Contact Us
               </a>
-              <a href="#" className="text-black hover:text-gray-600 transition font-medium text-sm">
+              <a href="/about" className="text-black hover:text-gray-600 transition font-medium text-sm">
                 About Us
               </a>
             </div>
@@ -72,15 +73,15 @@ export default function Nav() {
               >
                 <Search size={22} />
               </button>
-              <button className="text-black hover:text-gray-600 transition">
+              <Link to="/profile"><button className="text-black hover:text-gray-600 transition">
                 <User size={22} />
-              </button>
-              <button className="relative text-black hover:text-gray-600 transition">
+              </button></Link>
+              <Link to="/cart"><button className="relative text-black hover:text-gray-600 transition">
                 <ShoppingCart size={22} />
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                   2
                 </span>
-              </button>
+              </button></Link>
             </div>
           </div>
         </nav>
@@ -95,7 +96,7 @@ export default function Nav() {
             <div className="flex items-center justify-between mb-6">
               {/* Logo */}
               <div className="flex-shrink-0">
-                <div className="flex items-center gap-2">
+                <Link to="/"><div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-black rounded flex items-center justify-center">
                     <span className="text-white font-bold text-sm">GH</span>
                   </div>
@@ -103,20 +104,20 @@ export default function Nav() {
                     <p className="text-black font-bold text-lg tracking-wide">GENTLEHAUS</p>
                     <p className="text-gray-600 text-xs tracking-widest">PREMIUM CLOTHING</p>
                   </div>
-                </div>
+                </div></Link>
               </div>
 
               {/* Right Icons */}
               <div className="flex items-center gap-4">
-                <button className="text-black hover:text-gray-600 transition">
+                <Link to="/profile"><button className="text-black hover:text-gray-600 transition">
                   <User size={22} />
-                </button>
-                <button className="relative text-black hover:text-gray-600 transition">
+                </button></Link>
+                <Link to="/cart" ><button className="relative text-black hover:text-gray-600 transition">
                   <ShoppingCart size={22} />
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                     2
                   </span>
-                </button>
+                </button></Link>
               </div>
             </div>
 

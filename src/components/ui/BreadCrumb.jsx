@@ -17,7 +17,7 @@ const Breadcrumb = ({
       )}
       
       <nav 
-        className={`flex flex-wrap items-center gap-y-1 gap-x-1.5 text-[10px] md:text-xs uppercase tracking-widest ${
+        className={`flex flex-wrap items-center gap-y-1 gap-x-1.5 text-[12px] md:text-xs uppercase tracking-widest ${
           align === "center" ? "justify-center" : "justify-start"
         }`}
       >
@@ -29,18 +29,18 @@ const Breadcrumb = ({
               {item.href && !isLast ? (
                 <a 
                   href={item.href} 
-                  className="text-gray-400 hover:text-black transition-colors whitespace-nowrap"
+                  className="text-black text-[18px] hover:text-black transition-colors whitespace-nowrap"
                 >
                   {item.label}
                 </a>
               ) : (
-                <span className={`text-black font-medium ${isLast ? "line-clamp-1 max-w-[200px] md:max-w-none" : "whitespace-nowrap"}`}>
+                <span className={`text-black text-[18px] font-medium ${isLast ? "line-clamp-1 max-w-[200px] md:max-w-none" : "whitespace-nowrap"}`}>
                   {item.label}
                 </span>
               )}
               
               {!isLast && (
-                <span className="ml-1.5 text-gray-300 select-none">
+                <span className="ml-1.5 text-black select-none">
                   {separator}
                 </span>
               )}

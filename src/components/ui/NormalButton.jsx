@@ -36,7 +36,7 @@ const NormalButton = ({
         
         /* REFINED DIMENSIONS */
         /* Reduced from 48/55px to 42/48px for a sleeker look */
-        h-[42px] md:h-[48px] 
+        h-[40px] md:h-[40px] 
         px-6 md:px-8
         
         /* TYPOGRAPHY */

@@ -77,20 +77,20 @@ const FeatureCard = ({ icon: Icon, title, description }) => (
 //     </div>
 //   );
 // };
-  return (
-    <div className="max-w-8xl mx-auto px-10 py-12">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {cardsData.map((card) => (
-          <FeatureCard
-            key={card.id}
-            icon={card.icon}
-            title={card.title}
-            description={card.description}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
+//   return (
+//     <div className="max-w-8xl mx-auto px-10 py-12">
+//       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+//         {cardsData.map((card) => (
+//           <FeatureCard
+//             key={card.id}
+//             icon={card.icon}
+//             title={card.title}
+//             description={card.description}
+//           />
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
 
 export default FeatureCard;

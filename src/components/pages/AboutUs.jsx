@@ -1,12 +1,12 @@
 import React from 'react';
-import Breadcrumb from '../components/ui/BreadCrumb.jsx';
+import Breadcrumb from '../ui/BreadCrumb';
 
 const AboutUs = () => {
   return (
     <main className="overflow-hidden bg-white">
       {/* 1. Breadcrumb - Compact spacing */}
       <div className="py-2 md:py-4">
-        <Breadcrumb 
+        <Breadcrumb  
           title="About Us" 
           showTitle={true}
           align="center"
@@ -23,7 +23,7 @@ const AboutUs = () => {
           <img 
             src="https://gentlehaus.in/cdn/shop/files/about_us_banner_175d66c4-5083-4403-8aa5-28c81ae439d8.webp?v=1754661865&width=1500" 
             alt="Gentlehaus Banner" 
-            className="w-full h-[200px] sm:h-[300px] md:h-[450px] object-cover"
+            className="w-full h-[200px] sm:h-[300px] md:h-[700px] object-cover"
           />
         </div>
       </section>

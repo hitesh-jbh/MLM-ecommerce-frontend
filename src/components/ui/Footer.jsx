@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Facebook, Instagram } from 'lucide-react';
+import FootersPage from '../pages/FooterPage.jsx';
+import { FooterPageData } from './FooterPageData';
 
 export default function Footer() {
     const [email, setEmail] = useState('');
@@ -8,6 +11,29 @@ export default function Footer() {
         console.log('Subscribed with email:', email);
         setEmail('');
     };
+
+    const routeLink = [
+        {
+            link: "/",
+            text: "Home",
+        },
+        {
+            link: "/gentle",
+            text: "Gentle Trends",
+        },
+        {
+            link: "/luxria",
+            text: "Luxria",
+        },
+        {
+            link: "/contact",
+            text: "Contact Us",
+        },
+        {
+            link: "/about",
+            text: "About Us",
+        },
+    ]
 
     return (
         <footer className="bg-gray-100 px-6 md:px-12 lg:px-20 py-14 md:py-18">
@@ -49,14 +75,15 @@ export default function Footer() {
                             Quick links
                         </h3>
                         <ul className="space-y-3">
-                            {['Home', 'Gentle Trends', 'Luxuria', 'Contact Us', 'About Us'].map((item) => (
+                            {/* {['Home', 'Gentle Trends', 'Luxuria', 'Contact Us', 'About Us'].map((item) => ( */}
+                            {routeLink.map((item) => (
                                 <li key={item}>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        to={item.link}
                                         className="text-gray-600 text-sm hover:text-black transition"
                                     >
-                                        {item}
-                                    </a>
+                                        {item.text}
+                                    </Link>
                                 </li>
                             ))}
                         </ul>
@@ -64,24 +91,17 @@ export default function Footer() {
 
                     {/* Information */}
                     <div>
-                        <h3 className="text-base font-semibold text-black mb-5">
-                            Information
-                        </h3>
+                        <h3 className="text-base font-semibold text-black mb-5">Information</h3>
                         <ul className="space-y-3">
-                            {[
-                                'Shipping & Cancellation',
-                                'Policy',
-                                'Refund & Return Policy',
-                                'Terms & Conditions',
-                                'Privacy Policy',
-                            ].map((item) => (
-                                <li key={item}>
-                                    <a
-                                        href="#"
-                                        className="text-gray-600 text-sm hover:text-black transition"
+                            {FooterPageData.map((item) => (
+                                <li key={item.id}>
+                                    <Link
+                                        // Links to /info/shipping-cancellation etc.
+                                        to={`/info/${item.id}`}
+                                        className="text-gray-600 text-sm hover:text-black transition capitalize"
                                     >
-                                        {item}
-                                    </a>
+                                        {item.id.replace(/-/g, ' ')}
+                                    </Link>
                                 </li>
                             ))}
                         </ul>

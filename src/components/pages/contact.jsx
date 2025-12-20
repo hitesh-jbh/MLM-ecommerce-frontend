@@ -1,26 +1,53 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Facebook, Instagram } from 'lucide-react';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+
+// Define Zod schema for validation
+const contactFormSchema = z.object({
+  name: z.string()
+    .min(1, 'Name is required')
+    .min(2, 'Name must be at least 2 characters'),
+  email: z.string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address'),
+  message: z.string()
+    .min(1, 'Message is required')
+    .min(10, 'Message must be at least 10 characters'),
+  saveInfo: z.boolean().optional()
+});
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-    saveInfo: false
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting, isValid },
+    reset
+  } = useForm({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      message: '',
+      saveInfo: false
+    }
   });
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+  const onSubmit = (data) => {
+    console.log('Form submitted:', data);
+    alert('Message sent successfully!');
+    reset();
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
-    setFormData({ name: '', email: '', message: '', saveInfo: false });
+  // Helper component to display error messages
+  const ErrorMessage = ({ message }) => {
+    if (!message) return null;
+    return (
+      <div className="mt-1">
+        <p className="text-red-500 text-sm">{message}</p>
+      </div>
+    );
   };
 
   return (
@@ -37,51 +64,64 @@ export default function Contact() {
                 We would love to hear from you.
               </h1>
               <p className="text-gray-500 text-base md:text-sm">
-                If you've got great products your making or looking to work with us then drop us a line.
+                If you've got great products you're making or looking to work with us then drop us a line.
               </p>
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
               
               {/* Name and Email Row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full px-4 md:px-6 py-3 md:py-4 bg-gray-5 border border-gray-200 rounded-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300 transition"
-                />
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-4 md:px-6 py-3 md:py-4 bg-gray-5 border border-gray-200 rounded-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300 transition"
-                />
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Name"
+                    {...register("name")}
+                    className={`w-full px-4 md:px-6 py-3 md:py-4 bg-gray-50 border rounded-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 transition ${
+                      errors.name ? 'border-red-300 focus:ring-red-200' : 'border-gray-200 focus:ring-gray-300'
+                    }`}
+                  />
+                  <ErrorMessage message={errors.name?.message} />
+                </div>
+                
+                <div>
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    {...register("email")}
+                    className={`w-full px-4 md:px-6 py-3 md:py-4 bg-gray-50 border rounded-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 transition ${
+                      errors.email ? 'border-red-300 focus:ring-red-200' : 'border-gray-200 focus:ring-gray-300'
+                    }`}
+                  />
+                  <ErrorMessage message={errors.email?.message} />
+                </div>
               </div>
 
               {/* Message */}
-              <textarea
-                name="message"
-                placeholder="Message"
-                value={formData.message}
-                onChange={handleChange}
-                rows="8"
-                className="w-full px-4 md:px-6 py-3 md:py-4 bg-gray-5 border border-gray-200 rounded-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300 transition resize-none"
-              ></textarea>
+              <div>
+                <textarea
+                  placeholder="Message"
+                  rows="8"
+                  {...register("message")}
+                  className={`w-full px-4 md:px-6 py-3 md:py-4 bg-gray-50 border rounded-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 transition resize-none ${
+                    errors.message ? 'border-red-300 focus:ring-red-200' : 'border-gray-200 focus:ring-gray-300'
+                  }`}
+                ></textarea>
+                <ErrorMessage message={errors.message?.message} />
+                {!errors.message && (
+                  <div className="text-xs text-gray-500 mt-1">
+                    Minimum 10 characters required
+                  </div>
+                )}
+              </div>
 
               {/* Checkbox */}
               <div className="flex items-start gap-3">
                 <input
                   type="checkbox"
                   id="saveInfo"
-                  name="saveInfo"
-                  checked={formData.saveInfo}
-                  onChange={handleChange}
+                  {...register("saveInfo")}
                   className="w-5 h-5 mt-1 cursor-pointer accent-black"
                 />
                 <label htmlFor="saveInfo" className="text-gray-700 text-sm md:text-base cursor-pointer">
@@ -92,9 +132,12 @@ export default function Contact() {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="bg-black hover:bg-gray-900 text-white px-8 md:px-10 py-3 md:py-4 font-semibold rounded-md transition-colors duration-300"
+                disabled={isSubmitting}
+                className={`bg-black hover:bg-gray-900 text-white px-8 md:px-10 py-3 md:py-4 font-semibold rounded-md transition-colors duration-300 ${
+                  isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
               >
-                Submit Now
+                {isSubmitting ? 'Submitting...' : 'Submit Now'}
               </button>
             </form>
           </div>

@@ -4,7 +4,6 @@ import Breadcrumb from '../ui/BreadCrumb';
 const AboutUs = () => {
   return (
     <main className="overflow-hidden bg-white">
-      {/* 1. Breadcrumb - Compact spacing */}
       <div className="py-2 md:py-4">
         <Breadcrumb  
           title="About Us" 
@@ -17,7 +16,6 @@ const AboutUs = () => {
         />
       </div>
 
-      {/* 2. Main Banner - Controlled Aspect Ratio */}
       <section className="w-full max-w-[1440px] mx-auto px-4 md:px-8 mb-8 md:mb-12">
         <div className="relative overflow-hidden rounded-lg">
           <img 
@@ -28,7 +26,6 @@ const AboutUs = () => {
         </div>
       </section>
 
-      {/* 3. Philosophy Section - Balanced Font Sizes */}
       <section className="w-full max-w-6xl mx-auto px-5 text-center mb-12 md:mb-20">
         <h2 className="text-lg sm:text-2xl md:text-3xl font-bold mb-6 md:mb-10 text-black leading-snug">
           It pains me to see men reduced to trends that strip away individuality and strength.
@@ -61,11 +58,9 @@ const AboutUs = () => {
         </div>
       </section>
 
-      {/* 4. Side-by-Side Section - Compact Features */}
       <section className='w-full max-w-[1200px] mx-auto px-4 md:px-8 mb-12 md:mb-20'>
         <div className="flex flex-col lg:flex-row items-center gap-8 md:gap-12">
           
-          {/* Left: Image */}
           <div className="w-full lg:w-1/2">
             <img 
               src="https://gentlehaus.in/cdn/shop/files/about_us_side_banner.webp?v=1751090746&width=940" 
@@ -73,8 +68,7 @@ const AboutUs = () => {
               className="w-full h-[300px] md:h-[500px] rounded-lg object-cover"
             />
           </div>
-
-          {/* Right: Feature Content */}
+          
           <div className="w-full lg:w-1/2">
             <h3 className="text-2xl md:text-4xl font-bold text-black mb-8">
               We are proudly Indian.

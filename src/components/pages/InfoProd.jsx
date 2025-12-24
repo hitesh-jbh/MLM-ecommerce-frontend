@@ -1,3 +1,4 @@
+
 // import React, { useEffect, useState } from 'react';
 // import { useParams } from 'react-router-dom';
 // import ProductDetails from '../ui/ProdDetail.jsx';
@@ -5,10 +6,9 @@
 // import Tabs from '../ui/Tabs.jsx';
 // import FeatureSection from '../ui/FeatureSection.jsx';
 // import ProductCarousel from '../ui/ProductCarousel.jsx';
-// // Import these if they aren't already
 // import StickyPurchaseBar from '../ui/CardBottomFixed.jsx';
-// import Footer from '../ui/Footer.jsx';
-// import AnnouncementBar from '../ui/AnnouncementBar.jsx';
+// import AnnouncementBar from "../ui/AnnouncementBar.jsx"
+// import ProductInfoShimmer from '../ui/ProductInfoShimmer.jsx';
 
 // const products = [
 //     {
@@ -173,24 +173,59 @@
 //     },
 // ];
 
-// const featureData = [
-//     { icon: "heroicons:shield-check", head: "Premium Quality", desc: "Crafted from 100% long-staple cotton." },
-//     { icon: "heroicons:truck", head: "Fast Shipping", desc: "Pan-India delivery within 3-5 days." },
-//     { icon: "heroicons:arrow-path", head: "Easy Returns", desc: "7-day hassle-free return policy." }
-// ];
-
 // const InfoProd = () => {
 //     const { id } = useParams();
-    
-//     // --- ALL HOOKS MUST BE INSIDE HERE ---
-//     const [activeTab, setActiveTab] = useState('description');
 //     const [quantity, setQuantity] = useState(1);
+//     const [selectedSize, setSelectedSize] = useState("");
 //     const [showStickyBar, setShowStickyBar] = useState(false);
+//     const [activeTab, setActiveTab] = useState('description');
+//     const [loading, setLoading] = useState(true); // Add loading state
+//     const [product, setProduct] = useState(null);
+
+//     // Create the parameter object for both dropdowns
+//     const sizeOptions = product?.sizes?.map(size => ({
+//         label: `${size} - ${product.price}`,
+//         value: size,
+//         price: product.price
+//     })) || [];
 
 //     useEffect(() => {
 //         window.scrollTo(0, 0);
+//         const handleScroll = () => {
+//             // Shows bar after scrolling 600px
+//             setShowStickyBar(window.scrollY > 600);
+//         };
+//         window.addEventListener('scroll', handleScroll);
+//         return () => window.removeEventListener('scroll', handleScroll);
+//     }, [id]);
+
+//     useEffect(() => {
+//         // Simulate an API call
+//         setLoading(true);
+//         setTimeout(() => {
+//             const foundProduct = DUMMY_PRODUCTS.find((p) => p.id === Number(id));
+//             setProduct(foundProduct);
+//             setLoading(false);
+//         }, 1500); // 1.5 seconds delay
         
-//         // Logic to show sticky bar on scroll
+//         window.scrollTo(0, 0);
+//     }, [id]);
+
+//     // Show shimmer while loading
+//     if (loading) return <ProductInfoShimmer />;
+
+//     if (!product) return <div className="p-20 text-center text-2xl font-bold">Product Not Found</div>;
+
+//     const handleAddToCart = () => {
+//         if (!selectedSize) {
+//             alert("Please select a size first!");
+//             return;
+//         }
+//         alert(`Successfully added to cart:\nProduct: ${product.title}\nSize: ${selectedSize}\nQuantity: ${quantity}`);
+//     };
+
+//     useEffect(() => {
+//         window.scrollTo(0, 0);
 //         const handleScroll = () => {
 //             setShowStickyBar(window.scrollY > 600);
 //         };
@@ -198,16 +233,12 @@
 //         return () => window.removeEventListener('scroll', handleScroll);
 //     }, [id]);
 
-//     // const product = DUMMY_PRODUCTS.find((p) => p.id === Number(id));
-//     // Inside InfoProd component
-//     const product = DUMMY_PRODUCTS.find((p) => p.id === Number(id));
-
-//     // Create the options object containing both size and price
-//     const sizeOptions = product?.sizes?.map(size => ({
-//         label: `${size} - ${product.price}`, // Display label (e.g., "M - Rs. 974.00")
-//         value: size,                         // Internal value
-//         price: product.price                 // Extra parameter
-//     })) || [];
+//     // Featured data
+//     const featureData = [
+//         { icon: "heroicons:shield-check", head: "Premium Quality", desc: "Crafted from 100% long-staple cotton." },
+//         { icon: "heroicons:truck", head: "Fast Shipping", desc: "Pan-India delivery within 3-5 days." },
+//         { icon: "heroicons:arrow-path", head: "Easy Returns", desc: "7-day hassle-free return policy." }
+//     ];
 
 //     // Define tabs inside or pass product data to them
 //     const productTabs = [
@@ -215,33 +246,36 @@
 //         { id: 'shipping', label: 'Shipping', content: <div className="p-4">3-5 Day Delivery</div> }
 //     ];
 
-//     if (!product) {
-//         return <div className="p-20 text-center">Product Not Found</div>;
-//     }
+    
+
+//     if (!product) return <div className="p-20 text-center text-2xl font-bold">Product Not Found</div>;
 
 //     return (
 //         <div className="bg-white min-h-screen">
 //             <div className='flex justify-center py-8'>
-//                 <Breadcrumb
-//                     items={[
-//                         { label: "Home", href: "/" },
-//                         { label: product.title },
-//                     ]}
-//                 />
+//                 <Breadcrumb items={[{ label: "Home", href: "/" }, { label: product.title }]} />
 //             </div>
 
-//             <ProductDetails product={product} />
+//             <ProductDetails 
+//                 product={product} 
+//                 selectedSize={selectedSize} 
+//                 setSelectedSize={setSelectedSize} 
+//                 quantity={quantity}
+//                 setQuantity={setQuantity}
+//                 sizeOptions={sizeOptions}
+//                 onAddToCart={handleAddToCart}
+//             />
 
 //             <div className="max-w-7xl mx-auto px-4 py-12">
-//                 <Tabs tabs={productTabs} activeTab={activeTab} setActiveTab={setActiveTab} />
-//             </div>
-//             <AnnouncementBar />
+//                  <Tabs tabs={productTabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+//              </div>
+//              <AnnouncementBar />
 
-//             <section className="w-full py-16 bg-gray-50">
-//                 <div className="max-w-[1440px] mx-auto px-6">
-//                     <h2 className="text-center text-4xl mb-12">Why Gentlehaus?</h2>
-//                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-//                         {featureData.map((item, index) => (
+//              <section className="w-full py-16 bg-gray-50">
+//                  <div className="max-w-[1440px] mx-auto px-6">
+//                      <h2 className="text-center text-4xl mb-12">Why Gentlehaus?</h2>
+//                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+//                          {featureData.map((item, index) => (
 //                             <FeatureSection 
 //                                 key={index}
 //                                 iconName={item.icon}
@@ -253,7 +287,7 @@
 //                 </div>
 //             </section>
 
-//             <ProductCarousel title="You Might Also Like" products={products} />
+//             <ProductCarousel title="You Might Also Like" products={products} />             
 //             <ProductCarousel title="Recently Viewed Products" products={products} />
 
 //             <StickyPurchaseBar
@@ -261,9 +295,11 @@
 //                 product={product}
 //                 quantity={quantity}
 //                 onQuantityChange={setQuantity}
-//                 onAddToCart={() => alert("Added to cart")}
+//                 selectedSize={selectedSize}
+//                 setSelectedSize={setSelectedSize}
+//                 sizeOptions={sizeOptions}
+//                 onAddToCart={handleAddToCart}
 //             />
-
 //         </div>
 //     );
 // };
@@ -279,10 +315,10 @@ import Tabs from '../ui/Tabs.jsx';
 import FeatureSection from '../ui/FeatureSection.jsx';
 import ProductCarousel from '../ui/ProductCarousel.jsx';
 import StickyPurchaseBar from '../ui/CardBottomFixed.jsx';
-import AnnouncementBar from "../ui/AnnouncementBar.jsx"
+import AnnouncementBar from "../ui/AnnouncementBar.jsx";
+import ProductInfoShimmer from '../ui/ProductInfoShimmer.jsx';
+import HappyCustomersCards from "../ui/HappyCustomersCards.jsx"
 
-
-// ... DUMMY_PRODUCTS array remains as you provided ...
 const products = [
     {
       id: 1,
@@ -448,65 +484,71 @@ const DUMMY_PRODUCTS = [
 
 const InfoProd = () => {
     const { id } = useParams();
+    
+    // 1. ALL HOOKS MUST BE AT THE TOP
+    const [loading, setLoading] = useState(true);
     const [quantity, setQuantity] = useState(1);
     const [selectedSize, setSelectedSize] = useState("");
     const [showStickyBar, setShowStickyBar] = useState(false);
     const [activeTab, setActiveTab] = useState('description');
 
+    // Simulate loading data
+    useEffect(() => {
+        setLoading(true);
+        window.scrollTo(0, 0);
+        
+        const timer = setTimeout(() => {
+            setLoading(false);
+        }, 1000);
+
+        const handleScroll = () => {
+            setShowStickyBar(window.scrollY > 600);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            clearTimeout(timer);
+        };
+    }, [id]);
+
+    // Define data consistently so hooks are not skipped
     const product = DUMMY_PRODUCTS.find((p) => p.id === Number(id));
 
-    // Create the parameter object for both dropdowns
     const sizeOptions = product?.sizes?.map(size => ({
         label: `${size} - ${product.price}`,
         value: size,
         price: product.price
     })) || [];
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-        const handleScroll = () => {
-            // Shows bar after scrolling 600px
-            setShowStickyBar(window.scrollY > 600);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [id]);
-
-    if (!product) return <div className="p-20 text-center text-2xl font-bold">Product Not Found</div>;
-
-    const handleAddToCart = () => {
-        if (!selectedSize) {
-            alert("Please select a size first!");
-            return;
-        }
-        alert(`Successfully added to cart:\nProduct: ${product.title}\nSize: ${selectedSize}\nQuantity: ${quantity}`);
-    };
-
-    useEffect(() => {
-        window.scrollTo(0, 0);
-        const handleScroll = () => {
-            setShowStickyBar(window.scrollY > 600);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [id]);
-
-    // Featured data
     const featureData = [
         { icon: "heroicons:shield-check", head: "Premium Quality", desc: "Crafted from 100% long-staple cotton." },
         { icon: "heroicons:truck", head: "Fast Shipping", desc: "Pan-India delivery within 3-5 days." },
         { icon: "heroicons:arrow-path", head: "Easy Returns", desc: "7-day hassle-free return policy." }
     ];
 
-    // Define tabs inside or pass product data to them
     const productTabs = [
         { id: 'description', label: 'Description', content: <div className="p-4">Premium {product?.title}</div> },
         { id: 'shipping', label: 'Shipping', content: <div className="p-4">3-5 Day Delivery</div> }
     ];
 
-    
+    const handleAddToCart = () => {
+        if (!selectedSize) {
+            alert("Please select a size first!");
+            return;
+        }
+        alert(`Added to cart: ${product.title}`);
+    };
 
-    if (!product) return <div className="p-20 text-center text-2xl font-bold">Product Not Found</div>;
+    // 2. RENDER LOGIC AT THE BOTTOM
+    if (loading) return <ProductInfoShimmer />;
+    
+    if (!product) return (
+        <div className="flex flex-col items-center justify-center min-h-[60vh]">
+            <h2 className="text-2xl font-bold">Product Not Found</h2>
+            <p className="text-gray-500">The item you are looking for does not exist.</p>
+        </div>
+    );
 
     return (
         <div className="bg-white min-h-screen">
@@ -527,6 +569,7 @@ const InfoProd = () => {
             <div className="max-w-7xl mx-auto px-4 py-12">
                  <Tabs tabs={productTabs} activeTab={activeTab} setActiveTab={setActiveTab} />
              </div>
+             
              <AnnouncementBar />
 
              <section className="w-full py-16 bg-gray-50">
@@ -545,7 +588,7 @@ const InfoProd = () => {
                 </div>
             </section>
 
-            <ProductCarousel title="You Might Also Like" products={products} />             
+            <ProductCarousel title="You Might Also Like" products={products} />            
             <ProductCarousel title="Recently Viewed Products" products={products} />
 
             <StickyPurchaseBar
@@ -558,6 +601,7 @@ const InfoProd = () => {
                 sizeOptions={sizeOptions}
                 onAddToCart={handleAddToCart}
             />
+            <HappyCustomersCards />
         </div>
     );
 };

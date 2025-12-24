@@ -14,28 +14,32 @@ import Modal from "./components/ui/Modal.jsx";
 import Cart from "./components/pages/CartPage.jsx"
 import Profile from "./components/pages/Profile.jsx";
 import Luxria from "./components/pages/Luxria.jsx";
+import StickyComponent from "./components/ui/StickyComponent.jsx";
+import FootersPage from "./components/pages/FooterPage.jsx";
 
 // Error Page
 import ErrorPage from "./components/pages/Error.jsx";
-import StickyComponent from "./components/ui/StickyComponent.jsx";
-import FootersPage from "./components/pages/FooterPage.jsx";
-// import UserProfile from "./components/ui/UserProfile.jsx"
 
-// 1. Layout Component
+import HomeShimmer from "./components/ui/HomeShimmer.jsx";
+import YourOrder from "./components/pages/YourOrder.jsx";
+import TrackPackage from "./components/pages/Order/TrackPackage.jsx";
+import HierachyGraph from "./components/ui/HierachyGraph.jsx";
+import WriteReview from "./components/pages/WriteReview.jsx";
+
 const AppLayout = () => {
   return (
     <div className="app">
-      <ScrollRestoration />
+      {/* <ScrollRestoration /> */}
       {/* <Modal /> */}
       <Nav />
       <Outlet />
       <Footer />
       <StickyComponent />
+      <ScrollRestoration />
     </div>
   );
 };
 
-// 2. Define Routes
 const appRouter = createBrowserRouter([
   {
     path: "/",
@@ -78,6 +82,22 @@ const appRouter = createBrowserRouter([
         element: <FootersPage />
       },
       {
+        path: "/your-order",
+        element: <YourOrder />
+      },
+      {
+        path: "/your-order/:orderId",
+        element: <TrackPackage />
+      },
+      {
+        path: "/refer-graph",
+        element: <HierachyGraph />,
+      },
+      {
+        path: "/write-review/:orderId",
+        element: <WriteReview />
+      },
+      {
         path: "*",
         element: <ErrorPage />
       }
@@ -85,7 +105,6 @@ const appRouter = createBrowserRouter([
   },
 ]);
 
-// 3. Export the App
 export default function App() {
   return <RouterProvider router={appRouter} />;
 }

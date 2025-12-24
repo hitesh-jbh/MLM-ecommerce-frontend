@@ -14,22 +14,27 @@ export default function Footer() {
 
     const routeLink = [
         {
+            id: 1,
             link: "/",
             text: "Home",
         },
         {
+            id: 2,
             link: "/gentle",
             text: "Gentle Trends",
         },
         {
-            link: "/luxria",
+            id: 3,
+            link: "/luxuria",
             text: "Luxria",
         },
         {
+            id: 4,
             link: "/contact",
             text: "Contact Us",
         },
         {
+            id: 5,
             link: "/about",
             text: "About Us",
         },
@@ -77,7 +82,7 @@ export default function Footer() {
                         <ul className="space-y-3">
                             {/* {['Home', 'Gentle Trends', 'Luxuria', 'Contact Us', 'About Us'].map((item) => ( */}
                             {routeLink.map((item) => (
-                                <li key={item}>
+                                <li key={item.id}>
                                     <Link
                                         to={item.link}
                                         className="text-gray-600 text-sm hover:text-black transition"

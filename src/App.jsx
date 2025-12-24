@@ -4,12 +4,15 @@ import StickyComponent from "./components/ui/StickyComponent.jsx";
 import Modal from "./components/ui/Modal.jsx";
 import ProductInfoPurchase from "./pages/ProductInoPurchase.jsx";
 import ScrollingBanner from "./components/ui/ScrollingBannerCarousel.jsx";
+// import FeatureSection from "./components/ui/FeatureSection.jsx";
 import FeatureSection from "./components/ui/FeatureSection.jsx";
 import Contact from "./components/pages/contact.jsx";
 import LoginPage from "./components/pages/LoginPage.jsx";
 import UserProfile from "./components/ui/UserProfile.jsx";
-import {user} from "./Store/data.jsx";
 import LuxuriaShimer from "./components/ui/LuxuriaShimer.jsx";
+import FeaturesSection from "./components/ui/FeatureCard.jsx";
+import Profile from "./components/ui/Profile.jsx"
+import Edit from "./components/ui/Edit.jsx";
 
 export default function App() {
 //   const userData = {
@@ -39,8 +42,10 @@ export default function App() {
      {/* <FeatureSection /> */}
      {/* <Contact /> */}
      {/* <LoginPage /> */}
-     {/* <UserProfile user={user} /> */}
-     <LuxuriaShimer />
+     {/* <FeaturesSection /> */}
+     <Profile />
+     {/* <LuxuriaShimer /> */}
+     {/* <Edit /> */}
      
     </>
   );

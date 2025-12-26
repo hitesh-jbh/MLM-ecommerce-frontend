@@ -2,6 +2,7 @@ import { Search } from 'lucide-react';
 import React, { useState } from 'react';
 import OrderCard from '../ui/YourOrder/OrderInfo';
 import { Link } from 'react-router-dom';
+import { shippedProducts } from '../../utils/Constants';
 // import { Product } from '../../utils/Constants';
 
 const YourOrder = () => {
@@ -11,60 +12,7 @@ const YourOrder = () => {
 
     const tabs = ["Orders", "Buy Again", "Not Yet Dispatched", "Cancelled Orders"];
 
-    const allOrders = [
-        {
-            orderId: "404-1234567-8901234",
-            orderDate: "20 December 2025",
-            status: "0", 
-            total: 971.00,
-            shipTo: "John Doe",
-            items: [{
-                id: 1,
-                title: "Men's Full Sleeve Cotton Shirt with Retro Geometric Block Print",
-                image: "https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp",
-                returnExpiry: "Jan 15, 2025"
-            }]
-        },
-        {
-            orderId: "404-1234567-8905678",
-            orderDate: "21 December 2025",
-            status: "1", // Added for StepBar
-            total: 1250.00,
-            shipTo: "John Doe",
-            items: [{
-                id: 2,
-                title: "Premium Slim Fit Chinos",
-                image: "https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp",
-                returnExpiry: "Jan 15, 2026"
-            }]
-        },
-        {
-            orderId: "404-1234567-8909876",
-            orderDate: "23 December 2025",
-            status: "3", // Added for StepBar
-            total: 1250.00,
-            shipTo: "John Doe",
-            items: [{
-                id: 3,
-                title: "Premium Slim Fit Chinos",
-                image: "https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp",
-                returnExpiry: "Jan 15, 2026"
-            }]
-        },
-        {
-            orderId: "404-1234567-8902468",
-            orderDate: "25 December 2025",
-            status: "5", // Added for StepBar
-            total: 1250.00,
-            shipTo: "John Doe",
-            items: [{
-                id: 4,
-                title: "Premium Slim Fit Chinos",
-                image: "https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp",
-                returnExpiry: "Jan 15, 2026"
-            }]
-        }
-    ];
+    const allOrders = shippedProducts;
 
 
     const getTabFilteredOrders = (orders) => {

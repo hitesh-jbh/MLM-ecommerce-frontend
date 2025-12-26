@@ -208,7 +208,7 @@ const ProdDetails = ({ product }) => {
                                 Add to Cart
                             </button>
                         </div>
-                        <BuyNowButton />
+                        <BuyNowButton product={product}/>
                     </div>
                 </div>
             </div>

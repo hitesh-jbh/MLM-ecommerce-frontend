@@ -1,11 +1,30 @@
 import { ChevronRight } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { placeOrder } from '../../utils/Slice/orderSlice';
 
-export default function BuyNowButton() {
+export default function BuyNowButton({ product }) {
+    const dispatch = useDispatch();
+
+    const handlePlaceOrder = () => {
+        // Construct a clean order object
+        const orderData = {
+            items: [product],
+            totalPrice: product.price,
+            size: product?.variant?.size || "Standard", 
+            date: new Date().toLocaleDateString(),
+        };
+
+        dispatch(placeOrder(orderData));
+
+        alert(`Order successful! You just bought the ${product.name}.`);
+    };
+
     return (
-        /* Reduced vertical padding to keep the layout tight */
         <div className="w-full py-2"> 
-            <button className="w-full bg-black text-white rounded-xl py-2.5 px-4 md:px-6 relative overflow-hidden group hover:bg-[#111] transition-all duration-300 min-h-[20px] md:min-h-[30px] shadow-sm active:scale-[0.98]">
-
+            <button 
+                onClick={handlePlaceOrder} 
+                className="w-full bg-black text-white rounded-xl py-2.5 px-4 md:px-6 relative overflow-hidden group hover:bg-[#111] transition-all duration-300 min-h-[50px] shadow-sm active:scale-[0.98]"
+            >
                 {/* Content Container */}
                 <div className="flex items-center justify-between gap-3">
                     
@@ -15,24 +34,18 @@ export default function BuyNowButton() {
                             Buy Now
                         </span>
 
-                        {/* Divider Line - Adds a premium look */}
                         <div className="h-6 w-[1px] bg-gray-800 hidden sm:block"></div>
 
-                        {/* Payment Icons - Clean & Compact */}
+                        {/* Payment Icons */}
                         <div className="flex items-center -space-x-1.5 md:space-x-1.5">
-                            {/* GPay */}
                             <div className="w-6 h-6 md:w-8 md:h-8 bg-white rounded-full flex items-center justify-center p-1 ring-2 ring-black overflow-hidden flex-shrink-0">
                                 <img className="w-full h-full object-contain" src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="GPay" />
                             </div>
-
-                            {/* Apple Pay */}
                             <div className="w-6 h-6 md:w-8 md:h-8 bg-white rounded-full flex items-center justify-center p-1 ring-2 ring-black overflow-hidden flex-shrink-0">
-                                <img className="w-full h-full object-contain" src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_logo.svg" alt="PhonePe" />
+                                <img className="w-full h-full object-contain" src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_logo.svg" alt="Apple Pay" />
                             </div>
-
-                            {/* Visa */}
                             <div className="w-6 h-6 md:w-8 md:h-8 bg-white rounded-full flex items-center justify-center p-1 ring-2 ring-black overflow-hidden flex-shrink-0">
-                                <img className="w-full h-full object-contain" src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Paytm" />
+                                <img className="w-full h-full object-contain" src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" />
                             </div>
                         </div>
                     </div>
@@ -44,7 +57,7 @@ export default function BuyNowButton() {
                     </div>
                 </div>
 
-                {/* Powered By - Subtle & Professional */}
+                {/* Powered By */}
                 <div className="absolute bottom-0.5 right-4 text-[6px] md:text-[8px] text-gray-600 tracking-tighter">
                     Powered by <span className="text-gray-400 font-medium">JBH[Zeeshu]</span>
                 </div>

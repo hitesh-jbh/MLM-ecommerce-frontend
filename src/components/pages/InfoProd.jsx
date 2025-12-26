@@ -320,6 +320,9 @@ import ProductInfoShimmer from '../ui/ProductInfoShimmer.jsx';
 import HappyCustomersCards from "../ui/HappyCustomersCards.jsx"
 
 import { Product } from '../../utils/Constants.js';
+import { useDispatch } from 'react-redux';
+import { placeOrder } from '../../utils/Slice/orderSlice.js';
+import { clearCart } from '../../utils/Slice/cartSlice.js';
 
    const DUMMY_PRODUCTS = Product;
 
@@ -337,6 +340,8 @@ const InfoProd = () => {
 
     // LIFTED STATE: This keeps both components in sync
     const [selectedSize, setSelectedSize] = useState(product?.variants?.[0] || null);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setLoading(true);
@@ -367,8 +372,20 @@ const InfoProd = () => {
     ];
 
     const productTabs = [
-        { id: 'description', label: 'Description', content: <div className="p-4">Premium {product?.title}</div> },
-        { id: 'shipping', label: 'Shipping', content: <div className="p-4">3-5 Day Delivery</div> }
+        { id: 'description', label: 'Product Description', content: <div className="p-4">
+            <p className='p-1'>Bring elegance and charm to your wardrobe with this men’s cotton shirt featuring a beautifully detailed floral print. Crafted from soft, breathable cotton, this full sleeve shirt combines comfort with refined style. The warm earthy tones and botanical artwork create a timeless look that’s perfect for both relaxed and semi-formal occasions.</p>
+
+            <p className='p-1'>Whether paired with chinos or denim, this shirt adds a touch of sophistication inspired by nature.</p>
+            <ul className='list-disc p-2 ml-4' >
+                <li>Made from 100% breathable cotton</li>
+                <li>Full sleeve design with button-down closure</li>
+                <li>Vintage-inspired floral print in warm neutral tones</li>
+                <li>Regular fit for day-long comfort</li>
+                <li>Ideal for casual, smart casual, or resort wear</li>
+            </ul>
+        </div> },
+        { id: 'shipping', label: 'Shipping & Return', content: <div className="p-2"><p>Shipping cost is based on weight. Just add products to your cart and use the Shipping Calculator to see the shipping price.</p><br/>
+        <p>We want you to be 100% satisfied with your purchase. Items can be returned or exchanged within 7 days of delivery.</p></div> }
     ];
 
     const handleAddToCart = () => {
@@ -388,11 +405,6 @@ const InfoProd = () => {
             <p className="text-gray-500">The item you are looking for does not exist.</p>
         </div>
     );
-
-    // const sizeOptions = product.variants.map(v => ({
-    //     label: `${v.size} - Rs. ${v.price}`,
-    //     value: v.size
-    // }));
 
     return (
         <div className="bg-white min-h-screen">

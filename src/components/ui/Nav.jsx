@@ -2,12 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Search, User, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import appStore from '../../utils/appStore';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateSearchQuery } from '../../utils/Slice/searchSlice';
 
 export default function Nav() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const searchRef = useRef(null);
+  const dispatch = useDispatch();
 
   const cartItemsLength = useSelector((store) => store.cart.items.length);
 
@@ -29,6 +31,17 @@ export default function Nav() {
   }, [isSearchOpen]);
 
   const popularSearches = ['T-Shirt', 'Blue', 'Jacket'];
+
+  // const searchItem = useSelector((state) => state.search.query);
+  // // search handler
+  // const handleSearch = (e) => {
+  //   const value = e.target.value;
+  //   dispatch(updateSearchQuery());
+  // }
+
+  // const popularSearches = () => {
+  //   dis
+  // }
 
   return (
     <div ref={searchRef}>
@@ -77,7 +90,8 @@ export default function Nav() {
               >
                 <Search size={22} />
               </button>
-              <Link to="/login"><button className="text-black hover:text-gray-600 transition">
+              {/* <Link to="/login"><button className='p-1 w-[2/12] rounded text-black hover:text-gray-600 transition font-medium text-sm' >Login</button></Link> */}
+              <Link to="/profile"><button className="text-black hover:text-gray-600 transition">
                 <User size={22} />
               </button></Link>
               <Link to="/cart"><button className="relative text-black hover:text-gray-600 transition">
@@ -115,7 +129,8 @@ export default function Nav() {
               <div className="flex items-center gap-4">
 
                 {/* user login or not login logic */}
-                <Link to="/login"><button className="text-black hover:text-gray-600 transition">
+                {/* <Link to="/login"><button className='text-black hover:text-gray-600 transition font-medium text-sm p-1 w-[2/12] rounded ' >Login</button></Link> */}
+                <Link to="/profile"><button className="text-black hover:text-gray-600 transition">
                   <User size={22} />
                 </button></Link>
 

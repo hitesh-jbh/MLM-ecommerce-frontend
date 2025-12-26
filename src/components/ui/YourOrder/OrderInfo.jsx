@@ -1,14 +1,26 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { addItem } from '../../../utils/Slice/cartSlice';
 
 const OrderCard = ({ order }) => {
-  const { orderDate, total, orderId, shipTo, items, status } = order;
+  const { orderDate, price, orderId, shipTo, items, status, id, name, image } = order;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleBuyAgain = (item) => {
-    console.log("Adding to cart:", item.title);
-    navigate('/cart'); 
-    alert(`${item.title} added to cart!`);
+    dispatch(addItem({
+      id: item.id,
+      name: item.title,
+      image: item.image,
+      quantity: 1,
+      selectedSize: {
+        size: order.size || "M",
+        price: price / items.length,
+        stock: 100 // Ensures it passes the reducer's stock check
+      }
+    }));
+    navigate('/cart');
   };
 
   const handleWriteReview = (orderId) => {
@@ -41,7 +53,7 @@ const OrderCard = ({ order }) => {
           </div>
           <div>
             <p className="uppercase text-[10px] font-bold text-gray-500">Total</p>
-            <p>₹{total.toFixed(2)}</p>
+            <p>₹{price.toFixed(2)}</p>
           </div>
           <div className="hidden sm:block">
             <p className="uppercase text-[10px] font-bold text-gray-500">Ship To</p>

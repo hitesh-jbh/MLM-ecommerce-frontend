@@ -1,11 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { removeItem, updateQuantity } from "../../utils/Slice/cartSlice";
+import { clearCart, removeItem, updateQuantity } from "../../utils/Slice/cartSlice";
+import { placeOrder } from "../../utils/Slice/orderSlice";
 
 export default function Cart() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
 
   // Calculate Subtotal
@@ -22,6 +24,20 @@ export default function Cart() {
   const handleRemove = (id, size) => {
     dispatch(removeItem({ id, size }));
   };
+
+  const handlePlaceOrder = () => {
+    const finalOrder = {
+      // id: `ORD-${Date.now()}`,
+      items: [...cartItems],
+      totalAmount: subtotal,
+      date: new Date().toLocaleString(),
+      status: "Processing"
+    }
+    dispatch(placeOrder(finalOrder));
+    dispatch(clearCart());
+    navigate('/order-history'); 
+    alert(`Order Placed Successfully! Total: ₹${subtotal.toFixed(2)}`);
+  }
 
   if (cartItems.length === 0) {
     return (
@@ -70,6 +86,7 @@ export default function Cart() {
 
                 <p className="text-xs text-gray-500 mt-1">Size: {item.size}</p>
                 <p className="text-sm font-semibold text-black mt-2">
+                  {/* ₹ {item.price} */}
                   ₹ {item.price.toFixed(2)}
                 </p>
 
@@ -108,7 +125,7 @@ export default function Cart() {
             <p className="text-lg font-semibold text-black">₹ {subtotal.toFixed(2)}</p>
           </div>
 
-          <button className="w-full bg-black hover:bg-gray-900 text-white py-4 rounded-md text-sm font-semibold transition">
+          <button onClick={handlePlaceOrder} className="w-full bg-black hover:bg-gray-900 text-white py-4 rounded-md text-sm font-semibold transition">
             PROCEED TO CHECKOUT
           </button>
           

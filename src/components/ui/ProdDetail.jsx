@@ -442,7 +442,7 @@ const ProductDetails = ({ product }) => {
                                 Add to Cart
                             </button>
                         </div>
-                        <BuyNowButton />
+                        <BuyNowButton product={product}/>
                     </div>
 
                     {/* --- TRUST BADGES --- */}

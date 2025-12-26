@@ -186,55 +186,102 @@ export const Product = [
     },
 ];
 
-// export const Product = [
-//         {
-//             id: 1,
-//             title: "Men's Full Sleeve Cotton Shirt with Retro Geometric Block Print",
-//             image: ["https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp"],
-//             shipment: {
-//                 orderId: "404-1234567-8901234",
-//                 orderDate: "20 December 2025",
-//                 status: "0", 
-//                 total: 971.00,
-//                 shipTo: "John Doe",
-//                 returnExpiry: "Jan 15, 2026",
-//             },
-//         },
-//         {
-//             id: 2,
-//             title: "Men's Full Sleeve Cotton Shirt with Retro Geometric Block Print",
-//             image: ["https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp"],
-//             shipment: {
-//                 orderId: "404-1234567-8901234",
-//                 orderDate: "20 December 2024",
-//                 status: "1", 
-//                 total: 971.00,
-//                 shipTo: "John Doe",
-//                 returnExpiry: "Jan 15, 2025",
-//             },
-//         },{
-//             id: 3,
-//             title: "Men's Full Sleeve Cotton Shirt with Retro Geometric Block Print",
-//             image: ["https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp"],
-//             shipment: {
-//                 orderId: "404-1234567-8901234",
-//                 orderDate: "20 December 2024",
-//                 status: "3", 
-//                 total: 971.00,
-//                 shipTo: "John Doe",
-//                 returnExpiry: "Jan 15, 2025",
-//             },
-//         },{
-//             id: 4,
-//             title: "Men's Full Sleeve Cotton Shirt with Retro Geometric Block Print",
-//             image: ["https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp"],
-//             shipment: {
-//                 orderId: "404-1234567-8901234",
-//                 orderDate: "20 December 2024",
-//                 status: "5", 
-//                 total: 971.00,
-//                 shipTo: "John Doe",
-//                 returnExpiry: "Jan 15, 2025",
-//             },
-//         },
-//     ];
+export const Brands = [
+        { name: 'Nike', count: 123, logo: 'ℕ' },
+        { name: 'Adidas', count: 55, logo: '𝔄' },
+        { name: 'Puma', count: 325, logo: '𝕻' },
+        { name: 'Uniqlo', count: 61, logo: 'ⓤ' },
+        { name: 'New Balance', count: 99, logo: '𝔵' },
+        { name: 'Apple', count: 65, logo: '𝕴' },
+    ];
+
+export const shippedProducts = [
+        {
+            id: 1,
+            name: "Men's Full Sleeve Cotton Shirt Featuring Bold Geometric Outline Pattern",
+            image: [
+                "https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp?v=1750849046&width=810",
+                "https://gentlehaus.in/cdn/shop/files/2_2dba3960-3954-4a33-8921-52bd73113b1b.webp?v=1750849046&width=810",
+                "https://gentlehaus.in/cdn/shop/files/3_bcd67440-8c…38-b9d1-d6a6ac27ba0e.webp?v=1750849046&width=810",
+            ],
+            size: "L",
+            quantity: 1,
+            orderId: "404-1234567-8901234",
+            orderDate: "20 December 2025",
+            status: "0", 
+            price: 971.00,
+            shipTo: "John Doe",
+            items: [{
+                id: 1,
+                title: "Men's Full Sleeve Cotton Shirt with Retro Geometric Block Print",
+                image: "https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp",
+                returnExpiry: "Jan 15, 2025"
+            }]
+        },
+        {
+            id: 2,
+            name: "Men's Full Sleeve Cotton Shirt Featuring Bold Geometric Outline Pattern",
+            image: [
+                "https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp?v=1750849046&width=810",
+                "https://gentlehaus.in/cdn/shop/files/2_2dba3960-3954-4a33-8921-52bd73113b1b.webp?v=1750849046&width=810",
+                "https://gentlehaus.in/cdn/shop/files/3_bcd67440-8c…38-b9d1-d6a6ac27ba0e.webp?v=1750849046&width=810",
+            ],
+            size: "L",
+            quantity: 1,
+            orderId: "404-1234567-8905678",
+            orderDate: "21 December 2025",
+            status: "1", // Added for StepBar
+            price: 1250.00,
+            shipTo: "John Doe",
+            items: [{
+                id: 2,
+                title: "Premium Slim Fit Chinos",
+                image: "https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp",
+                returnExpiry: "Jan 15, 2026"
+            }]
+        },
+        {
+            id: 3,
+            name: "Men's Full Sleeve Cotton Shirt Featuring Bold Geometric Outline Pattern",
+            image: [
+                "https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp?v=1750849046&width=810",
+                "https://gentlehaus.in/cdn/shop/files/2_2dba3960-3954-4a33-8921-52bd73113b1b.webp?v=1750849046&width=810",
+                "https://gentlehaus.in/cdn/shop/files/3_bcd67440-8c…38-b9d1-d6a6ac27ba0e.webp?v=1750849046&width=810",
+            ],
+            size: "L",
+            quantity: 1,
+            orderId: "404-1234567-8909876",
+            orderDate: "23 December 2025",
+            status: "3", // Added for StepBar
+            price: 1250.00,
+            shipTo: "John Doe",
+            items: [{
+                id: 3,
+                title: "Premium Slim Fit Chinos",
+                image: "https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp",
+                returnExpiry: "Jan 15, 2026"
+            }]
+        },
+        {
+            id: 4,
+            name: "Men's Full Sleeve Cotton Shirt Featuring Bold Geometric Outline Pattern",
+            image: [
+                "https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp?v=1750849046&width=810",
+                "https://gentlehaus.in/cdn/shop/files/2_2dba3960-3954-4a33-8921-52bd73113b1b.webp?v=1750849046&width=810",
+                "https://gentlehaus.in/cdn/shop/files/3_bcd67440-8c…38-b9d1-d6a6ac27ba0e.webp?v=1750849046&width=810",
+            ],
+            size: "L",
+            quantity: 1,
+            orderId: "404-1234567-8902468",
+            orderDate: "25 December 2025",
+            status: "5", // Added for StepBar
+            price: 1250.00,
+            shipTo: "John Doe",
+            items: [{
+                id: 4,
+                title: "Premium Slim Fit Chinos",
+                image: "https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp",
+                returnExpiry: "Jan 15, 2026"
+            }]
+        }
+    ];

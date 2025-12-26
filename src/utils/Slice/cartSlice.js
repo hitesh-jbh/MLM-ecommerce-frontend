@@ -39,13 +39,18 @@ const cartSlice = createSlice({
       item.quantity = quantity;
     }
   },
+
   removeItem: (state, action) => {
     const { id, size } = action.payload;
     // Filter out the item matching both ID and Size
     state.items = state.items.filter(item => !(item.id === id && item.size === size));
+  },
+
+  clearCart: (state, action) => {
+    state.items.length = 0;
   }
   },
 });
 
-export const { addItem, updateQuantity, removeItem } = cartSlice.actions;
+export const { addItem, updateQuantity, removeItem, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;

@@ -126,7 +126,7 @@ export default function QuantityCounter({ productId, selectedSize }) {
   const quantity = useSelector((state) => state.count[key] || 1);
 
   return (
-    <div className="flex items-center justify-between px-3 border border-gray-300 rounded-lg bg-white w-full sm:max-w-[160px] h-11">
+    <div className="flex items-center justify-between px-3 border border-gray-300 rounded-lg bg-white w-full sm:max-w-[160px] h-13">
       <button 
         onClick={() => dispatch(decrementCount({ id: productId, size: selectedSize?.size }))}
         className="p-1 active:scale-90"

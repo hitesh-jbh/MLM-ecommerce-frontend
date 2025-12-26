@@ -30,6 +30,7 @@ import LoginPage from "./components/pages/LoginPage.jsx";
 
 import { Provider } from "react-redux";
 import appStore from "./utils/appStore.js";
+import WishlistPage from "./components/pages/WishlistPage.jsx";
 
 const AppLayout = () => {
   return (
@@ -107,6 +108,10 @@ const appRouter = createBrowserRouter([
       {
         path: "/wallet-balance",
         element: <WalletBalance />,
+      },
+      {
+        path: "/wishlist",
+        element: <WishlistPage />,
       },
       {
         path: "*",

@@ -29,16 +29,6 @@ export default function FilterProductPage() {
     ]
 
     const products = Product;
-    // const products = [
-    //     { id: 1, name: 'Shirt Soft Cotton', price: 40.00, brand: 'Uniqlo', category: 'Shirts', rating: 4.5, reviews: 128, image: 'https://gentlehaus.in/cdn/shop/files/1_da90cc63-f19b-4851-bc98-4be80122dbbf.webp?v=1754287277&width=1240', stock: 12 },
-    //     { id: 2, name: 'Zip Up Neck Shirt', price: 65.00, brand: 'Nike', category: 'Shirts', rating: 4.2, reviews: 89, image: 'https://gentlehaus.in/cdn/shop/files/1_698850c4-7f88-44ec-9537-66b50ea4e6b3.webp?v=1750850291&width=1240', stock: 8 },
-    //     { id: 3, name: 'Classic Long Sleeve', price: 55.00, brand: 'Adidas', category: 'Shirts', rating: 4.7, reviews: 203, image: 'https://gentlehaus.in/cdn/shop/files/1_3f224edb-25bd-49f7-a2ee-d366d40979d5.webp?v=1753440203&width=1240', stock: 25 },
-    //     { id: 4, name: 'Premium Polo Shirt', price: 85.00, brand: 'Puma', category: 'Shirts', rating: 4.3, reviews: 156, image: 'https://gentlehaus.in/cdn/shop/files/1_8863e69b-c686-4b9e-8238-7aa55faf92cb.webp?v=1750849550&width=1240', stock: 5 },
-    //     { id: 5, name: 'Sports T-Shirt', price: 35.00, brand: 'Nike', category: 'T-Shirts', rating: 4.0, reviews: 92, image: 'https://gentlehaus.in/cdn/shop/files/1_391cef8b-61ec-466a-ac0a-a2ce8f4cac52.webp?v=1750847760&width=1240', stock: 18 },
-    //     { id: 6, name: 'Casual Cotton Tee', price: 28.00, brand: 'Uniqlo', category: 'T-Shirts', rating: 4.8, reviews: 312, image: 'https://gentlehaus.in/cdn/shop/files/1_6cc9bb17-2b88-4f46-94e1-d79d63bf12ed.webp?v=1753858576&width=1240', stock: 32 },
-    //     { id: 7, name: 'Running Shorts', price: 45.00, brand: 'Adidas', category: 'Shorts', rating: 4.6, reviews: 167, image: 'https://gentlehaus.in/cdn/shop/files/1_33f5ffba-1bf7-41a3-af4c-59154e549e92.webp?v=1754287482&width=1240', stock: 15 },
-    //     { id: 8, name: 'Training Pants', price: 95.00, brand: 'New Balance', category: 'Pants', rating: 4.4, reviews: 78, image: 'https://gentlehaus.in/cdn/shop/files/1_454b8e7d-f557-4487-b1ed-3c2653720d81.webp?v=1753440349&width=1240', stock: 7 },
-    // ];
 
     const brands = [
         { name: 'Nike', count: 123, logo: 'ℕ' },
@@ -148,51 +138,6 @@ export default function FilterProductPage() {
             setIsLoading(false);
         }, 2000);
         return () => clearTimeout(timer);
-        // let filtered = [...products];
-
-        // // Brand filter
-        // if (selectedBrands.length > 0) {
-        //     filtered = filtered.filter(product => selectedBrands.includes(product.brand));
-        // }
-
-        // // Size filter (simulated)
-        // if (selectedSizes.length > 0) {
-        //     filtered = filtered.filter(product =>
-        //         product.id % selectedSizes.length === 0 || selectedSizes.includes('M')
-        //     );
-        // }
-
-        // // Price filter
-        // filtered = filtered.filter(product =>
-        //     product.price >= priceRange[0] && product.price <= priceRange[1]
-        // );
-
-        // // Search filter
-        // if (searchQuery) {
-        //     filtered = filtered.filter(product =>
-        //         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        //         product.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        //         product.category.toLowerCase().includes(searchQuery.toLowerCase())
-        //     );
-        // }
-
-        // // Sort filter
-        // switch (sortBy) {
-        //     case 'newest':
-        //         filtered.sort((a, b) => b.id - a.id);
-        //         break;
-        //     case 'price-low':
-        //         filtered.sort((a, b) => a.price - b.price);
-        //         break;
-        //     case 'price-high':
-        //         filtered.sort((a, b) => b.price - a.price);
-        //         break;
-        //     case 'rating':
-        //         filtered.sort((a, b) => b.rating - a.rating);
-        //         break;
-        //     default:
-        //         filtered.sort((a, b) => b.reviews - a.reviews);
-        // }
 
         // setFilteredProducts(filtered);
     }, [selectedBrands, selectedSizes, priceRange, searchQuery, sortBy]);
@@ -356,7 +301,7 @@ export default function FilterProductPage() {
                             </div>
 
                             {/* Brand Filter */}
-                            <div className="mb-8">
+                             <div className="mb-8">
                                 <button
                                     onClick={() => toggleSection('brand')}
                                     className="flex items-center justify-between w-full mb-4 group"

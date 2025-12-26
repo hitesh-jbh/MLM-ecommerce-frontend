@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function StatsDashboard() {
-  const [stats, setStats] = useState({
+  const [stats] = useState({
     walletBalance: 460.75,
     totalEarnings: 1520,
     totalOrders: 80,
@@ -11,45 +11,47 @@ export default function StatsDashboard() {
   });
 
   const statCards = [
-    { label: 'Commission Wallet Balance', link: "/wallet-balance", value: `$${stats.walletBalance.toFixed(2)}`, key: 'walletBalance' },
-    { label: 'Total Earnings', link: "#", value: stats.totalEarnings, key: 'totalEarnings' },
+    { label: 'Wallet Balance', link: "/wallet-balance", value: `$${stats.walletBalance.toFixed(2)}`, key: 'walletBalance' },
+    { label: 'Total Earnings', link: "#", value: `$${stats.totalEarnings}`, key: 'totalEarnings' },
     { label: 'Total Orders', link: "/your-order", value: stats.totalOrders, key: 'totalOrders' },
     { label: 'Active Referrals', link: "#", value: stats.activeReferrals, key: 'activeReferrals' },
-    { label: 'Resent Rewards', link: "#", value: stats.resentRewards, key: 'resentRewards' }
+    { label: 'Recent Rewards', link: "#", value: stats.resentRewards, key: 'resentRewards' }
   ];
 
-  const handleChange = (key, value) => {
-    setStats(prev => ({
-      ...prev,
-      [key]: parseFloat(value) || 0
-    }));
-  };
-
   return (
-    
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">Dashboard Stats</h1>
-        
-        {/* Stats Display */}
-        <div className="bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 rounded-2xl shadow-2xl p-4 md:p-6 mb-2">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
-            {statCards.map((card, index) => (
-              <Link to={card.link} key={card.key}><div
-                key={index}
-                className="bg-white rounded-xl p-4 md:p-5 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
-              >
-                <div className="text-xs md:text-sm text-gray-600 font-medium mb-2 whitespace-nowrap">
-                  {card.label}
+    <div className="w-full max-w-7xl mx-auto px-4 py-6 md:px-8">
+      <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center lg:text-left">
+        Dashboard Stats
+      </h1>
+      
+      {/* Stats Display Container */}
+      <div className="bg-gradient-to-br from-gray-100 via-white to-gray-100 rounded-3xl shadow-xl p-4 md:p-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
+          {statCards.map((card) => (
+            <Link 
+              to={card.link} 
+              key={card.key}
+              className="group block"
+            >
+              <div className="h-full bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col justify-between">
+                <div>
+                  <p className="text-[10px] md:text-xs uppercase tracking-wider text-gray-500 font-bold mb-1">
+                    {card.label}
+                  </p>
+                  <h2 className="text-xl md:text-2xl font-extrabold text-gray-900 truncate">
+                    {card.value}
+                  </h2>
                 </div>
-                <div className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 break-words">
-                  {card.value}
+                
+                {/* Visual indicator for mobile interactivity */}
+                <div className="mt-4 flex items-center text-blue-600 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                  VIEW DETAILS →
                 </div>
-              </div></Link>
-            ))}
-          </div>
+              </div>
+            </Link>
+          ))}
         </div>
-
       </div>
-    
+    </div>
   );
 }

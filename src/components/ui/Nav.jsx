@@ -1,11 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, User, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import appStore from '../../utils/appStore';
+import { useSelector } from 'react-redux';
 
 export default function Nav() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const searchRef = useRef(null);
+
+  const cartItemsLength = useSelector((store) => store.cart.items.length);
 
   // Close search when clicking outside
   useEffect(() => {
@@ -73,13 +77,13 @@ export default function Nav() {
               >
                 <Search size={22} />
               </button>
-              <Link to="/profile"><button className="text-black hover:text-gray-600 transition">
+              <Link to="/login"><button className="text-black hover:text-gray-600 transition">
                 <User size={22} />
               </button></Link>
               <Link to="/cart"><button className="relative text-black hover:text-gray-600 transition">
                 <ShoppingCart size={22} />
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                  2
+                  {cartItemsLength}
                 </span>
               </button></Link>
             </div>
@@ -109,9 +113,12 @@ export default function Nav() {
 
               {/* Right Icons */}
               <div className="flex items-center gap-4">
-                <Link to="/profile"><button className="text-black hover:text-gray-600 transition">
+
+                {/* user login or not login logic */}
+                <Link to="/login"><button className="text-black hover:text-gray-600 transition">
                   <User size={22} />
                 </button></Link>
+
                 <Link to="/cart" ><button className="relative text-black hover:text-gray-600 transition">
                   <ShoppingCart size={22} />
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">

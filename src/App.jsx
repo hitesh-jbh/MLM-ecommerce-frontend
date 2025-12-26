@@ -25,18 +25,25 @@ import YourOrder from "./components/pages/YourOrder.jsx";
 import TrackPackage from "./components/pages/Order/TrackPackage.jsx";
 import HierachyGraph from "./components/ui/HierachyGraph.jsx";
 import WriteReview from "./components/pages/WriteReview.jsx";
+import WalletBalance from "./components/pages/WalletBalance.jsx";
+import LoginPage from "./components/pages/LoginPage.jsx";
+
+import { Provider } from "react-redux";
+import appStore from "./utils/appStore.js";
 
 const AppLayout = () => {
   return (
-    <div className="app">
-      {/* <ScrollRestoration /> */}
-      {/* <Modal /> */}
-      <Nav />
-      <Outlet />
-      <Footer />
-      <StickyComponent />
-      <ScrollRestoration />
-    </div>
+    <Provider store={appStore}>
+      <div className="app">
+        {/* <ScrollRestoration /> */}
+        {/* <Modal /> */}
+        <Nav />
+        <Outlet />
+        <Footer />
+        <StickyComponent />
+        <ScrollRestoration />
+      </div>
+    </Provider>
   );
 };
 
@@ -98,79 +105,25 @@ const appRouter = createBrowserRouter([
         element: <WriteReview />
       },
       {
+        path: "/wallet-balance",
+        element: <WalletBalance />,
+      },
+      {
         path: "*",
         element: <ErrorPage />
       }
     ],
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/modal",
+    element: <Modal />,
   },
 ]);
 
 export default function App() {
   return <RouterProvider router={appRouter} />;
 }
-
-// import React from "react";
-// import AboutUs from "./components/pages/AboutUs.jsx";
-// import StickyComponent from "./components/ui/StickyComponent.jsx";
-// import Modal from "./components/ui/Modal.jsx";
-// import ProductInfoPurchase from "./pages/ProductInoPurchase.jsx";
-// import ScrollingBanner from "./components/ui/ScrollingBannerCarousel.jsx";
-// import FeatureSection from "./components/ui/FeatureSection.jsx";
-// import Card from "./components/ui/FourCardButton.jsx";
-// import FilterProductPage from "./components/pages/FilterProductPage.jsx";
-// import Home from "./components/pages/Home.jsx";
-// import Nav from "./components/ui/Nav.jsx"
-// import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
-
-// const AppLayout = () => {
-//   return (
-//     <div className="app">
-//       <Nav />
-//       <Outlet />
-//     </div>
-//   )
-// }
-
-// const appRouter = createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <Home />
-//   }
-// ])
-
-// const root = ReactDOM(document.getElementById("root"));
-
-// root.render(<RouterProvider rooter={appRouter} />)
-
-// export default function App() {
-//   const userData = {
-//   profileImage: "https://randomuser.me/api/portraits/men/32.jpg",
-//   fullName: "udit kumar",
-//   role: "Admin",
-//   location: "Leeds, United Kingdom",
-//   personalInfo: {
-//     firstName: "Natashia",
-//     lastName: "Khaleira",
-//     dob: "12-10-1990",
-//     email: "info@binary-fusion.com",
-//     phone: "(+62) 821 2554-5846",
-//     role: "student",
-//   },
-// };
-
-//   return (
-//     <>
-//      <Home />
-//      <FilterProductPage />
-//      <Card />
-//      <AboutUs />
-//      <StickyComponent />
-//      <Modal />  
-//      <FeatureSection />
-//      <ProductInfoPurchase />
-//      <ScrollingBanner />
-//      <FeatureSection />
-     
-//     </>
-//   );
-// }

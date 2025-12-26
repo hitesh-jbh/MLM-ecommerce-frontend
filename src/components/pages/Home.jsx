@@ -8,9 +8,10 @@ import CoastalEdition from "../ui/CoastalEdition .jsx"
 import IconButton from "../ui/TwoImgOnHome.jsx"
 import HappyCustomersCards from "../ui/HappyCustomersCards.jsx"
 import ImageShowcase from "../ui/ImageShowcase.jsx"
-import FeatureCard from "../ui/FeatureCard.jsx";
+import FeaturesSection from "../ui/FeatureCard.jsx";
 import { FaShippingFast, FaExchangeAlt, FaTags, FaShieldAlt } from 'react-icons/fa';
 import HomeShimmer from "../ui/HomeShimmer.jsx";
+import { Product } from "../../utils/Constants.js";
 // import Dropdown from "../ui/Dropdown.jsx";
 
 export const Home = () => {
@@ -123,80 +124,7 @@ export const Home = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-    setProducts ([
-      {
-        id: 1,
-        image: 'https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp?v=1750849046&width=1240',
-        title: "Men's Full Sleeve Cotton Shirt with 'California' Typography Casual Black Streetwear",
-        price: 'Rs. 971.00',
-        originalPrice: 'Rs. 1,479.00',
-        description: 'Bring elegance and charm to your wardrobe with this men\'s cotton shirt featuring a beautifully...',
-        brand: 'Gentlehaus',
-      },
-      {
-        id: 2,
-        image: 'https://gentlehaus.in/cdn/shop/files/1_b4bc91c2-58a2-4fc3-90db-65f2c21d058d.webp?v=1750849685&width=620',
-        title: "Men's Full Sleeve Cotton Shirt Featuring Bold Geometric Outline Pattern",
-        price: 'Rs. 974.00',
-        originalPrice: 'Rs. 1,479.00',
-        description: 'Bring elegance and charm to your wardrobe with this men\'s cotton shirt featuring a beautifully...',
-        brand: 'Gentlehaus',
-      },
-      {
-        id: 3,
-        image: 'https://gentlehaus.in/cdn/shop/files/1_8863e69b-c686-4b9e-8238-7aa55faf92cb.webp?v=1750849550&width=1240',
-        title: "Men's Full Sleeve Cotton Shirt with 'California' Typography Casual Black Streetwear",
-        price: 'Rs. 971.00',
-        originalPrice: 'Rs. 1,479.00',
-        description: 'Bring elegance and charm to your wardrobe with this men\'s cotton shirt featuring a beautifully...',
-        brand: 'Gentlehaus',
-      },
-      {
-        id: 4,
-        image: 'https://gentlehaus.in/cdn/shop/files/1_9d456e30-6edb-4efa-935b-735b3fba85ef.webp?v=1753858631&width=1240',
-        title: "Men's Full Sleeve Cotton Shirt Featuring Bold Geometric Outline Pattern",
-        price: 'Rs. 974.00',
-        originalPrice: 'Rs. 1,479.00',
-        description: 'Bring elegance and charm to your wardrobe with this men\'s cotton shirt featuring a beautifully...',
-        brand: 'Gentlehaus',
-      },
-      {
-        id: 5,
-        image: 'https://gentlehaus.in/cdn/shop/files/1_49300bfe-3fe9-4c44-b2c1-6e984a00b13c.webp?v=1750849046&width=1240',
-        title: "Men's Full Sleeve Cotton Shirt with 'California' Typography Casual Black Streetwear",
-        price: 'Rs. 971.00',
-        originalPrice: 'Rs. 1,479.00',
-        description: 'Bring elegance and charm to your wardrobe with this men\'s cotton shirt featuring a beautifully...',
-        brand: 'Gentlehaus',
-      },
-      {
-        id: 6,
-        image: 'https://gentlehaus.in/cdn/shop/files/1_b4bc91c2-58a2-4fc3-90db-65f2c21d058d.webp?v=1750849685&width=620',
-        title: "Men's Full Sleeve Cotton Shirt Featuring Bold Geometric Outline Pattern",
-        price: 'Rs. 974.00',
-        originalPrice: 'Rs. 1,479.00',
-        description: 'Bring elegance and charm to your wardrobe with this men\'s cotton shirt featuring a beautifully...',
-        brand: 'Gentlehaus',
-      },
-      {
-        id: 7,
-        image: 'https://gentlehaus.in/cdn/shop/files/1_8863e69b-c686-4b9e-8238-7aa55faf92cb.webp?v=1750849550&width=1240',
-        title: "Men's Full Sleeve Cotton Shirt with 'California' Typography Casual Black Streetwear",
-        price: 'Rs. 971.00',
-        originalPrice: 'Rs. 1,479.00',
-        description: 'Bring elegance and charm to your wardrobe with this men\'s cotton shirt featuring a beautifully...',
-        brand: 'Gentlehaus',
-      },
-      {
-        id: 8,
-        image: 'https://gentlehaus.in/cdn/shop/files/1_9d456e30-6edb-4efa-935b-735b3fba85ef.webp?v=1753858631&width=1240',
-        title: "Men's Full Sleeve Cotton Shirt Featuring Bold Geometric Outline Pattern",
-        price: 'Rs. 974.00',
-        originalPrice: 'Rs. 1,479.00',
-        description: 'Bring elegance and charm to your wardrobe with this men\'s cotton shirt featuring a beautifully...',
-        brand: 'Gentlehaus',
-      },
-    ])
+    setProducts (Product);
 
     setCardsData ([
       {
@@ -234,7 +162,6 @@ export const Home = () => {
     <>
         <Hero />
         <ProductCarousel title="You are in new arrivals" products={ products} />
-        {/* <Dropdown /> */}
         <ScrollingBanner />
         <CoastalEdition />
         <IconButton />
@@ -267,8 +194,9 @@ export const Home = () => {
         </div>
         
         <ImageShowcase />
+        <FeaturesSection />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {cardsData.map((card) => (
               <FeatureCard
                 key={card.id}
@@ -277,7 +205,7 @@ export const Home = () => {
                 description={card.description}
               />
             ))}
-          </div>
+          </div> */}
         </div>
     </>
   );

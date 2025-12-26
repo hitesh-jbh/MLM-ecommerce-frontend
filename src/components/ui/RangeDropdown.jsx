@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-// Ensure this path is correct for your project
 import Icons from "./Icon"; 
 
 const RangeDropdown = ({ options, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
+  // Close on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -17,12 +16,12 @@ const RangeDropdown = ({ options, value, onChange }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Find the currently selected option object to display its label in the button
-  const selectedOption = options.find((opt) => opt.value === value);
+  // Use optional chaining to prevent "undefined" crashes
+  const selectedOption = options?.find((opt) => opt.value === value);
 
   return (
     <div className="relative w-full min-w-[200px]" ref={dropdownRef}>
-      {/* Trigger Button */}
+      {/* Selection Button */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
@@ -38,7 +37,7 @@ const RangeDropdown = ({ options, value, onChange }) => {
         </div>
       </button>
 
-      {/* Dropdown Menu */}
+      {/* Options Menu */}
       <div
         className={`absolute bottom-full mb-2 left-0 w-full bg-white border border-gray-100 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 origin-bottom z-[110] ${
           isOpen 
@@ -48,23 +47,21 @@ const RangeDropdown = ({ options, value, onChange }) => {
       >
         <div className="py-2 max-h-[250px] overflow-y-auto no-scrollbar">
           <div className="px-5 py-2 text-[10px] uppercase tracking-widest text-gray-400 font-bold">
-            Select options
+            Select Size
           </div>
-          {options.map((opt) => (
+          {options?.map((opt, index) => (
             <button
-              key={opt.value}
+              key={`${opt.value}-${index}`} // Fixes unique "key" error (image_23dd6a.png)
               type="button"
               onClick={() => {
                 onChange(opt.value);
                 setIsOpen(false);
               }}
               className={`flex items-center justify-between w-full px-5 py-3 text-xs md:text-sm transition-colors ${
-                value === opt.value ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-50"
+                value === opt.value ? "bg-black text-white" : "text-gray-600 hover:bg-gray-50"
               }`}
             >
-              <div className="flex flex-col items-start">
-                <span className="font-bold">{opt.value} - {opt.price}</span>
-              </div>
+              <span className="font-bold">{opt.label}</span>
               {value === opt.value && (
                 <Icons icon="ph:check-circle-fill" size={18} className="text-white" />
               )}

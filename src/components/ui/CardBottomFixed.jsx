@@ -134,18 +134,22 @@ const StickyPurchaseBar = ({
           
           {/* Synced Dropdown */}
           <div className="hidden lg:block w-52">
-             <RangeDropdown 
-                options={sizeOptions} 
-                value={selectedSize} 
-                onChange={setSelectedSize} 
-             />
+             {/* <RangeDropdown 
+              options={sizeOptions} 
+              value={selectedSize.size} // Pass the string value to the UI
+              onChange={(newSizeString) => {
+                // Find the full variant object from the product data
+                const fullVariant = product.variants.find(v => v.size === newSizeString);
+                setSelectedSize(fullVariant); // Update parent state with the full object
+              }} 
+            /> */}
           </div>
 
           {/* Synced Counter */}
-          <div className="hidden sm:block">
+          <div className="sm:block">
             <QuantityCounter 
-                value={quantity} 
-                onChange={onQuantityChange} 
+                productId={product.id} 
+                selectedSize={selectedSize} // Add this line!
             />
           </div>
           

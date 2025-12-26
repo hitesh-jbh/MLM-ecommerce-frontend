@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { Star, ShoppingBag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Icons from '../ui/Icon.jsx';
+import { addItem } from '../../utils/Slice/cartSlice.js';
+import { useDispatch } from 'react-redux';
 
 const Card3Modi = ({ product }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isLiked, setIsLiked] = useState(false);
 
   // 1. Safe Formatting for Prices
@@ -28,10 +31,35 @@ const Card3Modi = ({ product }) => {
   };
 
   // 4. Cart Handler
-  const handleAddToCart = (e) => {
-    e.stopPropagation(); // Prevents navigating to info page
-    console.log("Added to cart:", product.id);
-    alert(`${product.title} added to cart!`);
+  const handleAddItem = (e) => {
+    e.stopPropagation();
+
+    // 1. Find the "M" size specifically from the variants array
+    const mVariant = product.variants?.find(v => v.size === "M") || product.variants?.[0];
+
+    if (!mVariant) {
+      console.error("No variants found for this product");
+      goToInfoPage();
+      return;
+    }
+
+    // 2. Check stock for the "M" variant
+    if (mVariant.stock === 0) {
+      alert(`Size ${mVariant.size} is currently out of stock!`);
+      return;
+    }
+
+    // 3. Dispatch to cart
+    dispatch(addItem({
+      id: product.id,
+      name: product.name,
+      image: Array.isArray(product.images) ? product.images[0] : (product.image || product.images),
+      selectedSize: mVariant, // This contains size: "M" and the specific price
+      quantity: 1
+    }));
+
+    // Optional: UI Feedback
+    alert(`Added ${product.name} (Size ${mVariant.size}) at Rs. ${mVariant.price} to cart!`);
   };
 
   return (
@@ -76,7 +104,7 @@ const Card3Modi = ({ product }) => {
         {/* Desktop Add to Cart Hover Button */}
         <div className="absolute inset-x-0 bottom-4 px-4 translate-y-20 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out hidden lg:block">
           <button 
-            onClick={handleAddToCart}
+            onClick={handleAddItem}
             className="w-full bg-white py-3 rounded-xl flex items-center justify-center gap-2 text-sm font-bold text-gray-900 shadow-xl hover:bg-black hover:text-white transition-colors border border-gray-100"
           >
             <ShoppingBag size={18} /> Add to Cart
@@ -89,7 +117,7 @@ const Card3Modi = ({ product }) => {
         {/* Text Area - CLICKABLE */}
         <div onClick={goToInfoPage} className="cursor-pointer">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-widest text-gray-400 truncate max-w-[70%]">
+            <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-widest text-gray-600 truncate max-w-[70%]">
               {product.category || 'Casual'}
             </span>
             <div className="flex items-center gap-0.5 sm:gap-1">
@@ -98,11 +126,11 @@ const Card3Modi = ({ product }) => {
             </div>
           </div>
 
-          <h3 className="text-sm sm:text-base lg:text-[17px] font-bold text-gray-900 leading-tight mb-0.5 sm:mb-1 line-clamp-2">
-            {product.title}
+          <h3 className="text-sm sm:text-base  lg:text-[14px] font-bold text-gray-900 leading-tight mb-0.5 sm:mb-1 line-clamp-2">
+            {product.name}
           </h3>
 
-          <p className="text-[10px] sm:text-xs text-gray-400 mb-3 sm:mb-4 font-medium">by Gentlehaus</p>
+          <p className="text-[10px] sm:text-xs text-gray-500 mb-3 sm:mb-4 font-medium">by {product.brand}</p>
         </div>
 
         {/* Price & Stock Section */}
@@ -120,7 +148,7 @@ const Card3Modi = ({ product }) => {
 
         {/* Mobile Add to Cart Button */}
         <button 
-          onClick={handleAddToCart}
+          onClick={handleAddItem}
           className="mt-3 sm:mt-4 w-full lg:hidden bg-gray-900 active:bg-black text-white py-2 sm:py-2.5 rounded-xl text-[10px] sm:text-xs font-bold flex items-center justify-center gap-2 transition-transform active:scale-95"
         >
           <ShoppingBag size={14} className="sm:w-4 sm:h-4" /> Add to Cart

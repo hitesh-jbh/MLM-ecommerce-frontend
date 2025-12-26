@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function StatsDashboard() {
   const [stats, setStats] = useState({
@@ -10,11 +11,11 @@ export default function StatsDashboard() {
   });
 
   const statCards = [
-    { label: 'Wallet Balance', value: `$${stats.walletBalance.toFixed(2)}`, key: 'walletBalance' },
-    { label: 'Total Earnings', value: stats.totalEarnings, key: 'totalEarnings' },
-    { label: 'Total Orders', value: stats.totalOrders, key: 'totalOrders' },
-    { label: 'Active Referrals', value: stats.activeReferrals, key: 'activeReferrals' },
-    { label: 'Resent Rewards', value: stats.resentRewards, key: 'resentRewards' }
+    { label: 'Commission Wallet Balance', link: "/wallet-balance", value: `$${stats.walletBalance.toFixed(2)}`, key: 'walletBalance' },
+    { label: 'Total Earnings', link: "#", value: stats.totalEarnings, key: 'totalEarnings' },
+    { label: 'Total Orders', link: "/your-order", value: stats.totalOrders, key: 'totalOrders' },
+    { label: 'Active Referrals', link: "#", value: stats.activeReferrals, key: 'activeReferrals' },
+    { label: 'Resent Rewards', link: "#", value: stats.resentRewards, key: 'resentRewards' }
   ];
 
   const handleChange = (key, value) => {
@@ -33,7 +34,7 @@ export default function StatsDashboard() {
         <div className="bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 rounded-2xl shadow-2xl p-4 md:p-6 mb-2">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
             {statCards.map((card, index) => (
-              <div
+              <Link to={card.link} key={card.key}><div
                 key={index}
                 className="bg-white rounded-xl p-4 md:p-5 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
               >
@@ -43,7 +44,7 @@ export default function StatsDashboard() {
                 <div className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 break-words">
                   {card.value}
                 </div>
-              </div>
+              </div></Link>
             ))}
           </div>
         </div>

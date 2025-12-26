@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const CoastalEdition = () => {
   return (
@@ -46,7 +47,7 @@ const CoastalEdition = () => {
 
         {/* Button */}
         <div className="mt-10">
-          <button
+          <Link to="/gentle"><button
             className="
               px-8
               py-3
@@ -64,7 +65,7 @@ const CoastalEdition = () => {
             "
           >
             Shop Now
-          </button>
+          </button></Link>
         </div>
       </div>
     </section>

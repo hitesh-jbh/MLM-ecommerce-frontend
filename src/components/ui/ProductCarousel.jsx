@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'; // Added for navigation
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-// import Card2Orig from './Card2Orig.jsx';
 import Card3Modi from '../ui/Card3Modi.jsx';
 
 import 'swiper/css';
@@ -14,10 +13,6 @@ const ProductCarousel = ({ title, products }) => {
   const [prevEl, setPrevEl] = useState(null);
   const [nextEl, setNextEl] = useState(null);
 
-  // Function to handle moving to the product detail page
-  // const handleCardClick = (id) => {
-  //   navigate(`/product/${id}`);
-  // };
   const handleCardClick = (id) => {
     navigate(`/product/${id}`);
     window.scrollTo({
@@ -56,28 +51,17 @@ const ProductCarousel = ({ title, products }) => {
         className="product-slider !static"
       >
         {products?.map((item) => (
-          // <SwiperSlide key={item.id}>
-          //   {/* Clickable wrapper for navigation */}
-          //   <div 
-          //     onClick={() => handleCardClick(item.id)} 
-          //     className="cursor-pointer transition-transform duration-300 hover:scale-[1.02]"
-          //   >
-          //     {/* <Card2Orig product={item} /> */}
-          //     <Card3Modi product={item} />
-          //   </div>
-          // </SwiperSlide>
           <SwiperSlide key={item.id}>
             <div 
               onClick={() => handleCardClick(item.id)} 
-              className="cursor-pointer py-4" // Added padding for shadow clearance
+              className="cursor-pointer py-4"
             >
               <Card3Modi product={item} />
             </div>
           </SwiperSlide>
         ))}
       </Swiper>
-
-      {/* CUSTOM NAVIGATION BUTTONS */}
+      
       <button 
         ref={(node) => setPrevEl(node)}
         className="absolute left-2 top-[50%] -translate-y-1/2 z-20 flex items-center justify-center bg-white border border-gray-200 rounded-full shadow-md w-10 h-10 md:w-12 md:h-12 transition-all duration-300 hover:bg-black hover:text-white lg:opacity-0 lg:group-hover:opacity-100 disabled:opacity-30"

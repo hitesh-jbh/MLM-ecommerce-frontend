@@ -44,36 +44,7 @@ export default function AnnouncementBar() {
 
         </div>
       </div>
-
-      {/* Responsive Animation */}
-      <style jsx global>{`
-        @keyframes marquee {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-
-        .animate-marquee {
-          animation: marquee 30s linear infinite;
-        }
-
-        /* Mobile - faster animation for shorter text */
-        @media (max-width: 640px) {
-          .animate-marquee {
-            animation: marquee 20s linear infinite;
-          }
-        }
-
-        /* Tablet */
-        @media (min-width: 641px) and (max-width: 1024px) {
-          .animate-marquee {
-            animation: marquee 25s linear infinite;
-          }
-        }
-      `}</style>
+      
     </div>
   );
 }

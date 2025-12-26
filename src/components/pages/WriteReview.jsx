@@ -53,7 +53,7 @@ const WriteReview = () => {
             <h1 className="text-2xl font-bold mb-2">Product Review</h1>
             <p className="text-gray-600 mb-8">Order ID: <span className="text-black font-medium">{orderId}</span></p>
 
-            <form onSubmit={handleSubmit} className="space-y-8 bg-white p-6 border rounded-xl shadow-sm">
+            <form onSubmit={handleSubmit} className="space-y-6 bg-white p-4 border rounded-xl shadow-sm">
                 
                 {/* Star Selection Section */}
                 <div>
@@ -94,7 +94,7 @@ const WriteReview = () => {
                     <h3 className="font-bold text-lg mb-1">Add a written review</h3>
                     <p className="text-sm text-gray-500 mb-3">What did you like or dislike? What was the product used for?</p>
                     <textarea
-                        className="w-full border border-gray-300 rounded-lg p-4 h-40 focus:ring-2 focus:ring-black focus:border-black outline-none transition-all"
+                        className="w-full border border-gray-300 rounded-lg p-4 h-34 focus:ring-2 focus:ring-black focus:border-black outline-none transition-all"
                         placeholder="Write your comments here..."
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
@@ -107,6 +107,7 @@ const WriteReview = () => {
                     <button
                         type="submit"
                         className="px-8 py-2 bg-black border border-black text-white rounded-full  font-medium transition shadow-sm"
+                        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     >
                         Submit Review
                     </button>

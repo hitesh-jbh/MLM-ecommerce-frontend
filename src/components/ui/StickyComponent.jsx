@@ -9,7 +9,7 @@ const StickyComponent = () => {
   // const navigate = useNavigate();
 
   // function modalClick() {
-  //   navigate(<Modal />);
+  //   navigate("/modal");
   // }
 
   useEffect(() => {

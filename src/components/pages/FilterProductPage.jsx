@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronDown, Heart, Menu, X, Grid3X3, List, Search, Filter, Star, ShoppingBag, Check } from 'lucide-react';
 import Card3Modi from '../ui/Card3Modi';
 import CardShimmer from '../ui/CardShimmer';
+import { Product } from '../../utils/Constants';
 
 export default function FilterProductPage() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -27,16 +28,17 @@ export default function FilterProductPage() {
         { id: 2, columns: 2, icon: '||' }
     ]
 
-    const products = [
-        { id: 1, name: 'Shirt Soft Cotton', price: 40.00, brand: 'Uniqlo', category: 'Shirts', rating: 4.5, reviews: 128, image: 'https://gentlehaus.in/cdn/shop/files/1_da90cc63-f19b-4851-bc98-4be80122dbbf.webp?v=1754287277&width=1240', stock: 12 },
-        { id: 2, name: 'Zip Up Neck Shirt', price: 65.00, brand: 'Nike', category: 'Shirts', rating: 4.2, reviews: 89, image: 'https://gentlehaus.in/cdn/shop/files/1_698850c4-7f88-44ec-9537-66b50ea4e6b3.webp?v=1750850291&width=1240', stock: 8 },
-        { id: 3, name: 'Classic Long Sleeve', price: 55.00, brand: 'Adidas', category: 'Shirts', rating: 4.7, reviews: 203, image: 'https://gentlehaus.in/cdn/shop/files/1_3f224edb-25bd-49f7-a2ee-d366d40979d5.webp?v=1753440203&width=1240', stock: 25 },
-        { id: 4, name: 'Premium Polo Shirt', price: 85.00, brand: 'Puma', category: 'Shirts', rating: 4.3, reviews: 156, image: 'https://gentlehaus.in/cdn/shop/files/1_8863e69b-c686-4b9e-8238-7aa55faf92cb.webp?v=1750849550&width=1240', stock: 5 },
-        { id: 5, name: 'Sports T-Shirt', price: 35.00, brand: 'Nike', category: 'T-Shirts', rating: 4.0, reviews: 92, image: 'https://gentlehaus.in/cdn/shop/files/1_391cef8b-61ec-466a-ac0a-a2ce8f4cac52.webp?v=1750847760&width=1240', stock: 18 },
-        { id: 6, name: 'Casual Cotton Tee', price: 28.00, brand: 'Uniqlo', category: 'T-Shirts', rating: 4.8, reviews: 312, image: 'https://gentlehaus.in/cdn/shop/files/1_6cc9bb17-2b88-4f46-94e1-d79d63bf12ed.webp?v=1753858576&width=1240', stock: 32 },
-        { id: 7, name: 'Running Shorts', price: 45.00, brand: 'Adidas', category: 'Shorts', rating: 4.6, reviews: 167, image: 'https://gentlehaus.in/cdn/shop/files/1_33f5ffba-1bf7-41a3-af4c-59154e549e92.webp?v=1754287482&width=1240', stock: 15 },
-        { id: 8, name: 'Training Pants', price: 95.00, brand: 'New Balance', category: 'Pants', rating: 4.4, reviews: 78, image: 'https://gentlehaus.in/cdn/shop/files/1_454b8e7d-f557-4487-b1ed-3c2653720d81.webp?v=1753440349&width=1240', stock: 7 },
-    ];
+    const products = Product;
+    // const products = [
+    //     { id: 1, name: 'Shirt Soft Cotton', price: 40.00, brand: 'Uniqlo', category: 'Shirts', rating: 4.5, reviews: 128, image: 'https://gentlehaus.in/cdn/shop/files/1_da90cc63-f19b-4851-bc98-4be80122dbbf.webp?v=1754287277&width=1240', stock: 12 },
+    //     { id: 2, name: 'Zip Up Neck Shirt', price: 65.00, brand: 'Nike', category: 'Shirts', rating: 4.2, reviews: 89, image: 'https://gentlehaus.in/cdn/shop/files/1_698850c4-7f88-44ec-9537-66b50ea4e6b3.webp?v=1750850291&width=1240', stock: 8 },
+    //     { id: 3, name: 'Classic Long Sleeve', price: 55.00, brand: 'Adidas', category: 'Shirts', rating: 4.7, reviews: 203, image: 'https://gentlehaus.in/cdn/shop/files/1_3f224edb-25bd-49f7-a2ee-d366d40979d5.webp?v=1753440203&width=1240', stock: 25 },
+    //     { id: 4, name: 'Premium Polo Shirt', price: 85.00, brand: 'Puma', category: 'Shirts', rating: 4.3, reviews: 156, image: 'https://gentlehaus.in/cdn/shop/files/1_8863e69b-c686-4b9e-8238-7aa55faf92cb.webp?v=1750849550&width=1240', stock: 5 },
+    //     { id: 5, name: 'Sports T-Shirt', price: 35.00, brand: 'Nike', category: 'T-Shirts', rating: 4.0, reviews: 92, image: 'https://gentlehaus.in/cdn/shop/files/1_391cef8b-61ec-466a-ac0a-a2ce8f4cac52.webp?v=1750847760&width=1240', stock: 18 },
+    //     { id: 6, name: 'Casual Cotton Tee', price: 28.00, brand: 'Uniqlo', category: 'T-Shirts', rating: 4.8, reviews: 312, image: 'https://gentlehaus.in/cdn/shop/files/1_6cc9bb17-2b88-4f46-94e1-d79d63bf12ed.webp?v=1753858576&width=1240', stock: 32 },
+    //     { id: 7, name: 'Running Shorts', price: 45.00, brand: 'Adidas', category: 'Shorts', rating: 4.6, reviews: 167, image: 'https://gentlehaus.in/cdn/shop/files/1_33f5ffba-1bf7-41a3-af4c-59154e549e92.webp?v=1754287482&width=1240', stock: 15 },
+    //     { id: 8, name: 'Training Pants', price: 95.00, brand: 'New Balance', category: 'Pants', rating: 4.4, reviews: 78, image: 'https://gentlehaus.in/cdn/shop/files/1_454b8e7d-f557-4487-b1ed-3c2653720d81.webp?v=1753440349&width=1240', stock: 7 },
+    // ];
 
     const brands = [
         { name: 'Nike', count: 123, logo: 'ℕ' },
@@ -287,7 +289,7 @@ export default function FilterProductPage() {
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value)}
-                                    className="text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:text-amber-600 focus:border-transparent"
+                                    className="text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:border-transparent"
                                 >
                                     <option value="popular">Popular</option>
                                     <option value="newest">Newest</option>
@@ -558,43 +560,6 @@ export default function FilterProductPage() {
                         )}
                     </div>
 
-                    {/* Products Grid/List */}
-                    {/* {filteredProducts.length === 0 ? (
-                        <div className="text-center py-16">
-                            <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <Search className="text-gray-400" size={40} />
-                            </div>
-                            <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
-                            <p className="text-gray-600 mb-6">Try adjusting your filters or search term</p>
-                            <button
-                                onClick={clearFilters}
-                                className="px-6 py-3 bg-amber-800 text-white font-medium rounded-lg hover:bg-amber-900 transition-colors"
-                            >
-                                Clear all filters
-                            </button>
-                        </div>
-                    ) : viewMode === 'grid' ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            {filteredProducts.map((product) => (
-                                <Card3Modi product={product} />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="space-y-4">
-                            {filteredProducts.map((product) => (
-                                <Card3Modi product={product} />
-                                
-                            ))}
-                        </div>
-                    )}
-
-                    {filteredProducts.length > 0 && (
-                        <div className="mt-12 text-center">
-                            <button className="px-8 py-3 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 font-medium rounded-lg hover:shadow-md transition-all hover:scale-[1.02] active:scale-95">
-                                Load More Products
-                            </button>
-                        </div>
-                    )} */}
                     {isLoading ? (
                     // SHIMMER STATE
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

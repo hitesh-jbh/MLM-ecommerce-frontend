@@ -1,13 +1,13 @@
 import React from 'react'
 import UserProfile from './UserProfile'
-import {user, accountItems} from "../Store/data";
+import {user} from "../Store/data";
 import StatsDashboard from './StatsDashboard';
 
 function Profile() {
   return (
     <div>
         
-      <UserProfile user={user} accItem={accountItems}  />
+      <UserProfile user={user} />
     </div>
   )
 }

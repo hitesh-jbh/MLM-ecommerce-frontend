@@ -20,7 +20,7 @@ const userSchema = z.object({
   personalInfo: personalInfoSchema,
 });
 
-const UserProfile = ({ user, accItem }) => {
+const UserProfile = ({ user }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState(user);
   const [formData, setFormData] = useState(user);

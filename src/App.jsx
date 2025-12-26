@@ -13,6 +13,7 @@ import LuxuriaShimer from "./components/ui/LuxuriaShimer.jsx";
 import FeaturesSection from "./components/ui/FeatureCard.jsx";
 import Profile from "./components/ui/Profile.jsx"
 import Edit from "./components/ui/Edit.jsx";
+import WalletBalance from "./components/ui/WalletBalance .jsx";
 
 export default function App() {
 //   const userData = {
@@ -43,9 +44,10 @@ export default function App() {
      {/* <Contact /> */}
      {/* <LoginPage /> */}
      {/* <FeaturesSection /> */}
-     <Profile />
+      <Profile /> 
      {/* <LuxuriaShimer /> */}
      {/* <Edit /> */}
+     {/* <WalletBalance /> */}
      
     </>
   );

@@ -31,6 +31,10 @@ import LoginPage from "./components/pages/LoginPage.jsx";
 import { Provider } from "react-redux";
 import appStore from "./utils/appStore.js";
 import OrderHistory from "./components/pages/OrderHistory.jsx";
+import OrdersOverview from "./components/pages/Admin/Ordersoverview.jsx";
+import Sidebar from "./components/pages/Admin/Sidebar.jsx";
+import CompactCommissionConfig from "./components/pages/Admin/Comission.jsx";
+
 
 const AppLayout = () => {
   return (
@@ -48,6 +52,22 @@ const AppLayout = () => {
   );
 };
 
+
+const AdminLayout = () => {
+  return (
+    <div className="flex min-h-screen">
+
+      <Sidebar />
+      <div className="flex-1 p-6 ml-20 md:ml-64 bg-amber-50">
+    
+        <Outlet />
+      </div>
+
+    </div>
+  );
+};
+
+
 const appRouter = createBrowserRouter([
   {
     path: "/",
@@ -57,6 +77,7 @@ const appRouter = createBrowserRouter([
         path: "/",
         element: <Home />,
       },
+
       {
         path: "/contact",
         element: <Contact />,
@@ -127,8 +148,26 @@ const appRouter = createBrowserRouter([
     path: "/modal",
     element: <Modal />,
   },
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+    
+      {
+        path: "orderoverview",
+        element: <OrdersOverview />,
+      }, {
+        path: "comission",
+        element: <CompactCommissionConfig />,
+      },
+    ],
+  }
+
 ]);
+
+
 
 export default function App() {
   return <RouterProvider router={appRouter} />;
 }
+

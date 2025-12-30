@@ -2,7 +2,7 @@ import { Search } from 'lucide-react';
 import React, { useState } from 'react';
 import OrderCard from '../ui/YourOrder/OrderInfo';
 import { Link } from 'react-router-dom';
-import { shippedProducts } from '../../utils/Constants';
+import { shippedProducts } from '../../utils/Constants.jsx';
 // import { Product } from '../../utils/Constants';
 
 const YourOrder = () => {

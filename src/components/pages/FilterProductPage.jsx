@@ -17,7 +17,7 @@ import {
 
 import Card3Modi from '../ui/Card3Modi';
 import CardShimmer from '../ui/CardShimmer';
-import { Brands, Product } from '../../utils/Constants';
+import { Brands, Product } from '../../utils/Constants.jsx';
 import FilterGroup from '../ui/FilterUI/FilterGroup';
 import FilterItem from '../ui/FilterUI/FilterItem';
 

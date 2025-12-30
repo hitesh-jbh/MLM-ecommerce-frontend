@@ -9,7 +9,7 @@ export const user = {
     dob: "1999-06-12",
     email: "vivek@example.com",
     phone: "9876543210",
-    location: "Bangalore, India",
+    location: "Bangalore",
     role: "Frontend Developer",
   },
 };

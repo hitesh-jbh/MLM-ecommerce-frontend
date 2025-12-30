@@ -14,8 +14,10 @@ import Modal from "./components/ui/Modal.jsx";
 import Cart from "./components/pages/CartPage.jsx"
 import Profile from "./components/pages/Profile.jsx";
 import Luxria from "./components/pages/Luxria.jsx";
-import StickyComponent from "./components/ui/StickyComponent.jsx";
+import StickyComponent from   "./components/ui/StickyComponent.jsx";
 import FootersPage from "./components/pages/FooterPage.jsx";
+import AdminDashboard from "./components/pages/admin/Admindashboard.jsx";
+import OrderManagement from "./components/pages/admin/OrderManagement.jsx";
 
 // Error Page
 import ErrorPage from "./components/pages/Error.jsx";
@@ -47,6 +49,17 @@ const AppLayout = () => {
     </Provider>
   );
 };
+const AdminLayout = () => {
+  return (
+    <div>
+      <h1></h1>
+      <Outlet />
+      
+      
+    </div>
+  );
+};
+
 
 const appRouter = createBrowserRouter([
   {
@@ -127,6 +140,23 @@ const appRouter = createBrowserRouter([
     path: "/modal",
     element: <Modal />,
   },
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      {
+        path: "Admindashboard", 
+        element: <AdminDashboard />, 
+      },
+      { 
+        path: "ordermanagement",
+        element: <OrderManagement /> 
+      },
+    ],
+  }
+   
+
+
 ]);
 
 export default function App() {

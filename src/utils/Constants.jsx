@@ -1,8 +1,6 @@
 import React from "react";
 import Icons from "../components/ui/Icon";
-// import { LucideCopy, MessageSquare, ExternalLink, Copy, Pencil, Eye, CheckCircle, Wallet, Download, ArrowUpRight, ChevronDown,
-  
-//  } from 'lucide-react';
+
 
 export const Product = [
     {
@@ -828,6 +826,7 @@ export const commissionData = [
   { user: 'Rahul Jain', userId: '5720', orderId: 'ORD-9909', product: 'Whey Protein 2kg', type: 'Direct Referral', level: 1, amount: '60', status: 'Pending', resultLink: null },
   { user: 'Sneha Kapur', userId: '5730', orderId: 'ORD-9910', product: 'Resistance Bands', type: 'Level Income', level: 3, amount: '12', status: 'Approved', resultLink: '/reports/sneha_5730.pdf' },
 ];
+
 
 // Refer Network Data
 export const referNetworkData = {

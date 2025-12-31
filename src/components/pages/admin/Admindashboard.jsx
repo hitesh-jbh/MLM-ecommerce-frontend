@@ -84,7 +84,6 @@ function AdminDashboard() {
                 </div>
             </div>
 
-            <GenericTable title="Referal" columns={referTable} data={referData} />
         </div>
     );
 }

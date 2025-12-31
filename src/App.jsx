@@ -38,7 +38,7 @@ import LoginPage from "./components/pages/LoginPage.jsx";
 // Admin Imports
 // import AdminProfile from "./components/pages/Admin/AdminProfile.jsx";
 import {AdminProfile} from "./components/pages/admin/AdminProfile.jsx"
-import AdminDashboard from "./components/pages/Admin/AdminDashboard.jsx";
+import AdminDashboard from "./components/pages/admin/Admindashboard.jsx";
 // import GenericTable from "./components/pages/Admin/GenericTable.jsx";
 import OrderManagement from "./components/pages/admin/OrderManagement.jsx";
 import EditAddress from "./components/pages/user/editAddress.jsx";

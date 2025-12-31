@@ -18,6 +18,15 @@ import StickyComponent from   "./components/ui/StickyComponent.jsx";
 import FootersPage from "./components/pages/FooterPage.jsx";
 import AdminDashboard from "./components/pages/admin/Admindashboard.jsx";
 import OrderManagement from "./components/pages/admin/OrderManagement.jsx";
+import ProductMgt from "./components/pages/admin/productMgt.jsx";
+import UserMgt from "./components/pages/admin/UserMgt.jsx";
+import CommissionMgt from "./components/pages/admin/CommissionMgt.jsx";
+import AdminWalletMgt from "./components/pages/admin/AdminWalletMgt.jsx";
+import WorkWalletMgt from "./components/pages/admin/WorkWalletMgt.jsx";
+import ReferralMgt from "./components/pages/admin/ReferralCodeMgt.jsx";
+import MarketingCamp  from "./components/pages/admin/MarketingCampaign.jsx";
+import MlMmgt  from "./components/pages/admin/MLMmgt.jsx";
+import Settings  from "./components/pages/admin/Settings.jsx";
 
 // Error Page
 import ErrorPage from "./components/pages/Error.jsx";
@@ -152,6 +161,43 @@ const appRouter = createBrowserRouter([
         path: "ordermanagement",
         element: <OrderManagement /> 
       },
+      { 
+        path: "productmgt",
+        element: <ProductMgt/> 
+      },
+       { 
+        path: "usermgt",
+        element: <UserMgt/> 
+      },
+       { 
+        path: "commissionmgt",
+        element: <CommissionMgt/> 
+      },
+      { 
+        path: "adminwalletmgt",
+        element: <AdminWalletMgt/> 
+      },
+       { 
+        path: "workwalletmgt",
+        element: <WorkWalletMgt/> 
+      },
+      { 
+        path: "referralmgt",
+        element: <ReferralMgt/> 
+      },
+       { 
+        path: "marketingcamp",
+        element: <MarketingCamp/> 
+      },
+      { 
+        path: "MlMmgt",
+        element: <MlMmgt/> 
+      },
+       { 
+        path: "settings",
+        element: <Settings/> 
+      },
+      
     ],
   }
    

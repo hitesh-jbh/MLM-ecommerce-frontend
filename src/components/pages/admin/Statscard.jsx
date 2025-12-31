@@ -1,18 +1,31 @@
+import React from "react";
+
 function StatCard({ title, value, icon }) {
   return (
-    <div className="flex items-center px-6 py-4 text-black bg-white border border-gray-200 shadow-md dark:bg-black dark:text-white rounded-xl dark:border-gray-800">
-      <div className="p-3 bg-gray-100 rounded-full dark:bg-gray-900">
+    <div
+      className="
+        flex items-center gap-3
+        px-3 py-2
+        w-full max-w-[240px]
+        rounded-lg
+        bg-white dark:bg-neutral-900
+        shadow-sm
+      "
+    >
+      {/* Icon */}
+      <div className="flex items-center justify-center bg-gray-100 rounded-md w-9 h-9 dark:bg-neutral-800">
         {icon}
       </div>
-      <div>
-        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+
+      {/* Content */}
+      <div className="flex flex-col leading-tight">
+        <p className="text-xs text-gray-500 dark:text-gray-400">
           {title}
         </p>
-        <h2 className="text-xl font-bold">
+        <p className="text-base font-semibold text-gray-900 dark:text-white">
           {value}
-        </h2>
+        </p>
       </div>
-
     </div>
   );
 }

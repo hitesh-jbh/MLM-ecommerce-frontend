@@ -31,10 +31,14 @@ import LoginPage from "./components/pages/LoginPage.jsx";
 import { Provider } from "react-redux";
 import appStore from "./utils/appStore.js";
 import OrderHistory from "./components/pages/OrderHistory.jsx";
-import OrdersOverview from "./components/pages/Admin/Ordersoverview.jsx";
-import Sidebar from "./components/pages/Admin/Sidebar.jsx";
-import CompactCommissionConfig from "./components/pages/Admin/Comission.jsx";
-
+import OrdersOverview from "./components/pages/admin/Ordersoverview.jsx";
+import Sidebar from "./components/pages/admin/Sidebar.jsx";
+import CompactCommissionConfig from "./components/pages/admin/Comission.jsx";
+import Notifications from "./components/pages/admin/Notification.jsx";
+import FixedDateLabelWithDropdown from "./components/pages/admin/Date.jsx";
+import CampaignDashboard from "./components/pages/admin/Compagins.jsx";
+import UserManagementDashboard from "./components/pages/admin/Chart.jsx";
+import RecentActivity from "./components/pages/admin/Testimonial.jsx";
 
 const AppLayout = () => {
   return (
@@ -58,7 +62,8 @@ const AdminLayout = () => {
     <div className="flex min-h-screen">
 
       <Sidebar />
-      <div className="flex-1 p-6 ml-20 md:ml-64 bg-amber-50">
+  <div className="flex-1 p-6 ml-20 md:ml-64">
+
     
         <Outlet />
       </div>
@@ -156,9 +161,30 @@ const appRouter = createBrowserRouter([
       {
         path: "orderoverview",
         element: <OrdersOverview />,
-      }, {
+      },
+       {
         path: "comission",
         element: <CompactCommissionConfig />,
+      },
+      {
+        path: "notifications",
+        element: <Notifications />,
+      },
+       {
+        path: "Date",
+        element: <FixedDateLabelWithDropdown />,
+      },
+        {
+        path: "compagins",
+        element: <CampaignDashboard />,
+      },
+       {
+        path: "chart",
+        element: <UserManagementDashboard />,
+      },
+       {
+        path: "testimonial",
+        element: < RecentActivity/>,
       },
     ],
   }

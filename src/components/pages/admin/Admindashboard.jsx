@@ -1,8 +1,11 @@
 import React from "react";
+// import StatCard from "./Statscard";
 import StatCard from "./Statscard";
 import ReferralRankingCard from "./ReferralRankingCard";
 import WalletCard from "./WalletCard";
 import { Users, ShoppingCart, DollarSign, Clock } from "lucide-react";
+import { GenericTable } from "./GenericTable";
+import { referData, referTable } from "../../../utils/Constants";
 
 
 function AdminDashboard() {
@@ -80,101 +83,10 @@ function AdminDashboard() {
                     
                 </div>
             </div>
+
+            <GenericTable title="Referal" columns={referTable} data={referData} />
         </div>
     );
 }
 
 export default AdminDashboard;
-
-
-
-
-// import React from 'react'
-// import LineChart from '../../ui/LineChart'
-// import { commissionData, commissionTable, referNetworkData, salesData, treeData, walletData, walletTable, workWalletData, workWalletTable } from '../../../utils/Constants';
-// import HierarchyGraph from '../../ui/HierachyGraph';
-// import UserProfile from '../../ui/UserProfile';
-// import GenericTable from './GenericTable';
-// import { orderData, orderTable, userData, userTable, productData, productTable } from '../../../utils/Constants';
-// import ReferNetwork from '../../ui/ReferNetwork'
-// import TableActionFooter from './TableActionFooter';
-// import Sidebar from './Sidebar';
-
-// const monthlySales = salesData;
-// const referralData = treeData;
-
-// const AdminDashboard = () => {
-//   return (
-//     <div className='min-h-screen bg-gray-50 p-4 md:p-8 flex flex-col gap-8'>
-      
-//       {/* Orders Section */}
-//       <section>
-//         <GenericTable 
-//           title="Orders" 
-//           columns={orderTable} 
-//           data={orderData} 
-//         />
-//       </section>
-
-//       {/* Products Section */}
-//       <section>
-//         <GenericTable 
-//           title="Products Table" 
-//           columns={productTable} 
-//           data={productData} 
-//         />
-//       </section>
-
-//       {/* All users */}
-//       <section>
-//         <GenericTable 
-//           title="All Users" 
-//           columns={userTable} 
-//           data={userData} 
-//         />
-//       </section>
-
-//       {/* Commission Mgt*/}
-//       <section>
-//         <GenericTable 
-//           title="Users" 
-//           columns={commissionTable} 
-//           data={commissionData} 
-//         />
-//       </section>
-
-//       {/* Wallet */}
-//       <section>
-//         <GenericTable 
-//           title="Wallet Transaction" 
-//           columns={walletTable} 
-//           data={walletData} 
-//         />
-//         <TableActionFooter 
-//           data={walletData} 
-//           storageKey="wallet-tx" 
-//         />
-//       </section>
-
-//       {/*Work Wallet Overview */}
-//       <section>
-//         <GenericTable 
-//           title="Work Wallet Overview" 
-//           columns={workWalletTable} 
-//           data={workWalletData} 
-//         />
-//         <TableActionFooter 
-//           data={workWalletData} 
-//           storageKey="work-wallet" 
-//         />
-//       </section>
-
-//       <section>
-//         <ReferNetwork data={referNetworkData}/>
-//       </section>
-      
-//     </div>
-//   )
-// }
-
-// export default AdminDashboard

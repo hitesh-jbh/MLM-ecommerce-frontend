@@ -1,17 +1,78 @@
 import { FaBox, FaBriefcase, FaCreditCard, FaCrown, FaHeadset, FaLock, FaMapMarkerAlt, FaWallet } from "react-icons/fa";
 
 
+// export const user = {
+//   profileImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150",
+//   walletBalance: 3200.5,
+//   personalInfo: {
+//     firstName: "John",
+//     lastName: "Doe",
+//     email: "john@example.com",
+//     phone: "1234567890",
+//     location: "New York, USA",
+//     rank: "Platinum Member"
+//   }
+// };
+
 export const user = {
-  profileImage: "https://i.pravatar.cc/150?img=3",
+  profileImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150",
+  walletBalance: 3200.5,
   personalInfo: {
-    firstName: "jhunjhunwala",
-    lastName: "chhanchhar",
-    dob: "1999-06-12",
-    email: "vivek@example.com",
-    phone: "9876543210",
-    location: "Bangalore",
-    role: "Frontend Developer",
+    firstName: "John",
+    lastName: "Doe",
+    email: "john@example.com",
+    phone: "1234567890",
+    location: "New York, USA",
+    rank: "Platinum Member",
+    memberSince: "March 2024"
   },
+  // Support for multiple addresses
+  addresses: [
+    {
+      id: "addr_1",
+      isDefault: true,
+      label: "Home", // e.g., Home, Office, Gym
+      fullName: "John Doe",
+      phone: "+1 123-456-7890",
+      street: "123 Premium Lane",
+      apartment: "Apt 4B",
+      city: "New York",
+      state: "NY",
+      zipCode: "10001",
+      country: "USA"
+    },
+    {
+      id: "addr_2",
+      isDefault: false,
+      label: "Office",
+      fullName: "John Doe",
+      phone: "+1 987-654-3210",
+      street: "456 Corporate Plaza",
+      apartment: "Level 12",
+      city: "Brooklyn",
+      state: "NY",
+      zipCode: "11201",
+      country: "USA"
+    }
+  ],
+  // Support for payment methods (Masked for security)
+  paymentMethods: [
+    {
+      id: "pay_1",
+      type: "card",
+      brand: "visa", // Used to show the Visa Logo
+      last4: "4444",
+      expiryMonth: "12",
+      expiryYear: "2026",
+      isDefault: true
+    },
+    {
+      id: "pay_2",
+      type: "upi",
+      provider: "Google Pay",
+      vpa: "john.doe@okaxis"
+    }
+  ]
 };
 
 // export const accountItems = [

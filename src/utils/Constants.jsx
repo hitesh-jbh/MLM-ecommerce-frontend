@@ -828,6 +828,157 @@ export const commissionData = [
 ];
 
 
+// Referal Table
+export const referTable =  [
+  { 
+    header: 'User ID', 
+    key: 'userId',
+    render: (val) => (
+      <span className="font-bold">UID {val}</span>
+    ) ,
+    width: '80px' 
+  },
+  { 
+    header: 'Referral Code', 
+    key: 'referralCode',
+    render: (val, row) => (
+      <div className="flex flex-col">
+        <span className="font-bold text-slate-800">{val}</span>
+        <span className="text-[10px] text-slate-400">{row.expiryStatus}</span>
+      </div>
+    )
+  },
+  { 
+    header: 'Assigned To', 
+    key: 'assignedTo',
+    render: (val) => (
+      <div className="flex items-center gap-2">
+        <img src={val.avatar} className="w-6 h-6 rounded-full border" alt="avatar" />
+        <div className="flex flex-col">
+          <span className="font-medium text-slate-700">{val.name}</span>
+          <span className="text-[9px] text-slate-400">● Active {val.points}</span>
+        </div>
+      </div>
+    )
+  },
+  { 
+    header: 'Used / Limit', 
+    key: 'usage',
+    render: (val) => (
+      <div className="flex flex-col">
+        <span className="font-medium">{val.current} / {val.limit}</span>
+        <span className="text-[9px] text-slate-400">● Rank {val.rankPoints}</span>
+      </div>
+    )
+  },
+  { 
+    header: 'Rank / Points', 
+    key: 'rank',
+    render: (val) => (
+      <div className="flex flex-col">
+        <span className={`font-medium ${val.name === 'Gold' ? 'text-amber-600' : 'text-slate-600'}`}>
+          {val.name || '—'}
+        </span>
+        <span className="text-[9px] text-slate-400">{val.points ? `● ${val.points}` : ''}</span>
+      </div>
+    )
+  },
+  { 
+    header: 'Commission', 
+    key: 'commission',
+    render: (val) => <span className="font-bold text-slate-700">{val}</span>
+  },
+  { 
+    header: 'Status', 
+    key: 'status',
+    render: (val) => {
+      const colors = {
+        Active: 'bg-green-100 text-green-700',
+        Expired: 'bg-gray-100 text-gray-600',
+        Disabled: 'bg-slate-200 text-slate-500'
+      };
+      return (
+        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${colors[val]}`}>
+          {val}
+        </span>
+      );
+    }
+  },
+  {
+    header: 'Actions',
+    key: 'actions',
+    render: () => (
+      <button className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+        <Icons icon="heroicons:ellipsis-horizontal-20-solid" size={18} />
+      </button>
+    )
+  }
+];
+
+export const referData = [
+  {
+    userId: '46034',
+    referralCode: 'REF123456',
+    expiryStatus: 'Active',
+    assignedTo: { name: 'John Doe', avatar: 'https://i.pravatar.cc/150?u=1', points: '10,234' },
+    usage: { current: 6, limit: 20, rankPoints: '10,234' },
+    rank: { name: 'Gold', points: '10,234' },
+    commission: '₹100',
+    status: 'Active'
+  },
+  {
+    userId: '024366',
+    referralCode: 'SILVER1000',
+    expiryStatus: 'Expired | 02:04:05:19',
+    assignedTo: { name: 'Silver Bono', avatar: 'https://i.pravatar.cc/150?u=2', points: '4,660' },
+    usage: { current: 61, limit: 100, rankPoints: '4,689' },
+    rank: { name: 'Silver', points: '4689' },
+    commission: '5%',
+    status: 'Expired'
+  },
+  {
+    userId: 'All',
+    referralCode: 'GLOBALBONUS',
+    expiryStatus: 'Active',
+    assignedTo: { name: 'All Users', avatar: 'https://ui-avatars.com/api/?name=All+Users', points: '69,356' },
+    usage: { current: 349, limit: '', rankPoints: '85,805' },
+    rank: { name: '', points: '' },
+    commission: '10%',
+    status: 'Active'
+  },
+  {
+    userId: '70480',
+    referralCode: 'SUMMER25',
+    expiryStatus: 'Expired | 02:04:08:56',
+    assignedTo: { name: 'Pro', avatar: 'https://i.pravatar.cc/150?u=3', points: '0285' },
+    usage: { current: 210, limit: 'Unlimited', rankPoints: '469,306' },
+    rank: { name: 'Pro', points: '469,306' },
+    commission: 'Flat ₹25',
+    status: 'Expired'
+  },
+  {
+    userId: '20928',
+    referralCode: 'EXPIRED50',
+    expiryStatus: 'Expired | 8:30:25:28',
+    assignedTo: { name: 'Pro', avatar: 'https://i.pravatar.cc/150?u=4', points: '99258' },
+    usage: { current: 250, limit: 250, rankPoints: '63,259' },
+    rank: { name: '★250', points: '59' }, // The star badge in image
+    commission: 'Flat ₹50',
+    status: 'Expired'
+  },
+  {
+    userId: '43633',
+    referralCode: 'LUCKYDRAW',
+    expiryStatus: 'Disabled | 3:14:14:33',
+    assignedTo: { name: 'Diamond', avatar: 'https://i.pravatar.cc/150?u=5', points: '205559' },
+    usage: { current: 142, limit: 500, rankPoints: '223,559' },
+    rank: { name: 'Pro', points: '299,339' },
+    commission: '20%',
+    status: 'Disabled'
+  }
+];
+
+
 // Refer Network Data
 export const referNetworkData = {
   name: "Alex (Root)",
@@ -862,3 +1013,209 @@ export const referNetworkData = {
     }
   ]
 };
+
+
+// Profile Menu Icon
+export const profileMenuIcon = [
+    {
+      title: "Your Orders",
+      description: "Track, return, or buy things again",
+      icon: <Icons icon="heroicons:shopping-bag" size={48} className="text-black" />,
+      linkTo: "/your-order"
+    },
+    {
+      title: "Your Addresses",
+      description: "Edit addresses for orders and gifts",
+      icon: <Icons icon="heroicons:map-pin" size={48} className="text-black" />,
+      linkTo: "/address"
+    },
+    {
+      title: "Payment options",
+      description: "Edit or add payment methods",
+      icon: <Icons icon="heroicons:credit-card" size={48} className="text-black" />,
+      linkTo: "/payment"
+    },
+    {
+      title: "Edit Profile",
+      description: "Update your name, email, and personal info",
+      icon: <Icons icon="heroicons:user-circle" size={48} className="text-black" />,
+      linkTo: "/profile/edit"
+    }
+  ];
+
+// Nav Wallet and Profile Detail
+  export const normalWalletDetail = {
+    commission: {
+      title: "Order & Commission Summary",
+      balance: 1250,
+      pending: 450,
+      paid: 800,
+      totalEarned: 2500,
+      status: "2",
+    },
+    normalWallet: {
+      title: "Normal Wallet",
+      stats: [
+        { label: "Current Balance", value: 3200.50, icon: <Icons icon="heroicons:wallet-solid" size={20} /> },
+        { label: "Pending Payout", value: 150.00, icon: <Icons icon="solar:clock-circle-outline" size={20} /> },
+        { label: "Total Paid", value: 3050.50, icon:<Icons icon="solar:check-circle-bold" size={20} />},
+      ]
+    }
+  };
+
+
+  // Heirachy mgt data
+ export const hierachyTable = [
+  { 
+    header: 'Level', 
+    key: 'level', 
+    width: '60px',
+    render: (val) => <span className="font-bold text-slate-700 text-sm">{val}</span>
+  },
+  { 
+    header: 'Member', 
+    key: 'member',
+    width: '180px',
+    render: (member) => (
+      <div className="flex items-center gap-2">
+        <img src={member.avatar} alt="" className="w-9 h-9 rounded-full border border-gray-100 shrink-0" />
+        <div className="min-w-0">
+          <p className="font-bold text-slate-900 text-xs truncate">{member.name}</p>
+          <p className="text-[10px] text-slate-400">{member.id}</p>
+        </div>
+      </div>
+    )
+  },
+  { 
+    header: 'Direct Members (5/5)', 
+    key: 'directMembers',
+    render: (members, row) => ( // Use the second argument 'row' to access confirmedMembers
+      <div className="grid grid-cols-2 gap-x-8 gap-y-1 py-1 border-l border-r border-gray-100 px-4 min-w-[450px]">
+        {/* Left Side: Uses the 'members' key (directMembers) */}
+        <div className="space-y-1">
+          {members?.map((m, idx) => (
+            <div key={idx} className="flex items-center gap-2">
+              <span className="text-slate-300 text-[10px] w-3">{idx + 1}</span>
+              <span className="flex items-center justify-center w-5 h-5 bg-blue-600 text-white rounded-full text-[10px] shrink-0 font-bold">
+                {idx + 1}
+              </span>
+              <span className="text-blue-800 font-semibold text-[11px] truncate">{m.name}</span>
+              <span className="text-slate-400 text-[10px]">{m.id}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Right Side: CORRECTED to use 'row.confirmedMembers' */}
+        <div className="space-y-1">
+          {row.confirmedMembers?.map((cm, idx) => (
+            <div key={idx} className="flex items-center gap-2">
+              <div className="bg-green-100 text-green-600 rounded p-0.5 shrink-0">
+                 <Icons icon="heroicons:check-badge-solid" size={14} />
+              </div>
+              <span className="text-slate-600 font-medium text-[11px] truncate">{cm.name}</span>
+              <span className="text-slate-400 text-[10px]">{cm.id}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  },
+  { 
+    header: 'New Chain', 
+    key: 'isChainComplete',
+    width: '120px',
+    render: (isComplete) => (
+      <div className="flex items-center justify-center">
+        {isComplete ? (
+          <div className="w-7 h-7 bg-green-500 text-white rounded shadow-sm flex items-center justify-center">
+            <Icons icon="heroicons:check-solid" size={18} />
+          </div>
+        ) : (
+          <button className="group flex items-center gap-1.5 px-3 py-1.5 bg-white text-orange-500 border border-orange-200 rounded-md hover:bg-orange-50 transition-all shadow-sm">
+             <Icons icon="heroicons:bolt-solid" size={14} className="text-orange-400" />
+             <span className="text-[10px] font-bold uppercase tracking-wide">New Chain +5</span>
+             <Icons icon="heroicons:chevron-right-solid" size={10} className="text-slate-300 group-hover:translate-x-0.5 transition-transform" />
+          </button>
+        )}
+      </div>
+    )
+  },
+];
+
+export const hierachyData = [
+  {
+    level: 1,
+    member: { name: 'John Doe', id: '#10234', avatar: 'https://i.pravatar.cc/150?u=1' },
+    directMembers: [
+      { id: '#20657', name: 'Sara Patel' },
+      { id: '#18345', name: 'Tom Smith' },
+      { id: '#20267', name: 'Lisa Wong' },
+      { id: '#25031', name: 'Brian Adams' },
+    ],
+    // This data appears in the second column of the Direct Members section
+    confirmedMembers: [
+       { id: '#10234', name: 'John Doe' } // Example: showing the parent confirmed
+    ],
+    isChainComplete: true,
+  },
+  {
+    level: 2,
+    member: { name: 'Sara Patel', id: '#20657', avatar: 'https://i.pravatar.cc/150?u=2' },
+    directMembers: [
+      { id: '#30045', name: 'Ajay Mehta' },
+      { id: '#28192', name: 'David Lee' },
+      { id: '#30468', name: 'Rachel Fisher' },
+      { id: '#29106', name: 'Eva Malik' },
+    ],
+    confirmedMembers: [
+      { id: '#30045', name: 'Ajja, Mehta' },
+      { id: '#28192', name: 'David Lee' },
+      { id: '#30468', name: 'Rachel Fisher' },
+      { id: '#29106', name: 'Eva Malik' },
+    ],
+    isChainComplete: false,
+  }
+];
+//   export const hierachyData = [
+//   {
+//     level: 2,
+//     member: { name: 'Sara Patel', id: '#20657', avatar: 'https://i.pravatar.cc/150?u=2' },
+//     directMembers: [
+//       { id: '#30045', name: 'Ajay Mehta' },
+//       { id: '#28192', name: 'David Lee' },
+//       { id: '#30468', name: 'Rachel Fisher' },
+//       { id: '#29106', name: 'Eva Malik' },
+//     ],
+//     isChainComplete: false,
+//   },
+//   {
+//     level: 1,
+//     member: { name: 'John Doe', id: '#10234', avatar: 'https://i.pravatar.cc/150?u=1' },
+//     directMembers: [
+//       { id: '#20657', name: 'Sara Patel' },
+//       { id: '#18345', name: 'Tom Smith' },
+//       { id: '#20267', name: 'Lisa Wong' },
+//       { id: '#25031', name: 'Brian Adams' },
+//     ],
+//     isChainComplete: true,
+//   },
+//   {
+//     level: 3,
+//     member: { name: 'Ajay Mehta', id: '#30045', avatar: 'https://i.pravatar.cc/150?u=5' },
+//     directMembers: [
+//       { id: '#40001', name: 'Kevin Hart' },
+//       { id: '#40002', name: 'Emma Stone' },
+//     ],
+//     isChainComplete: false,
+//   },
+//   {
+//     level: 2,
+//     member: { name: 'Tom Smith', id: '#18345', avatar: 'https://i.pravatar.cc/150?u=3' },
+//     directMembers: [
+//       { id: '#39628', name: 'Olivia Hunt' },
+//       { id: '#37149', name: 'Kevin Thomas' },
+//       { id: '#41537', name: 'Julia Singh' },
+//     ],
+//     isChainComplete: false,
+//   }
+// ];

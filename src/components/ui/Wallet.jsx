@@ -1,26 +1,10 @@
 import React from 'react';
 import StepBar from './ProgessBar/stepBar';
 import { Wallet as WalletIcon, Clock, CheckCircle, ArrowUpRight } from 'lucide-react';
+import { normalWalletDetail } from '../../utils/Constants';
 
 const WalletPage = () => {
-  const summaryData = {
-    commission: {
-      title: "Order & Commission Summary",
-      balance: 1250,
-      pending: 450,
-      paid: 800,
-      totalEarned: 2500,
-      status: "2",
-    },
-    normalWallet: {
-      title: "Normal Wallet",
-      stats: [
-        { label: "Current Balance", value: 3200.50, icon: <WalletIcon size={20} /> },
-        { label: "Pending Payout", value: 150.00, icon: <Clock size={20} /> },
-        { label: "Total Paid", value: 3050.50, icon: <CheckCircle size={20} /> },
-      ]
-    }
-  };
+  const summaryData = normalWalletDetail;
 
   return (
     <div className="p-4 md:p-8 bg-white min-h-screen text-black font-sans">
@@ -46,19 +30,15 @@ const WalletPage = () => {
             <div className="flex-1 p-6 md:p-8 bg-gray-50 flex flex-col justify-between">
               <div>
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Earnings Progress</span>
+                  <span className="text-[16px] font-bold uppercase tracking-widest text-gray-900">Earnings Progress</span>
                   <span className="text-xl font-black">${summaryData.commission.totalEarned.toLocaleString()} Total</span>
-                </div>
-                {/* Progress Bar Container */}
-                <div className="w-full overflow-x-auto pb-2">
-                   <StepBar status={summaryData.commission.status} />
                 </div>
               </div>
 
-              <div className="mt-8 grid grid-cols-3 gap-2 border-t border-gray-200 pt-6">
-                <MiniDetail label="Earned" val={summaryData.commission.totalEarned} />
-                <MiniDetail label="Pending" val={summaryData.commission.pending} />
-                <MiniDetail label="Paid" val={summaryData.commission.paid} />
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-4">
+                <StatBox label="Balance" value={summaryData.commission.totalEarned} />
+                <StatBox label="Pending" value={summaryData.commission.pending} />
+                <StatBox label="Paid" value={summaryData.commission.paid} />
               </div>
             </div>
           </div>

@@ -13,7 +13,7 @@ export default function StatsDashboard() {
   const statCards = [
     { label: 'Commission Wallet Balance', link: "/wallet-balance", value: `$${stats.walletBalance.toFixed(2)}`, key: 'walletBalance' },
     { label: 'Total Earnings', link: "#", value: stats.totalEarnings, key: 'totalEarnings' },
-    { label: 'Total Orders', link: "/your-order", value: stats.totalOrders, key: 'totalOrders' },
+    { label: 'Total Orders', link: "#", value: stats.totalOrders, key: 'totalOrders' },
     { label: 'Active Referrals', link: "#", value: stats.activeReferrals, key: 'activeReferrals' },
     { label: 'Resent Rewards', link: "#", value: stats.resentRewards, key: 'resentRewards' }
   ];

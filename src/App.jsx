@@ -16,8 +16,6 @@ import Profile from "./components/pages/Profile.jsx";
 import Luxria from "./components/pages/Luxria.jsx";
 import StickyComponent from   "./components/ui/StickyComponent.jsx";
 import FootersPage from "./components/pages/FooterPage.jsx";
-import AdminDashboard from "./components/pages/admin/Admindashboard.jsx";
-import OrderManagement from "./components/pages/admin/OrderManagement.jsx";
 
 // Error Page
 import ErrorPage from "./components/pages/Error.jsx";
@@ -34,12 +32,23 @@ import appStore from "./utils/appStore.js";
 import OrderHistory from "./components/pages/OrderHistory.jsx";
 
 // Login Imports
-// import LoginPage from "./components/pages/LoginPage.jsx";
-import LoginSignupPage from "./components/pages/LoginSignupPage.jsx";
+import LoginPage from "./components/pages/LoginPage.jsx";
+// import LoginSignupPage from "./components/pages/LoginSignupPage.jsx";
 
-// Dashboard Imports
+// Admin Imports
+// import AdminProfile from "./components/pages/Admin/AdminProfile.jsx";
+import {AdminProfile} from "./components/pages/admin/AdminProfile.jsx"
 import AdminDashboard from "./components/pages/Admin/AdminDashboard.jsx";
-import OrderMgt from "./components/pages/Admin/OrderMgt.jsx";
+// import GenericTable from "./components/pages/Admin/GenericTable.jsx";
+import OrderManagement from "./components/pages/admin/OrderManagement.jsx";
+import EditAddress from "./components/pages/user/editAddress.jsx";
+import PaymentMethods from "./components/pages/user/PaymentMethod.jsx";
+import ReferralCodeMgt from "./components/pages/admin/ReferralCodeMgt.jsx";
+import HierachyMgt from "./components/pages/admin/HierachyMgt.jsx";
+import WishlistPage from "./components/pages/WishlistPage.jsx";
+import SignUp from "./components/pages/SignUp.jsx";
+// import ReferralRankingCard from "./components/pages/Admin/ReferralRankingCard.jsx";;
+// import Sidebar from "./components/pages/admin/Sidebar.jsx"
 
 const AppLayout = () => {
   return (
@@ -98,13 +107,37 @@ const appRouter = createBrowserRouter([
         element: <Profile />,
       },
       {
+        path: "/address",
+        element: <EditAddress />,
+      },
+      {
+        path: "/payment",
+        element: <PaymentMethods />,
+      },
+      {
         path: "/admin",
-        element: <AdminDashboard />,
+        element: <AdminProfile />,
         children: [
           {
+            index: true,
+            element: <AdminDashboard />
+          },
+          {
+            path: "/admin/dashboard",
+            element: <AdminDashboard />
+          },
+          {
             path: "/admin/orderoverview",
-            element: <OrderMgt />
-          }
+            element: <OrderManagement />
+          },
+          {
+            path: "/admin/referalcode",
+            element: <ReferralCodeMgt />
+          },
+          {
+            path: "/admin/hierachymgt",
+            element: <HierachyMgt />
+          },
         ]
       },
       {
@@ -144,34 +177,42 @@ const appRouter = createBrowserRouter([
         element: <OrderHistory />,
       },
       {
+        path: "/wishlist",
+        element: <WishlistPage />,
+      },
+      {
+        path: "/login",
+        element: <LoginPage />,
+        // element: <LoginSignupPage />,
+      },
+      {
+        path: "/signup",
+        element: <SignUp />,
+      },
+      {
         path: "*",
         element: <ErrorPage />
       }
     ],
   },
   {
-    path: "/login",
-    // element: <LoginPage />,
-    element: <LoginSignupPage />,
-  },
-  {
     path: "/modal",
     element: <Modal />,
   },
-  {
-    path: "/admin",
-    element: <AdminLayout />,
-    children: [
-      {
-        path: "Admindashboard", 
-        element: <AdminDashboard />, 
-      },
-      { 
-        path: "ordermanagement",
-        element: <OrderManagement /> 
-      },
-    ],
-  }
+  // {
+  //   path: "/admin",
+  //   element: <AdminLayout />,
+  //   children: [
+  //     {
+  //       path: "Admindashboard", 
+  //       element: <AdminDashboard />, 
+  //     },
+  //     { 
+  //       path: "ordermanagement",
+  //       element: <OrderManagement /> 
+  //     },
+  //   ],
+  // }
    
 
 

@@ -2,7 +2,7 @@ import { api } from "../Api/axiosInstance";
 
 // User Api
 export const registerUser = (userData) => {
-  return api.post('/user/me', userData);
+  return api.post('/user/register', userData); 
 };
 
 export const loginUser = (userData) => {

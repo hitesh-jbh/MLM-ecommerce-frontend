@@ -1,3 +1,5 @@
+import React from 'react'
+
 function StatCard({ title, value, icon }) {
   return (
     <div className="flex items-center px-6 py-4 text-black bg-white border border-gray-200 shadow-md dark:bg-black dark:text-white rounded-xl dark:border-gray-800">

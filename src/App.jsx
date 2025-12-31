@@ -30,6 +30,14 @@ import WalletBalance from "./components/pages/WalletBalance.jsx";
 import { Provider } from "react-redux";
 import appStore from "./utils/appStore.js";
 import OrderHistory from "./components/pages/OrderHistory.jsx";
+import OrdersOverview from "./components/pages/admin/Ordersoverview.jsx";
+import Sidebar from "./components/pages/admin/Sidebar.jsx";
+import CompactCommissionConfig from "./components/pages/admin/Comission.jsx";
+import Notifications from "./components/pages/admin/Notification.jsx";
+import FixedDateLabelWithDropdown from "./components/pages/admin/Date.jsx";
+import CampaignDashboard from "./components/pages/admin/Compagins.jsx";
+import UserManagementDashboard from "./components/pages/admin/Chart.jsx";
+import RecentActivity from "./components/pages/admin/Testimonial.jsx";
 
 // Login Imports
 import LoginPage from "./components/pages/LoginPage.jsx";
@@ -77,6 +85,23 @@ const AdminLayout = () => {
 };
 
 
+
+const AdminLayout = () => {
+  return (
+    <div className="flex min-h-screen">
+
+      <Sidebar />
+  <div className="flex-1 p-6 ml-20 md:ml-64">
+
+    
+        <Outlet />
+      </div>
+
+    </div>
+  );
+};
+
+
 const appRouter = createBrowserRouter([
   {
     path: "/",
@@ -86,6 +111,7 @@ const appRouter = createBrowserRouter([
         path: "/",
         element: <Home />,
       },
+
       {
         path: "/contact",
         element: <Contact />,
@@ -199,6 +225,7 @@ const appRouter = createBrowserRouter([
     path: "/modal",
     element: <Modal />,
   },
+<<<<<<< HEAD
   // {
   //   path: "/admin",
   //   element: <AdminLayout />,
@@ -215,9 +242,49 @@ const appRouter = createBrowserRouter([
   // }
    
 
+=======
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+    
+      {
+        path: "orderoverview",
+        element: <OrdersOverview />,
+      },
+       {
+        path: "comission",
+        element: <CompactCommissionConfig />,
+      },
+      {
+        path: "notifications",
+        element: <Notifications />,
+      },
+       {
+        path: "Date",
+        element: <FixedDateLabelWithDropdown />,
+      },
+        {
+        path: "compagins",
+        element: <CampaignDashboard />,
+      },
+       {
+        path: "chart",
+        element: <UserManagementDashboard />,
+      },
+       {
+        path: "testimonial",
+        element: < RecentActivity/>,
+      },
+    ],
+  }
+>>>>>>> 12c206bb694a2659315e611d2945832207eeb455
 
 ]);
+
+
 
 export default function App() {
   return <RouterProvider router={appRouter} />;
 }
+

@@ -1,11 +1,21 @@
 import React, { useState } from 'react';
 import Icons from '../../ui/Icon';
 import { GenericTable } from './GenericTable';
+import KpiCard from "./KpiCards"
 import { referData, referTable } from '../../../utils/Constants';
 
 const ReferralCodeMgt = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isVisibleToAll, setIsVisibleToAll] = useState(true);
+
+  const KpiData = [
+        { id: "1", title: "Total Referral Codes", value: "320" },
+        { id: "2", title: "Acrive Codes", value: "20" },
+        { id: "3", title: "User Assigned", value: "20" },
+        { id: "4", title: "Conversition Today", value: "20" },
+
+
+    ];
 
   // Function to handle form submission
   const handleSubmit = (e) => {
@@ -40,6 +50,12 @@ const ReferralCodeMgt = () => {
       <div className='mt-10 overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm'>
         <GenericTable columns={referTable} data={referData} />
       </div>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            {KpiData.map((item) => (
+                <KpiCard key={item.id} {...item} />
+            ))}
+        </div>
 
       {/* --- REFERRAL CODE MODAL --- */}
       {isModalOpen && (
@@ -114,26 +130,3 @@ const ReferralCodeMgt = () => {
 };
 
 export default ReferralCodeMgt;
-import React from "react";
-import KpiCard from "./KpiCards";
-
-function ReferralMgt() {
-    const KpiData = [
-        { id: "1", title: "Total Referral Codes", value: "320" },
-        { id: "2", title: "Acrive Codes", value: "20" },
-        { id: "3", title: "User Assigned", value: "20" },
-        { id: "4", title: "Conversition Today", value: "20" },
-
-
-    ];
-
-    return (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {KpiData.map((item) => (
-                <KpiCard key={item.id} {...item} />
-            ))}
-        </div>
-    );
-}
-
-export default ReferralMgt;

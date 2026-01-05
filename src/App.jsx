@@ -31,6 +31,8 @@ import WalletBalance from "./components/pages/WalletBalance.jsx";
 
 import { Provider } from "react-redux";
 import appStore from "./utils/appStore.js";
+import WishlistPage from "./components/pages/WishlistPage.jsx";
+// import OrderHistory from "./components/pages/OrderHistory.jsx";
 import OrderHistory from "./components/pages/OrderHistory.jsx";
 import OrdersOverview from "./components/pages/admin/Ordersoverview.jsx";
 import Sidebar from "./components/pages/admin/Sidebar.jsx";
@@ -54,7 +56,7 @@ import EditAddress from "./components/pages/user/editAddress.jsx";
 import PaymentMethods from "./components/pages/user/PaymentMethod.jsx";
 import ReferralCodeMgt from "./components/pages/admin/ReferralCodeMgt.jsx";
 import HierachyMgt from "./components/pages/admin/HierachyMgt.jsx";
-import WishlistPage from "./components/pages/WishlistPage.jsx";
+// import WishlistPage from "./components/pages/WishlistPage.jsx";
 import SignUp from "./components/pages/SignUp.jsx";
 import AdminDashboard from "./components/pages/admin/AdminDashboard.jsx";
 import ProductMgt from "./components/pages/admin/productMgt.jsx";
@@ -66,6 +68,9 @@ import NormalWalletMgt from "./components/pages/admin/NormalWalletMgt.jsx";
 import Settings from "./components/pages/admin/Settings.jsx";
 import EditProfile from "./components/pages/EditProfile.jsx";
 import AdminProtectedRoute from "./AdminProtectedRoute.jsx";
+import ResetPassword from "./components/pages/user/ResetPassword.jsx";
+import EKYC from "./components/pages/user/EKYC.JSX";
+// import EKYC from "./components/pages/user/EKYC.jsx/index.js";
 // import ReferralRankingCard from "./components/pages/Admin/ReferralRankingCard.jsx";;
 // import Sidebar from "./components/pages/admin/Sidebar.jsx"
 
@@ -131,6 +136,14 @@ const appRouter = createBrowserRouter([
       {
         path: "/address",
         element: <EditAddress />,
+      },
+      {
+        path: "/reset-password",
+        element: <ResetPassword />,
+      },
+      {
+        path:"/e-kyc",
+        element: <EKYC />
       },
       {
         path: "/payment",
@@ -232,8 +245,8 @@ const appRouter = createBrowserRouter([
         element: <WalletBalance />,
       },
       {
-        path: "/order-history",
-        element: <OrderHistory />,
+        path: "/wishlist",
+        element: <WishlistPage />,
       },
       {
         path: "/wishlist",

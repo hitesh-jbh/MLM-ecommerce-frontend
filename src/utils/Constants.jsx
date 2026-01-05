@@ -1062,11 +1062,23 @@ export const profileMenuIcon = [
       linkTo: "/payment"
     },
     {
-      title: "Edit Profile",
-      description: "Update your name, email, and personal info",
+      title: "Reset Password",
+      description: "Reset Your Password",
       icon: <Icons icon="heroicons:user-circle" size={48} className="text-black" />,
-      linkTo: "/edit-profile"
-    }
+      linkTo: "/reset-password"
+    },
+    {
+      title: "eKYC",
+      description: "First complete your kyc",
+      icon: <Icons icon="heroicons:user-circle" size={48} className="text-black" />,
+      linkTo: "/e-kyc"
+    },
+    // {
+    //   title: "Edit Profile",
+    //   description: "Update your name, email, and personal info",
+    //   icon: <Icons icon="heroicons:user-circle" size={48} className="text-black" />,
+    //   linkTo: "/edit-profile"
+    // }
   ];
 
 // Nav Wallet and Profile Detail

@@ -30,6 +30,7 @@ const productSlice = createSlice({
             state.filteredItems = action.payload;
         },
         
+        // toggleBrand: (state, action)  => {
         toggleBrand: (state, action) => {
             const brand = action.payload;
             if (state.filters.selectedBrands.includes(brand)) {

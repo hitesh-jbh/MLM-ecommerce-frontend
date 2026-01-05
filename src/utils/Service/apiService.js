@@ -6,10 +6,6 @@ export const registerUser = (userData) => {
   return api.post('/user/register', userData); 
 };
 
-// export const loginUser = (userData) => {
-//     return api.post('/user/login', userData);
-// };
-
 export const getProfile = (token) => {
     return api.get('/user/me', {
         headers: {
@@ -39,6 +35,8 @@ export const editProfile = async (userData) => {
 //             // 'Content-Type': 'application/json'
 //         }
 //     };
+// export const adminLogin = (adminData) => {
+//   return api.post('/admin/login', adminData);
 // };
 
 export const createStaff = (staffData) => {
@@ -88,4 +86,8 @@ export const login = (data) => {
 
 export const forgotPassword = (data) => {
     return api.post('/auth/forgot-password', data);
+}
+
+export const resetPassword = (data) => {
+    return api.post('/auth/reset-password', data);
 }

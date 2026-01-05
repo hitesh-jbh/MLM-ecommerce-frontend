@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from "../../utils/Slice/authSlice";
-import { registerUser, loginUser, getProfile } from "../../utils/Service/apiService";
+import { registerUser, getProfile } from "../../utils/Service/apiService";
 
 const signUpSchema = z.object({
   firstName: z.string().min(2, 'First name is required'),
@@ -33,54 +33,17 @@ const SignUp =() => {
   const dispatch = useDispatch();
 
   // Sign Up Logic
- const onSignUp = async (data) => {
-  setAuthError('');
-  
-  // Mapping frontend data to your Database schema fields
-  const apiData = {
-    firstName: data.firstName, // first_name in DB
-    lastName: data.lastName,   // last_name in DB
-    email: data.email,
-    password: data.password,
-    userType: "user",          // Matches ENUM('admin', 'customer', 'staff')
-    role: "user",              // Matches ENUM('super_admin', 'admin', etc.)
-    gender: data.gender,
-    contact: data.contact,
-    dob: data.dob
-  };
-
+ const handleSignup = async (e) => {
+  e.preventDefault();
   try {
-    // 1. Database Insertion: Create the user record
-    const regResponse = await registerUser(apiData);
-    const { referralCode } = regResponse.data;
+    const response = await axios.post('/api/signup', formData);
 
-    // 2. Token Generation: Auto-login to generate the JWT
-    const loginResponse = await loginUser({ 
-      email: data.email, 
-      password: data.password 
-    });
-    
-    const { success, token } = loginResponse.data;
-
-    if (success && token) {
-      // 3. PERSISTENCE: Store token locally to match the user later
-      localStorage.setItem("token", token);
-
-      // 4. Match Profile: Get the fresh DB record using the token
-      const profileResponse = await getProfile(token);
-      
-      const userData = {
-        ...profileResponse.data,
-        referralCode: referralCode 
-      };
-
-      // 5. Update Global State
-      dispatch(loginSuccess({ user: userData, token }));
-      navigate('/profile');
-      console.log(userData);
+    if (response.data.success) {
+      alert(`Registration Successful! Your Referral Token: ${response.data.referralToken}`);
+      navigate('/login');
     }
-  } catch (err) {
-    setAuthError(err.response?.data?.message || 'Registration failed.');
+  } catch (error) {
+    console.error("Signup failed", error);
   }
 };
 

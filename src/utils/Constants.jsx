@@ -455,25 +455,30 @@ export const orderData = [
 
 // --- PRODUCTS TABLE CONFIG ---
 export const productTable = [
-  { header: 'Product ID', key: 'pid' },
+  { header: 'Product ID', key: 'id', render: (val) => <span className="text-blue-600 font-medium"># {val}</span> },
   { header: 'Product Name', key: 'name', render: (val) => <span className="font-semibold text-gray-800">{val}</span> },
-  { header: 'Category', key: 'prodCategory', render: (val) => <span className="font-semibold text-gray-800">{val}</span> },
+  { header: 'Category', key: 'category', render: (val) => <span className="font-semibold text-gray-800">{val}</span> },
   { header: 'Price', key: 'price', render: (val) => `₹${val}` },
   { header: "PV", key: 'pv' },
   { header: "BV", key: 'bv' },
   { header: "Stock", key: 'stock' },
   { 
     header: 'Status', 
-    key: 'status',
-    render: (val) => (
-      <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-        val === 'Active' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
-      }`}>
-        {val}
+    key: 'stock',
+    render: (val) => {
+      if(val > 0) return <span className="px-2 py-0.5 rounded text-[10px] text-black font-bold uppercase bg-green-500 ">
+        Available
       </span>
-    )
+      else return <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-red-500 text-white">
+        Out of Stock
+      </span>
+    }
   },
-  { header: "Created Date", key: 'date' },
+  { header: "Created Date", key: 'created_at', render: (val) => {
+      if(!val) return 'N/A';
+      const date = new Date(val);
+      return date.toLocaleDateString();
+  } },
   {
     header: "Action",
     key: 'action',
@@ -542,21 +547,30 @@ export const productData = [
 export const userTable = [
   { 
     header: '# Member ID', 
-    key: 'memberId', 
+    key: 'id', 
     render: (val) => <span className="text-blue-600 font-medium"># {val}</span> 
   },
   { 
-    header: 'Name', 
-    key: 'name', 
-    render: (val, row) => (
-      <div className="flex items-center gap-3">
-        {/* Placeholder Avatar */}
-        <div className="w-8 h-8 rounded-full bg-blue-100 border border-blue-200 overflow-hidden">
-          <img src={`https://ui-avatars.com/api/?name=${val}&background=random`} alt={val} />
+    header: 'User', 
+    key: 'first_name', // We use first_name as the primary key for the render function
+    render: (_, row) => {
+      // Combine first and last name
+      const fullName = `${row.first_name} ${row.last_name}`;
+      return (
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-blue-100 border border-blue-200 overflow-hidden shrink-0">
+            <img 
+              src={`https://ui-avatars.com/api/?name=${fullName}&background=random`} 
+              alt={fullName} 
+            />
+          </div>
+          <div className="flex flex-col">
+            <span className="font-semibold text-gray-800 leading-none">{fullName}</span>
+            <span className="text-[10px] text-gray-400 uppercase font-bold mt-1">{row.role}</span>
+          </div>
         </div>
-        <span className="font-semibold text-gray-800">{val}</span>
-      </div>
-    )
+      );
+    }
   },
   { header: 'Downline', key: 'downline' },
   { header: 'Level', key: 'level' },
@@ -570,7 +584,11 @@ export const userTable = [
     key: 'email', 
     render: (val) => <span className="text-gray-400 italic">{val}</span> 
   },
-  { header: 'Join Date', key: 'joinDate' },
+  { header: 'Join Date', key: 'created_at', render: (val) => {
+    if(!val) return 'N/A';
+    const date = new Date(val);
+    return date.toLocaleDateString();
+  } },
   {
     header: "Action",
     key: 'action',

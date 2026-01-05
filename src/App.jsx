@@ -1,5 +1,7 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider, Outlet, ScrollRestoration } from "react-router-dom";
+import { SWRConfig } from "swr";
+import { fetcher } from "./utils/Api/axiosInstance.js";
 
 // Page Imports
 import Home from "./components/pages/Home.jsx";
@@ -63,22 +65,36 @@ import UserMgt from "./components/pages/admin/UserMgt.jsx";
 import NormalWalletMgt from "./components/pages/admin/NormalWalletMgt.jsx";
 import Settings from "./components/pages/admin/Settings.jsx";
 import EditProfile from "./components/pages/EditProfile.jsx";
+import AdminProtectedRoute from "./AdminProtectedRoute.jsx";
 // import ReferralRankingCard from "./components/pages/Admin/ReferralRankingCard.jsx";;
 // import Sidebar from "./components/pages/admin/Sidebar.jsx"
 
 const AppLayout = () => {
   return (
-    <Provider store={appStore}>
-      <div className="app">
-        {/* <ScrollRestoration /> */}
-        {/* <Modal /> */}
-        <Nav />
-        <Outlet />
-        <Footer />
-        <StickyComponent />
-        <ScrollRestoration />
-      </div>
-    </Provider>
+    <SWRConfig value={{refreshInterval: 3000 ,fetcher: fetcher}}>
+        <Provider store={appStore}>
+          <div className="app">
+            {/* <ScrollRestoration /> */}
+            {/* <Modal /> */}
+            <Nav />
+            <Outlet />
+            <Footer />
+            <StickyComponent />
+            <ScrollRestoration />
+          </div>
+      </Provider>
+    </SWRConfig>
+    // <Provider store={appStore}>
+    //   <div className="app">
+    //     {/* <ScrollRestoration /> */}
+    //     {/* <Modal /> */}
+    //     <Nav />
+    //     <Outlet />
+    //     <Footer />
+    //     <StickyComponent />
+    //     <ScrollRestoration />
+    //   </div>
+    // </Provider>
   );
 };
 
@@ -127,6 +143,7 @@ const appRouter = createBrowserRouter([
       {
         path: "/admin",
         element: <AdminProfile />,
+        // element: <AdminProtectedRoute />,
         children: [
           {
             index: true,

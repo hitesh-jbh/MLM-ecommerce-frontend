@@ -58,11 +58,7 @@ const FilterBar = ({ onFilterChange }) => {
         </div>
 
         {/* Add Staff Button - Links to POST /admin/staff */}
-        <div>
-          <button className="w-full bg-black text-white py-2.5 rounded-lg text-sm font-bold hover:bg-gray-800 flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95">
-            <Icons icon="heroicons:plus" size={18}/> Add Staff
-          </button>
-        </div>
+        
 
       </div>
     </div>

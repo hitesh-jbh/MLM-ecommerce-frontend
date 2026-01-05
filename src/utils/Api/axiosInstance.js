@@ -5,6 +5,8 @@ export const api = axios.create({
   baseURL: 'https://mlm-ecommerce-backend.onrender.com/api',
 });
 
+export const fetcher = (url) => api.get(url).then(res => res.data);
+
 // Add a request interceptor to attach the token automatically
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token"); // Or get from Redux state

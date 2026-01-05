@@ -1,27 +1,26 @@
 import React from 'react';
 import { Star, ShoppingBag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import Icons from '../ui/Icon.jsx';
-import { addItem } from '../../utils/Slice/cartSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleWishlist } from '../../utils/Slice/WishList.js';
+import Icons from '../ui/Icon.jsx';
+import { toggleWishlist } from '../../utils/Slice/wishlistSlice.js';
+import { addItem } from '../../utils/Slice/cartSlice.js';
 
 const Card3Modi = ({ product }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // 1. Identify the default variant (Size M) at the top level
-  const mVariant = product.variants?.find(v => v.size === "M") || product.variants?.[0];
-
-  // 2. REDUX SELECTOR: Check if this specific item + size is in wishlist
-  // This replaces the local useState(isLiked)
-  const isLiked = useSelector((state) => 
-    state.wishlist.items.some(
-      (item) => item.id === product.id && item.selectedSize?.size === mVariant?.size
-    )
+  // 1. Sync Liked State with Redux Store
+  // This ensures the heart icon stays red if the item is in the wishlist
+  const wishlistItems = useSelector((state) => state.wishlist.items);
+  const isLiked = wishlistItems.some(
+    (item) => item.id === product.id && item.selectedSize?.size === "M"
   );
 
-  // Formatting for Prices
+  // 2. Define the target variant (Size M) at the top level so all handlers can see it
+  const mVariant = product.variants?.find(v => v.size === "M") || product.variants?.[0];
+
+  // 3. Safe Formatting for Prices
   const displayPrice = typeof product.price === 'number' 
     ? `Rs. ${product.price.toFixed(2)}` 
     : product.price;
@@ -30,12 +29,12 @@ const Card3Modi = ({ product }) => {
     ? `Rs. ${product.originalPrice.toFixed(2)}`
     : product.originalPrice;
 
-  // Navigation Handler
+  // 4. Navigation Handler
   const goToInfoPage = () => {
     navigate(`/product/${product.id}`);
   };
 
-  // 3. WISHLIST HANDLER
+  // 5. Wishlist Toggle Handler
   const handleWishlist = (e) => {
     e.stopPropagation(); // Prevents navigating to info page
     if (!mVariant) return;
@@ -48,10 +47,12 @@ const Card3Modi = ({ product }) => {
       selectedSize: mVariant, 
       price: mVariant.price
     }));
-    navigate("/wishlist");
+    
+    // Optional: Only uncomment the next line if you want to jump to the wishlist page immediately
+    navigate("/wishlist"); 
   };
 
-  // 4. CART HANDLER
+  // 6. Cart Handler
   const handleAddItem = (e) => {
     e.stopPropagation();
 
@@ -98,7 +99,7 @@ const Card3Modi = ({ product }) => {
           </span>
         </div>
 
-        {/* Wishlist Button - Using Redux State */}
+        {/* Wishlist Button */}
         <button 
           onClick={handleWishlist} 
           className={`absolute top-2 right-2 sm:top-3 sm:right-3 p-1.5 sm:p-2 backdrop-blur-sm rounded-full transition-all shadow-sm active:scale-90 z-10 ${
@@ -153,7 +154,7 @@ const Card3Modi = ({ product }) => {
             )}
           </div>
           <div className="text-[9px] sm:text-[10px] font-bold px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-[#E8F5E9] text-[#2E7D32] whitespace-nowrap">
-            In stock
+            {mVariant?.stock > 0 ? 'In stock' : 'Out of stock'}
           </div>
         </div>
 

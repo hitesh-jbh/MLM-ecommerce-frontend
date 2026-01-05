@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Trash2, ShoppingBag } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleWishlist } from "../../utils/Slice/WishList.js";
+import { toggleWishlist } from "../../utils/Slice/wishlistSlice.js";
 import { addItem } from "../../utils/Slice/cartSlice.js";
 
 export default function WishlistPage() {

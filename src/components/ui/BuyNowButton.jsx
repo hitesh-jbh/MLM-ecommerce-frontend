@@ -2,6 +2,7 @@ import { ChevronRight } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { placeOrder } from '../../utils/Slice/orderSlice';
 
+
 export default function BuyNowButton({ product }) {
     const dispatch = useDispatch();
 

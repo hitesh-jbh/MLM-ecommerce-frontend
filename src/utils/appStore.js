@@ -1,14 +1,24 @@
 import { configureStore } from "@reduxjs/toolkit";
 import cartReducer from '../utils/Slice/cartSlice.js';
 import countReducer from "./Slice/countSlice.js";
-import wishListReducer from "../utils/Slice/WishList.js";
-import productReducer from "../utils/Slice/productSlice.js";
+import orderReducer from "./Slice/orderSlice.js";
+import addressReducer from "./Slice/addressSlice.js"
+import paymentReducer from "./Slice/paymentSlice.js"
+import wishlistReducer from "./Slice/wishlistSlice.js"
+import authReducer from "./Slice/authSlice.js"
+import searchReducer from "./Slice/searchSlice.js"
+import productReducer from "./Slice/productSlice.js"
 
 const appStore = configureStore({
     reducer: {
         cart: cartReducer,
         count: countReducer,
-        wishlist: wishListReducer,
+        order: orderReducer,
+        addresses: addressReducer,
+        payments: paymentReducer,
+        wishlist: wishlistReducer,
+        auth: authReducer,
+        search: searchReducer,
         product: productReducer,
     },
 });

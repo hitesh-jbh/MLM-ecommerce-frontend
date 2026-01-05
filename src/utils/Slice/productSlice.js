@@ -8,7 +8,7 @@ const productSlice = createSlice({
         filters: {
             selectedBrands: [],
             selectedSizes: [],
-            priceRange: [0, 1000],
+            priceRange: [0, 5000],
             searchQuery: '',
             sortBy: 'popular'
         },

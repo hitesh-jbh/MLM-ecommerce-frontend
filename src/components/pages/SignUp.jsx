@@ -31,79 +31,71 @@ const SignUp =() => {
   });
 
   const dispatch = useDispatch();
-// signup
-  const onSignUp = async (data) => {
-    setAuthError('');
-    // const [firstName, ...lastNames] = data.fullName.split(" ");
-    
-    const apiData = {
-      // firstName,
-      // lastName: lastNames.join(" ") || " ",
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      password: data.password,
-      userType: "user",
-      role: "user",
-      gender: data.gender,
-      contact: data.contact,
-      dob: data.dob
-    };
 
-    try {
-      // 1. Step 1: Register the account
-      const regResponse = await registerUser(apiData);
-      const { message, referralCode } = regResponse.data;
-      console.log("Registered successfully. Referral:", referralCode);
-
-      // 2. Step 2: Automatically Login to get a token
-      // We use the email and password the user just typed in
-      const loginResponse = await loginUser({ 
-        email: data.email, 
-        password: data.password 
-      });
-      
-      const { success, token } = loginResponse.data;
-
-      if (success && token) {
-        // 3. Step 3: Fetch the full profile using the new token
-        const profileResponse = await getProfile(token);
-        // const userData = profileResponse.data;
-        const userData = {
-          ...profileResponse.data,
-          firstName: profileResponse.data.firstName || data.firstName,
-          lastName: profileResponse.data.lastName || data.lastName,
-          contact: profileResponse.data.contact || data.contact,
-          dob: profileResponse.data.dob || data.dob,
-        };
-
-        // 4. Step 4: Dispatch to Redux!
-        // This populates state.user and state.token
-        dispatch(loginSuccess({
-          user: userData,
-          token: token
-        }));
-
-        alert(`Account created! Welcome, ${userData.email}. Your referral code is: ${referralCode}`);
-        
-        // 5. Navigate straight to profile
-        navigate('/profile');
-        console.log(userData);
-      }
-    } catch (err) {
-      // Handle errors for either registration or login
-      const errorMsg = err.response?.data?.message || 'Registration or auto-login failed.';
-      setAuthError(errorMsg);
-    }
+  // Sign Up Logic
+ const onSignUp = async (data) => {
+  setAuthError('');
+  
+  // Mapping frontend data to your Database schema fields
+  const apiData = {
+    firstName: data.firstName, // first_name in DB
+    lastName: data.lastName,   // last_name in DB
+    email: data.email,
+    password: data.password,
+    userType: "user",          // Matches ENUM('admin', 'customer', 'staff')
+    role: "user",              // Matches ENUM('super_admin', 'admin', etc.)
+    gender: data.gender,
+    contact: data.contact,
+    dob: data.dob
   };
 
+  try {
+    // 1. Database Insertion: Create the user record
+    const regResponse = await registerUser(apiData);
+    const { referralCode } = regResponse.data;
+
+    // 2. Token Generation: Auto-login to generate the JWT
+    const loginResponse = await loginUser({ 
+      email: data.email, 
+      password: data.password 
+    });
+    
+    const { success, token } = loginResponse.data;
+
+    if (success && token) {
+      // 3. PERSISTENCE: Store token locally to match the user later
+      localStorage.setItem("token", token);
+
+      // 4. Match Profile: Get the fresh DB record using the token
+      const profileResponse = await getProfile(token);
+      
+      const userData = {
+        ...profileResponse.data,
+        referralCode: referralCode 
+      };
+
+      // 5. Update Global State
+      dispatch(loginSuccess({ user: userData, token }));
+      navigate('/profile');
+      console.log(userData);
+    }
+  } catch (err) {
+    setAuthError(err.response?.data?.message || 'Registration failed.');
+  }
+};
+
+
+
+// signup
   // const onSignUp = async (data) => {
   //   setAuthError('');
-  //   const [firstName, ...lastNames] = data.fullName.split(" ");
+  //   // const [firstName, ...lastNames] = data.fullName.split(" ");
     
   //   const apiData = {
-  //     firstName,
-  //     lastName: lastNames.join(" ") || " ",
+  //     // firstName,
+  //     // lastName: lastNames.join(" ") || " ",
+  //     firstName: data.firstName,
+  //     lastName: data.lastName,
   //     email: data.email,
   //     password: data.password,
   //     userType: "user",
@@ -114,15 +106,52 @@ const SignUp =() => {
   //   };
 
   //   try {
-  //     const response = await registerUser(apiData);
-  //     const { message, referralCode } = response.data;
-  //     alert(`${message}. Your referral code is: ${referralCode}`);
-  //     // navigate('/login');
-  //     navigate('/');
+  //     // 1. Step 1: Register the account
+  //     const regResponse = await registerUser(apiData);
+  //     const { message, referralCode } = regResponse.data;
+  //     console.log("Registered successfully. Referral:", referralCode);
+
+  //     // 2. Step 2: Automatically Login to get a token
+  //     // We use the email and password the user just typed in
+  //     const loginResponse = await loginUser({ 
+  //       email: data.email, 
+  //       password: data.password 
+  //     });
+      
+  //     const { success, token } = loginResponse.data;
+
+  //     if (success && token) {
+  //       // 3. Step 3: Fetch the full profile using the new token
+  //       const profileResponse = await getProfile(token);
+  //       // const userData = profileResponse.data;
+  //       const userData = {
+  //         ...profileResponse.data,
+  //         firstName: profileResponse.data.firstName || data.firstName,
+  //         lastName: profileResponse.data.lastName || data.lastName,
+  //         contact: profileResponse.data.contact || data.contact,
+  //         dob: profileResponse.data.dob || data.dob,
+  //       };
+
+  //       // 4. Step 4: Dispatch to Redux!
+  //       // This populates state.user and state.token
+  //       dispatch(loginSuccess({
+  //         user: userData,
+  //         token: token
+  //       }));
+
+  //       alert(`Account created! Welcome, ${userData.email}. Your referral code is: ${referralCode}`);
+        
+  //       // 5. Navigate straight to profile
+  //       navigate('/profile');
+  //       console.log(userData);
+  //     }
   //   } catch (err) {
-  //     setAuthError(err.response?.data?.message || 'Registration failed.');
+  //     // Handle errors for either registration or login
+  //     const errorMsg = err.response?.data?.message || 'Registration or auto-login failed.';
+  //     setAuthError(errorMsg);
   //   }
   // };
+
 
   const inputStyle = "w-full py-2 bg-transparent border-b border-gray-300 focus:border-black outline-none transition-colors placeholder:text-gray-500 text-sm";
   const labelStyle = "block text-[10px] font-bold uppercase tracking-[0.2em] text-gray-700 mt-3";

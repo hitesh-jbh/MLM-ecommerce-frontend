@@ -6,6 +6,7 @@ import WalletCard from "./WalletCard";
 import { Users, ShoppingCart, DollarSign, Clock } from "lucide-react";
 import { GenericTable } from "./GenericTable";
 import { referData, referTable } from "../../../utils/Constants";
+import OrdersOverview from "./Ordersoverview";
 
 
 function AdminDashboard() {
@@ -53,7 +54,7 @@ function AdminDashboard() {
         <div className="min-h-screen p-6 space-y-6 bg-gray-50">
             {/* Stats Section */}
             <div>
-                <h1 className="mb-6 text-2xl font-bold">Admin Dashboard</h1>
+                {/* <h1 className="mb-6 text-2xl font-bold">Admin Dashboard</h1> */}
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                     {statsData.map((item) => (
                         <StatCard
@@ -64,6 +65,10 @@ function AdminDashboard() {
                         />
                     ))}
                 </div>
+            </div>
+
+            <div>
+                <OrdersOverview />
             </div>
 
             {/* Referral Rankings Section */}

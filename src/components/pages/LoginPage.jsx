@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { loginUser, getProfile } from "../../utils/Service/apiService";
+import { loginUser, adminLogin, getProfile } from "../../utils/Service/apiService";
 import { loginSuccess } from "../../utils/Slice/authSlice";
 
 const signInSchema = z.object({
@@ -13,7 +13,7 @@ const signInSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters')
 });
 
-export default function Login() {
+const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [authError, setAuthError] = useState('');
   const navigate = useNavigate();
@@ -23,32 +23,74 @@ export default function Login() {
     resolver: zodResolver(signInSchema) 
   });
 
+
+  // Sign in Logic
   const onSignIn = async (data) => {
-    setAuthError('');
+  setAuthError('');
+  try {
+    // Attempt standard login first
+    const response = await loginUser(data);
+    const { success, token, admin, user } = response.data;
+
+    if (success && token) {
+      localStorage.setItem("token", token);
+
+      // 1. Dynamic Extraction: Take whichever object exists
+      const userData = admin || user; 
+
+      // 2. Sync with Redux
+      dispatch(loginSuccess({ user: userData, token }));
+
+      // 3. Role-Based Navigation
+      // Using 'super_admin' based on your console output
+      if (userData.role === 'super_admin' || userData.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/profile');
+      }
+    }
+  } catch (err) {
+    // If standard login fails, try the explicit admin route as a fallback
     try {
-      const loginResponse = await loginUser(data);
-      const { success, token } = loginResponse.data;
+      const adminResponse = await adminLogin(data);
+      const { success, token, admin } = adminResponse.data;
 
       if (success && token) {
-        const profileResponse = await getProfile(token);
-        // const userData = profileResponse.data;
-        const userData = {
-          ...profileResponse.data,
-          firstName: profileResponse.data.firstName || data.firstName,
-          lastName: profileResponse.data.lastName || data.lastName,
-          contact: profileResponse.data.contact || data.contact,
-          dob: profileResponse.data.dob || data.dob,
-        };
-
-        dispatch(loginSuccess({ user: userData, token: token }));
-        alert(`Welcome back, ${userData.email}`);
-        // navigate('/profile');
-        navigate('/');
+        localStorage.setItem("token", token);
+        dispatch(loginSuccess({ user: admin, token }));
+        navigate('/admin/dashboard');
       }
-    } catch (err) {
+    } catch (adminErr) {
       setAuthError(err.response?.data?.message || 'Invalid credentials.');
     }
-  };
+  }
+};
+
+// const onSignIn = async (data) => {
+//   setAuthError('');
+//   try {
+//     // 1. Server-side Find: Matches email in DB and generates JWT
+//     const loginResponse = await loginUser(data);
+//     const { success, token } = loginResponse.data;
+
+//     if (success && token) {
+//       // 2. Store Token: Essential for the /user/me matching
+//       localStorage.setItem("token", token);
+
+//       // 3. Fetch Profile: Matches the token ID to the DB row
+//       const profileResponse = await getProfile(token);
+      
+//       // Use DB data as source of truth
+//       const userData = profileResponse.data;
+
+//       dispatch(loginSuccess({ user: userData, token }));
+//       navigate('/profile');
+//       console.log(userData);
+//     }
+//   } catch (err) {
+//     setAuthError(err.response?.data?.message || 'Invalid credentials.');
+//   }
+// };
 
   const inputStyle = "w-full py-3 bg-transparent border-b border-gray-300 focus:border-black outline-none transition-colors placeholder:text-gray-500 text-sm";
   const labelStyle = "block text-[10px] font-bold uppercase tracking-[0.2em] text-gray-700 mt-4";
@@ -118,6 +160,8 @@ export default function Login() {
     </div>
   );
 }
+
+export default Login;
 
 
 

@@ -13,45 +13,73 @@ import { FaShippingFast, FaExchangeAlt, FaTags, FaShieldAlt } from 'react-icons/
 import HomeShimmer from "../ui/HomeShimmer.jsx";
 import { Product } from "../../utils/Constants.jsx";
 // import Dropdown from "../ui/Dropdown.jsx";
+import { viewAllProducts } from "../../utils/Service/apiService.js";
 
 export const Home = () => {
 
   const [products, setProducts] = useState(null);
   const [cardsData, setCardsData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-    setProducts (Product);
+    const loadHomeData = async () => {
+      try {
+        // 2. Fetch real products from your backend
+        const response = await viewAllProducts();
+        
+        // As seen in your Postman logs, the array is inside response.data.products
+        setProducts(response.data.products || []);
 
-    setCardsData ([
-      {
-        id: 1,
-        icon: FaShippingFast,
-        title: "Free Shipping",
-        description: "Enjoy free shipping with\nprepaid orders"
-      },
-      {
-        id: 2,
-        icon: FaExchangeAlt,
-        title: "Easy & Free Returns",
-        description: "Returns Made Easy & Free"
-      },
-      {
-        id: 3,
-        icon: FaTags,
-        title: "Best Discount",
-        description: "Limited-Time Best Discount"
-      },
-      {
-        id: 4,
-        icon: FaShieldAlt,
-        title: "Payment Safety",
-        description: "100% Safe & Secure Shopping"
+        // 3. Set your feature cards
+        setCardsData([
+          { id: 1, icon: FaShippingFast, title: "Free Shipping", description: "Enjoy free shipping with\nprepaid orders" },
+          { id: 2, icon: FaExchangeAlt, title: "Easy & Free Returns", description: "Returns Made Easy & Free" },
+          { id: 3, icon: FaTags, title: "Best Discount", description: "Limited-Time Best Discount" },
+          { id: 4, icon: FaShieldAlt, title: "Payment Safety", description: "100% Safe & Secure Shopping" }
+        ]);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      } finally {
+        setLoading(false);
       }
-    ]);
-  }, 2000);
-    return () => clearTimeout(timer);
+    };
+
+    loadHomeData();
   }, []);
+
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //   setProducts (Product);
+
+  //   setCardsData ([
+  //     {
+  //       id: 1,
+  //       icon: FaShippingFast,
+  //       title: "Free Shipping",
+  //       description: "Enjoy free shipping with\nprepaid orders"
+  //     },
+  //     {
+  //       id: 2,
+  //       icon: FaExchangeAlt,
+  //       title: "Easy & Free Returns",
+  //       description: "Returns Made Easy & Free"
+  //     },
+  //     {
+  //       id: 3,
+  //       icon: FaTags,
+  //       title: "Best Discount",
+  //       description: "Limited-Time Best Discount"
+  //     },
+  //     {
+  //       id: 4,
+  //       icon: FaShieldAlt,
+  //       title: "Payment Safety",
+  //       description: "100% Safe & Secure Shopping"
+  //     }
+  //   ]);
+  // }, 2000);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   if (!cardsData || !products) return (<HomeShimmer />)
 
@@ -93,16 +121,6 @@ export const Home = () => {
         <ImageShowcase />
         <FeaturesSection />
 
-          {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {cardsData.map((card) => (
-              <FeatureCard
-                key={card.id}
-                icon={card.icon}
-                title={card.title}
-                description={card.description}
-              />
-            ))}
-          </div> */}
         </div>
     </>
   );

@@ -46,7 +46,6 @@ import LoginPage from "./components/pages/LoginPage.jsx";
 // Admin Imports
 // import AdminProfile from "./components/pages/Admin/AdminProfile.jsx";
 import {AdminProfile} from "./components/pages/admin/AdminProfile.jsx"
-import AdminDashboard from "./components/pages/admin/Admindashboard.jsx";
 // import GenericTable from "./components/pages/Admin/GenericTable.jsx";
 import OrderManagement from "./components/pages/admin/OrderManagement.jsx";
 import EditAddress from "./components/pages/user/editAddress.jsx";
@@ -55,6 +54,15 @@ import ReferralCodeMgt from "./components/pages/admin/ReferralCodeMgt.jsx";
 import HierachyMgt from "./components/pages/admin/HierachyMgt.jsx";
 import WishlistPage from "./components/pages/WishlistPage.jsx";
 import SignUp from "./components/pages/SignUp.jsx";
+import AdminDashboard from "./components/pages/admin/AdminDashboard.jsx";
+import ProductMgt from "./components/pages/admin/productMgt.jsx";
+import CommissionMgt from "./components/pages/admin/CommissionMgt.jsx";
+import WorkWalletMgt from "./components/pages/admin/WorkWalletMgt.jsx";
+import MlMmgt from "./components/pages/admin/MLMmgt.jsx";
+import UserMgt from "./components/pages/admin/UserMgt.jsx";
+import NormalWalletMgt from "./components/pages/admin/NormalWalletMgt.jsx";
+import Settings from "./components/pages/admin/Settings.jsx";
+import EditProfile from "./components/pages/EditProfile.jsx";
 // import ReferralRankingCard from "./components/pages/Admin/ReferralRankingCard.jsx";;
 // import Sidebar from "./components/pages/admin/Sidebar.jsx"
 
@@ -73,34 +81,6 @@ const AppLayout = () => {
     </Provider>
   );
 };
-const AdminLayout = () => {
-  return (
-    <div>
-      <h1></h1>
-      <Outlet />
-      
-      
-    </div>
-  );
-};
-
-
-
-const AdminLayout = () => {
-  return (
-    <div className="flex min-h-screen">
-
-      <Sidebar />
-  <div className="flex-1 p-6 ml-20 md:ml-64">
-
-    
-        <Outlet />
-      </div>
-
-    </div>
-  );
-};
-
 
 const appRouter = createBrowserRouter([
   {
@@ -141,6 +121,10 @@ const appRouter = createBrowserRouter([
         element: <PaymentMethods />,
       },
       {
+        path: "/edit-profile",
+        element: <EditProfile />,
+      },
+      {
         path: "/admin",
         element: <AdminProfile />,
         children: [
@@ -157,11 +141,43 @@ const appRouter = createBrowserRouter([
             element: <OrderManagement />
           },
           {
+            path: "/admin/product",
+            element: <ProductMgt />,
+          },
+          {
+            path: "/admin/comission",
+            element: <CommissionMgt />,
+          },
+          {
+            path: "/admin/wallets/normal",
+            element: <NormalWalletMgt />,
+          },
+          {
+            path: "/admin/wallets/work",
+            element: <WorkWalletMgt />,
+          },
+          {
+            path: "/admin/user",
+            element: <UserMgt />,
+          },
+          {
+            path: "/admin/mlm",
+            element: <MlMmgt />,
+          },
+          {
+            path: "/admin/notifications",
+            element: <Notifications />
+          },
+          {
+            path: "/admin/setting",
+            element: <Settings />
+          },
+          {
             path: "/admin/referalcode",
             element: <ReferralCodeMgt />
           },
           {
-            path: "/admin/hierachymgt",
+            path: "/admin/hierachy",
             element: <HierachyMgt />
           },
         ]
@@ -225,61 +241,6 @@ const appRouter = createBrowserRouter([
     path: "/modal",
     element: <Modal />,
   },
-<<<<<<< HEAD
-  // {
-  //   path: "/admin",
-  //   element: <AdminLayout />,
-  //   children: [
-  //     {
-  //       path: "Admindashboard", 
-  //       element: <AdminDashboard />, 
-  //     },
-  //     { 
-  //       path: "ordermanagement",
-  //       element: <OrderManagement /> 
-  //     },
-  //   ],
-  // }
-   
-
-=======
-  {
-    path: "/admin",
-    element: <AdminLayout />,
-    children: [
-    
-      {
-        path: "orderoverview",
-        element: <OrdersOverview />,
-      },
-       {
-        path: "comission",
-        element: <CompactCommissionConfig />,
-      },
-      {
-        path: "notifications",
-        element: <Notifications />,
-      },
-       {
-        path: "Date",
-        element: <FixedDateLabelWithDropdown />,
-      },
-        {
-        path: "compagins",
-        element: <CampaignDashboard />,
-      },
-       {
-        path: "chart",
-        element: <UserManagementDashboard />,
-      },
-       {
-        path: "testimonial",
-        element: < RecentActivity/>,
-      },
-    ],
-  }
->>>>>>> 12c206bb694a2659315e611d2945832207eeb455
-
 ]);
 
 

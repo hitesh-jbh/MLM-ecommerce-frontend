@@ -406,7 +406,7 @@ const ProductDetails = ({ product }) => {
                     </div>
 
                     {/* --- VARIANT SELECTOR --- */}
-                    <div className="space-y-3">
+                    {/* <div className="space-y-3">
                         <p className="font-bold text-sm uppercase tracking-wider text-gray-900">
                             Size: <span className="font-normal">{selectedVariant.size}</span>
                         </p>
@@ -427,7 +427,7 @@ const ProductDetails = ({ product }) => {
                         {selectedVariant.stock <= 5 && selectedVariant.stock > 0 && (
                             <p className="text-orange-600 text-xs font-bold animate-pulse">Low Stock: Only {selectedVariant.stock} left!</p>
                         )}
-                    </div>
+                    </div> */}
 
                     {/* --- ACTIONS --- */}
                     <div className="space-y-4 pt-4 border-t border-gray-100">

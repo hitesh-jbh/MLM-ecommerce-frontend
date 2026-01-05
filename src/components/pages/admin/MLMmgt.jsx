@@ -9,6 +9,7 @@ import {
   Lock,
   BadgeCheck
 } from "lucide-react";
+import UserManagementDashboard from "./Chart";
 
 function MlMmgt() {
 
@@ -58,16 +59,20 @@ function MlMmgt() {
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {statsData.map((item) => (
-        <StatCard
-          key={item.id}
-          title={item.title}
-          value={item.value}
-          icon={item.icon}
-        />
-      ))}
-    </div>
+    <>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {statsData.map((item) => (
+          <StatCard
+            key={item.id}
+            title={item.title}
+            value={item.value}
+            icon={item.icon}
+          />
+        ))}
+      </div>
+
+      <UserManagementDashboard />
+    </>
   );
 }
 

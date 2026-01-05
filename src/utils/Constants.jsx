@@ -300,6 +300,14 @@ export const salesData = [
   { month: "Jul", total: 1100 },
 ];
 
+export const mlmData = [
+  { day: "May 1", total: 400 },
+  { day: "May 8", total: 300 },
+  { day: "May 15", total: 600 },
+  { day: "May 22", total: 800 },
+  { day: "May 29", total: 500 },
+];
+
 export const treeData = {
       name: "Alex (Root)",
       referredPersons: [
@@ -1039,7 +1047,7 @@ export const profileMenuIcon = [
       title: "Edit Profile",
       description: "Update your name, email, and personal info",
       icon: <Icons icon="heroicons:user-circle" size={48} className="text-black" />,
-      linkTo: "/profile/edit"
+      linkTo: "/edit-profile"
     }
   ];
 

@@ -93,7 +93,7 @@ const EditProfile = () => {
             <h2 className="text-xl font-black tracking-tight">Account Settings</h2>
             <p className="text-xs text-gray-400">Update your member information</p>
           </div>
-          <Link to="/account-setting" className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-all">
+          <Link to="/profile/account-setting" className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-all">
             <X size={20} />
           </Link>
         </div>

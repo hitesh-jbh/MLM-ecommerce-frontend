@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import ProductDetails from '../../components/ui/ProdDetail.jsx';
+import ProductDetails from './ProdDetail.jsx';
 import Breadcrumb from '../../components/ui/BreadCrumb.jsx';
 import Tabs from '../../components/ui/Tabs.jsx';
 import FeatureSection from '../../components/ui/FeatureSection.jsx';
 import ProductCarousel from '../../components/ui/ProductCarousel.jsx';
 import AnnouncementBar from "../../components/ui/AnnouncementBar.jsx";
-import ProductInfoShimmer from '../ui/ProductInfoShimmer.jsx';
+import ProductInfoShimmer from '../../components/shimmer/ProductInfoShimmer.jsx';
 import HappyCustomersCards from "../../components/ui/HappyCustomersCards.jsx";
 
 import { useDispatch } from 'react-redux';

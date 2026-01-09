@@ -1,5 +1,5 @@
 import React from 'react';
-import { GenericTable } from './GenericTable.jsx';
+import { GenericTable } from '../../components/partials/table/GenericTable.jsx';
 import Icons from '../../components/ui/Icon.jsx';
 import { hierachyTable, hierachyData } from '../../utils/Constants.jsx';
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Icons from '../../ui/Icon';
-import { GenericTable } from './GenericTable';
-import KpiCard from "./KpiCards"
+import Icons from '../../components/ui/Icon';
+import { GenericTable } from '../../components/partials/table/GenericTable';
+import KpiCard from "../../components/admin_component/KpiCards"
 import { referData, referTable } from '../../utils/Constants';
 
 const ReferralCodeMgt = () => {

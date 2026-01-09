@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Icons from '../../../components/ui/Icon';
+import Icons from '../../components/ui/Icon';
 
 const TableActionFooter = ({ data = [], storageKey = "default" }) => {
   // Use a unique key to keep "Withdraw" and "Purchase" states separate for each table

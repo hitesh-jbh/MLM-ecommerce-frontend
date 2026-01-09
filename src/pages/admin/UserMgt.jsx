@@ -6,8 +6,8 @@
 
 // // API & UI Components
 // import { fetcher } from "../../../utils/Api/axiosInstance";
-// import KpiCard from "./KpiCards";
-// import { GenericTable } from "./GenericTable";
+// import KpiCard from "../../components/admin_component/KpiCards";
+// import { GenericTable } from "../../components/partials/table/GenericTable";
 // import { userTable } from "../../../utils/Constants";
 // import FilterBar from "./Filterbar";
 // import AddStaffModal from "./AddStaffModal";
@@ -108,11 +108,11 @@ import { useSelector } from "react-redux";
 import useSWR from "swr"; 
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import KpiCard from "./KpiCards";
-import { GenericTable } from "./GenericTable";
+import KpiCard from "../../components/admin_component/KpiCards";
+import { GenericTable } from "../../components/partials/table/GenericTable";
 import { userData, userTable } from "../../utils/Constants";
-import FilterBar from "./Filterbar";
-import AddStaffModal from "./AddStaffModal";
+import FilterBar from "../../components/ui/bar/Filterbar";
+import AddStaffModal from "../../components/admin_component/AddStaffModal";
 
 function UserMgt() {
     const [filteredUsers, setFilteredUsers] = useState([]);

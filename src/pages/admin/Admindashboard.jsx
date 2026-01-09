@@ -1,12 +1,12 @@
 import React from "react";
 // import StatCard from "./Statscard";
-import StatCard from "../../components/pages/admin/Statscard";
-import ReferralRankingCard from "../../components/pages/admin/ReferralRankingCard";
-import WalletCard from "../../components/pages/admin/WalletCard";
+import StatCard from "../../components/admin_component/Statscard";
+import ReferralRankingCard from "../../components/admin_component/ReferralRankingCard";
+import WalletCard from "./WalletCard";
 import { Users, ShoppingCart, DollarSign, Clock } from "lucide-react";
 import { GenericTable } from "../../components/partials/table/GenericTable";
 import { referData, referTable } from "../../utils/Constants";
-import OrdersOverview from "../../components/pages/admin/Ordersoverview";
+import OrdersOverview from "../../components/admin_component/Ordersoverview";
 
 
 function AdminDashboard() {

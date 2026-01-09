@@ -1,5 +1,5 @@
 import React from 'react';
-import StepBar from './ProgessBar/stepBar';
+import StepBar from './bar/StepBar';
 import { Wallet as WalletIcon, Clock, CheckCircle, ArrowUpRight } from 'lucide-react';
 import { normalWalletDetail } from '../../utils/Constants';
 

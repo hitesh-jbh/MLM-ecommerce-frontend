@@ -1,5 +1,4 @@
-import { data } from "react-router-dom";
-import { api } from "./axiosInstance.js";
+import { api } from "../Api/axiosInstance.js";
 
 // User Api
 export const registerUser = (userData) => {

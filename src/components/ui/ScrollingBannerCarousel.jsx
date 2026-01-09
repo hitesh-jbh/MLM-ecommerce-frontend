@@ -36,6 +36,9 @@ const ScrollingBanner = ({
                     src={item.img}
                     alt="product icon"
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                    }}
                   />
                 </div>
               )}

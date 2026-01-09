@@ -1,5 +1,5 @@
 import React from "react";
-import StatCard from "./Statscard";
+import StatCard from "../../components/admin_component/Statscard";
 import {
   User,
   Users,
@@ -9,7 +9,7 @@ import {
   Lock,
   BadgeCheck
 } from "lucide-react";
-import UserManagementDashboard from "./Chart";
+import UserManagementDashboard from "../../components/partials/widget/chart/Chart";
 
 function MlMmgt() {
 

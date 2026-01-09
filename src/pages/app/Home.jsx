@@ -27,8 +27,18 @@ export const Home = () => {
         // 2. Fetch real products from your backend
         const response = await viewAllProducts();
         
-        // As seen in your Postman logs, the array is inside response.data.products
-        setProducts(response.data.products || []);
+        // Handle different response structures
+        let productsData = [];
+        if (response?.data?.products && Array.isArray(response.data.products)) {
+          productsData = response.data.products;
+        } else if (Array.isArray(response?.data)) {
+          productsData = response.data;
+        } else if (Array.isArray(response)) {
+          productsData = response;
+        }
+        
+        console.log("Products loaded:", productsData.length);
+        setProducts(productsData);
 
         // 3. Set your feature cards
         setCardsData([
@@ -39,6 +49,7 @@ export const Home = () => {
         ]);
       } catch (error) {
         console.error("Failed to fetch products:", error);
+        setProducts([]); // Set empty array on error
       } finally {
         setLoading(false);
       }
@@ -47,12 +58,12 @@ export const Home = () => {
     loadHomeData();
   }, []);
 
-  if (!cardsData || !products) return (<HomeShimmer />)
+  if (loading || !cardsData) return (<HomeShimmer />)
 
   return (
     <>
         <Hero />
-        <ProductCarousel title="You are in new arrivals" products={ products} />
+        <ProductCarousel title="You are in new arrivals" products={products || []} />
         <ScrollingBanner />
         <CoastalEdition />
         <IconButton />
@@ -82,12 +93,11 @@ export const Home = () => {
               </a>
             </p>
           </div>
+          </div>
         </div>
         
         <ImageShowcase />
         <FeaturesSection />
-
-        </div>
     </>
   );
 };

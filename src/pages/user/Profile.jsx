@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 // UI Components
-import UserProfile from "../ui/UserProfile";
+import UserProfile from "./UserProfile";
 import Wallet from "../../components/ui/Wallet";
-import LineChart from "../ui/LineChart";
-import HierachyGraph from '../ui/HierachyGraph';
+import LineChart from "../../components/partials/widget/chart/LineChart";
+import HierachyGraph from '../../components/partials/widget/chart/HierachyGraph';
 
 // Logic & Data
 import { getProfile } from "../../utils/Service/apiService";

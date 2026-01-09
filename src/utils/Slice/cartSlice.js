@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { ca } from "zod/v4/locales";
 
 const cartSlice = createSlice({
   name: "cart",
@@ -25,20 +26,21 @@ const cartSlice = createSlice({
           id,
           name: action.payload.name,
           image: action.payload.image,
-          size: selectedSize.size,
-          price: selectedSize.price,
+          size: selectedSize.size || action.payload.size || " ",
+          price: selectedSize.price || action.payload.price || 0,
           stock: selectedSize.stock,
           quantity: quantity,
+          category: action.payload.category || " ",
         });
       }
     },
     updateQuantity: (state, action) => {
-    const { id, size, quantity } = action.payload;
-    const item = state.items.find(i => i.id === id && i.size === size);
-    if (item && quantity > 0 && quantity <= item.stock) {
-      item.quantity = quantity;
-    }
-  },
+      const { id, size, quantity } = action.payload;
+      const item = state.items.find(i => i.id === id && i.size === size);
+      if (item && quantity > 0 && quantity <= item.stock) {
+        item.quantity = quantity;
+      }
+    },
 
   removeItem: (state, action) => {
     const { id, size } = action.payload;

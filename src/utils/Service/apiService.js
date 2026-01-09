@@ -1,13 +1,13 @@
 import { data } from "react-router-dom";
-import { api } from "../Api/axiosInstance";
+import { api } from "./axiosInstance.js";
 
 // User Api
 export const registerUser = (userData) => {
-  return api.post('/user/register', userData); 
+  return api.post('/api/user/register', userData); 
 };
 
 export const getProfile = (token) => {
-    return api.get('/user/me', {
+    return api.get('/api/user/me', {
         headers: {
             Authorization: `Bearer ${token}`,
         }
@@ -16,7 +16,7 @@ export const getProfile = (token) => {
 
 export const editProfile = async (userData) => {
   const token = localStorage.getItem('token'); 
-  return await api.patch(`/user/edit`, userData, {
+  return await api.patch(`/api/user/edit`, userData, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -40,11 +40,18 @@ export const editProfile = async (userData) => {
 // };
 
 export const createStaff = (staffData) => {
-    return api.post('/admin/staff', staffData);
+    return api.post('/api/admin/staff', staffData);
 };
+// export const getUsers = (token) => {
+//     return api.get('/api/admin/all', {
+//         headers: {
+//             Authorization: `Bearer ${token}`,
+//         }
+//     });
+// }
 
-export const getUsers = (token) => {
-    return api.get('/admin/all', {
+export const getUsers = (token, type) => {
+    return api.get(`/api/admin/all?userType=${type}`, {
         headers: {
             Authorization: `Bearer ${token}`,
         }
@@ -57,37 +64,37 @@ export const getUsers = (token) => {
 
 // Product Api
 export const viewAllProducts = () => {
-    return api.get('/product/');
+    return api.get('/api/product/');
 };
 
 export const viewProduct = (id) => {
-    return api.get(`/product/${id}`);
+    return api.get(`/api/product/${id}`);
 };
 
 export const addProduct = (prodData) => {
-    return api.post('/product/', prodData);
+    return api.post('/api/product/', prodData);
     // return api.post('/product/', prodData, getAuthHeaders());
 };
 
 export const editProduct = (id, prodData) => {
-    return api.put(`/product/${id}`, prodData);
+    return api.put(`/api/product/${id}`, prodData);
 };
 
 export const deleteProduct = (id) => {
-    return api.delete(`/product/${id}`);
+    return api.delete(`/api/product/${id}`);
 };
 
 
 
 // Auth
 export const login = (data) => {
-    return api.post('/auth/login', data);
+    return api.post('/api/auth/login', data);
 }
 
 export const forgotPassword = (data) => {
-    return api.post('/auth/forgot-password', data);
+    return api.post('/api/auth/forgot-password', data);
 }
 
 export const resetPassword = (data) => {
-    return api.post('/auth/reset-password', data);
+    return api.post('/api/auth/reset-password', data);
 }

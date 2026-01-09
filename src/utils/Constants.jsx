@@ -454,46 +454,39 @@ export const orderData = [
 ];
 
 // --- PRODUCTS TABLE CONFIG ---
-export const productTable = [
-  { header: 'Product ID', key: 'id', render: (val) => <span className="text-blue-600 font-medium"># {val}</span> },
+export const productTable = (onEdit, onDelete) => [
+  { header: 'Product ID', key: 'id', render: (val) => <span className="text-blue-600 font-medium flex justify-center"># {val}</span> },
   { header: 'Product Name', key: 'name', render: (val) => <span className="font-semibold text-gray-800">{val}</span> },
   { header: 'Category', key: 'category', render: (val) => <span className="font-semibold text-gray-800">{val}</span> },
   { header: 'Price', key: 'price', render: (val) => `₹${val}` },
-  { header: "PV", key: 'pv' },
-  { header: "BV", key: 'bv' },
   { header: "Stock", key: 'stock' },
   { 
     header: 'Status', 
     key: 'stock',
-    render: (val) => {
-      if(val > 0) return <span className="px-2 py-0.5 rounded text-[10px] text-black font-bold uppercase bg-green-500 ">
-        Available
+    render: (val) => (
+      <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${val > 0 ? "bg-green-500 text-black" : "bg-red-500 text-white"}`}>
+        {val > 0 ? "Available" : "Out of Stock"}
       </span>
-      else return <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-red-500 text-white">
-        Out of Stock
-      </span>
-    }
+    )
   },
-  { header: "Created Date", key: 'created_at', render: (val) => {
-      if(!val) return 'N/A';
-      const date = new Date(val);
-      return date.toLocaleDateString();
-  } },
   {
     header: "Action",
     key: 'action',
     render: (_, row) => (
       <div className="flex items-center gap-3">
-        <input 
-          type="checkbox" 
-          className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer" 
-        />
         <button 
-          className="text-gray-500 hover:text-blue-600 transition-colors" 
-          onClick={() => console.log("Editing row:", row.pid)}
+          className="text-gray-400 hover:text-blue-600 transition-colors" 
+          onClick={() => onEdit(row)}
           title="Edit Product"
         >
-          <Icons icon="heroicons:pencil-square-solid" size={16} />
+          <Icons icon="heroicons:pencil-square-solid" size={18} />
+        </button>
+        <button 
+          className="text-gray-400 hover:text-red-600 transition-colors" 
+          onClick={() => onDelete(row)}
+          title="Delete Product"
+        >
+          <Icons icon="heroicons:trash-solid" size={18} />
         </button>
       </div>
     )
@@ -548,7 +541,7 @@ export const userTable = [
   { 
     header: '# Member ID', 
     key: 'id', 
-    render: (val) => <span className="text-blue-600 font-medium"># {val}</span> 
+    render: (val) => <span className="text-blue-600 font-medium flex justify-center"># {val}</span> 
   },
   { 
     header: 'User', 
@@ -572,13 +565,7 @@ export const userTable = [
       );
     }
   },
-  { header: 'Downline', key: 'downline' },
   { header: 'Level', key: 'level' },
-  { 
-    header: 'PV / BV', 
-    key: 'pv_bv', 
-    render: (_, row) => `${row.pv} / ${row.bv}` 
-  },
   { 
     header: 'Email', 
     key: 'email', 
@@ -1190,9 +1177,8 @@ export const hierachyData = [
       { id: '#20267', name: 'Lisa Wong' },
       { id: '#25031', name: 'Brian Adams' },
     ],
-    // This data appears in the second column of the Direct Members section
     confirmedMembers: [
-       { id: '#10234', name: 'John Doe' } // Example: showing the parent confirmed
+       { id: '#10234', name: 'John Doe' }
     ],
     isChainComplete: true,
   },
@@ -1214,46 +1200,12 @@ export const hierachyData = [
     isChainComplete: false,
   }
 ];
-//   export const hierachyData = [
-//   {
-//     level: 2,
-//     member: { name: 'Sara Patel', id: '#20657', avatar: 'https://i.pravatar.cc/150?u=2' },
-//     directMembers: [
-//       { id: '#30045', name: 'Ajay Mehta' },
-//       { id: '#28192', name: 'David Lee' },
-//       { id: '#30468', name: 'Rachel Fisher' },
-//       { id: '#29106', name: 'Eva Malik' },
-//     ],
-//     isChainComplete: false,
-//   },
-//   {
-//     level: 1,
-//     member: { name: 'John Doe', id: '#10234', avatar: 'https://i.pravatar.cc/150?u=1' },
-//     directMembers: [
-//       { id: '#20657', name: 'Sara Patel' },
-//       { id: '#18345', name: 'Tom Smith' },
-//       { id: '#20267', name: 'Lisa Wong' },
-//       { id: '#25031', name: 'Brian Adams' },
-//     ],
-//     isChainComplete: true,
-//   },
-//   {
-//     level: 3,
-//     member: { name: 'Ajay Mehta', id: '#30045', avatar: 'https://i.pravatar.cc/150?u=5' },
-//     directMembers: [
-//       { id: '#40001', name: 'Kevin Hart' },
-//       { id: '#40002', name: 'Emma Stone' },
-//     ],
-//     isChainComplete: false,
-//   },
-//   {
-//     level: 2,
-//     member: { name: 'Tom Smith', id: '#18345', avatar: 'https://i.pravatar.cc/150?u=3' },
-//     directMembers: [
-//       { id: '#39628', name: 'Olivia Hunt' },
-//       { id: '#37149', name: 'Kevin Thomas' },
-//       { id: '#41537', name: 'Julia Singh' },
-//     ],
-//     isChainComplete: false,
-//   }
-// ];
+
+
+export const pieReportData = [
+  { name: 'Level 1', value: 40, color: '#3B82F6' },
+  { name: 'Level 2', value: 10, color: '#FBBF24' },
+  { name: 'Level 3', value: 10, color: '#F87171' },
+  { name: 'Level 4', value: 15, color: '#34D399' },
+  { name: 'Level 5', value: 25, color: '#6366F1' }
+]

@@ -9,7 +9,10 @@ const AdminProtectedRoute = () => {
     const isAdmin = user && (user.role === "admin" || user.isAdmin === true);
 
     if (!token || !isLoggedIn || !isAdmin) {
-        return <Navigate to="/login"/>;
+        // return <Navigate to="/login"/>;
+        return(
+            <div>You are not Permitted for this</div>
+        )
     }
 
     return <Outlet />; // Renders the child routes

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom';
-import StepBar from '../../ui/bar/StepBar.jsx';
+import StepBar from '../../components/ui/bar/StepBar.jsx';
 import { shippedProducts } from '../../utils/Constants.jsx';
 
 const TrackPackage = () => {

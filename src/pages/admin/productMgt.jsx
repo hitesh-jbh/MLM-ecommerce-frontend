@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import useSWR from "swr";
-import KpiCard from "./KpiCards";
+import KpiCard from "../../components/admin_component/KpiCards";
 import Icons from "../../ui/Icon";
-import { GenericTable } from "./GenericTable";
+import { GenericTable } from "../../components/partials/table/GenericTable";
 import { productTable } from "../../utils/Constants";
 import { 
     addProduct, 

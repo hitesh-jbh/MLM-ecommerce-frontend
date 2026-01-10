@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import UserSidebar from './UserSidebar';
+import UserSidebar from '../../components/partials/sidebar/UserSidebar';
 import { Outlet } from 'react-router-dom';
 import { FaBars } from 'react-icons/fa'; // Hamburger icon
 

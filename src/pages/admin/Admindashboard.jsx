@@ -1,6 +1,6 @@
 import React from "react";
 // import StatCard from "./Statscard";
-import StatCard from "../../components/pages/admin/Statscard";
+import StatCard from "../../components/admin_component/Statscard";
 import ReferralRankingCard from "../../components/pages/admin/ReferralRankingCard";
 import WalletCard from "../../components/pages/admin/WalletCard";
 import { Users, ShoppingCart, DollarSign, Clock } from "lucide-react";

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { X, User, Key, ShieldCheck } from 'lucide-react';
-import Icons from '../../ui/Icon';
+import Icons from '../../components/ui/Icon';
 
 const AccountSetting = () => {
   const navigate = useNavigate();

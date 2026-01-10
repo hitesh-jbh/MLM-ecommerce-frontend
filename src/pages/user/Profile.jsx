@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 // UI Components
-import UserProfile from "../ui/UserProfile";
+import UserProfile from "../user/UserProfile";
 import Wallet from "../../components/ui/Wallet";
-import LineChart from "../ui/LineChart";
-import HierachyGraph from '../ui/HierachyGraph';
+import LineChart from "../../components/partials/widget/chart/LineChart";
+import HierachyGraph from '../../components/partials/widget/chart/HierachyGraph';
 
 // Logic & Data
 import { getProfile } from "../../utils/Service/apiService";
@@ -18,38 +18,6 @@ const Profile = () => {
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(true);
-
-  // useEffect(() => {
-  //   const fetchFreshProfile = async () => {
-  //     // Check local storage if Redux token is gone (on refresh)
-  //     const activeToken = token || localStorage.getItem("token");
-
-  //     if (activeToken) {
-  //       try {
-  //         // Identify user by matching the token to the DB ID
-  //         const response = await getProfile(activeToken);
-          
-  //         dispatch(loginSuccess({
-  //           user: response.data, // Data directly from your 'users' table
-  //           token: activeToken
-  //         }));
-  //       } catch (error) {
-  //         console.error("Session expired");
-  //         localStorage.removeItem("token");
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     } else {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   console.log(user);
-
-  //   fetchFreshProfile();
-  // }, [token, dispatch]);
-
-  // if (loading) return <div>Syncing with Database...</div>;
-  // if (!user) return navigate("/login");
 
   useEffect(() => {
     const fetchFreshProfile = async () => {

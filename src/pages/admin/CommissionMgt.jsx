@@ -1,7 +1,7 @@
 import React from "react";
-import KpiCard from "../../components/pages/admin/KpiCards";
-import CompactCommissionConfig from "../../components/pages/Comission";
-import { GenericTable } from "./GenericTable";
+import KpiCard from "../../components/admin_component/KpiCards";
+import CompactCommissionConfig from "../../components/admin_component/Comission";
+import { GenericTable } from "../../components/partials/table/GenericTable";
 import { commissionData, commissionTable } from "../../utils/Constants";
 
 function CommissionMgt() {

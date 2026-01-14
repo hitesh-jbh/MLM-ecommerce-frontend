@@ -1,5 +1,5 @@
 import React from "react";
-import KpiCard from "../../components/pages/admin/KpiCards";
+import KpiCard from "../../components/admin_component/KpiCards";
 
 function AdminWalletMgt() {
     const KpiData = [

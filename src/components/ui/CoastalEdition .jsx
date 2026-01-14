@@ -58,6 +58,8 @@ const CoastalEdition = () => {
               sm:text-base
               font-medium
               tracking-wide
+              text-black
+              bg-white
               hover:bg-black
               hover:text-white
               transition-all

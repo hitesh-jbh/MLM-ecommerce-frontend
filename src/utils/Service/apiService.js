@@ -1,5 +1,4 @@
-import { data } from "react-router-dom";
-import { api } from "./axiosInstance.js";
+import { api } from "../Api/axiosInstance.js";
 
 // User Api
 export const registerUser = (userData) => {
@@ -83,6 +82,12 @@ export const editProduct = (id, prodData) => {
 export const deleteProduct = (id) => {
     return api.delete(`/api/product/${id}`);
 };
+
+
+// Cart
+export const addToCart = (prodData) => {
+    return api.post("/api/cart/add", prodData);
+}
 
 
 

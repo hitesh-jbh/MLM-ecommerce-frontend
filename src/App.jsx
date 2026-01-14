@@ -1,5 +1,5 @@
 import React from "react";
-import { createBrowserRouter, RouterProvider, Outlet, ScrollRestoration } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import { SWRConfig } from "swr";
 import { fetcher } from "./utils/Api/axiosInstance.js";
 
@@ -8,11 +8,11 @@ import Home from "./pages/app/Home.jsx";
 import AboutUS from "./pages/app/AboutUs.jsx"
 import FilterProductPage from "./pages/app/FilterProductPage.jsx";
 import Nav from "./components/partials/header/Nav.jsx";
-import Footer from "./components/partials/footer/FooterPage.jsx";
+import Footer from "./components/partials/footer/footer.jsx";
 import Contact from "./pages/app/AboutUs.jsx";
 import InfoProd from "./pages/product/InfoProd.jsx";
 import Modal from "./components/ui/Modal.jsx";
-import Cart from "././pages/app/CartPage.jsx"
+import Cart from "./pages/app/CartPage.jsx"
 import Profile from "./pages/user/Profile.jsx";
 import Luxria from "./pages/app/Luxria.jsx";
 import StickyComponent from   "./components/ui/StickyComponent.jsx";
@@ -77,7 +77,6 @@ const AppLayout = () => {
             <Outlet />
             <Footer />
             <StickyComponent />
-            <ScrollRestoration />
           </div>
       </Provider>
     </SWRConfig>
@@ -141,6 +140,14 @@ const appRouter = createBrowserRouter([
           {
             path:"/profile/e-kyc",
             element: <EKYC />
+          },
+          {
+            path: "/profile/wishlist",
+            element: <WishlistPage />,
+          },
+          {
+            path: "/profile/edit",
+            element: <EditProfile />,
           },
         ]
       },
@@ -246,10 +253,6 @@ const appRouter = createBrowserRouter([
       {
         path: "/wallet-balance",
         element: <WalletBalance />,
-      },
-      {
-        path: "/wishlist",
-        element: <WishlistPage />,
       },
       {
         path: "/wishlist",

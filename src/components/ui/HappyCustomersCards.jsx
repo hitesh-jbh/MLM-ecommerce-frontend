@@ -65,13 +65,13 @@ export default function HappyCustomersCards() {
           <div
             className="flex transition-transform duration-500 ease-in-out"
             style={{
-              transform: `translateX(-${currentIndex * 100}%)`,
+              transform: `translateX(-${currentIndex * (100 / cardsPerView)}%)`,
             }}
           >
             {customers.map((customer) => (
               <div
                 key={customer.id}
-                className="min-w-full md:min-w-[50%] lg:min-w-[33.3333%] px-3"
+                className="min-w-full md:min-w-[50%] lg:min-w-[33.3333%] px-3 flex-shrink-0"
               >
                 <div className="bg-white rounded-lg p-6 shadow-sm h-full">
                   <h3 className="font-semibold text-gray-800 mb-2">

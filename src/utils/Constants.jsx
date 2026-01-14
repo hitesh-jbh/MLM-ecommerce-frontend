@@ -1,6 +1,9 @@
 import React from "react";
 import Icons from "../components/ui/Icon";
 
+export const websiteName = "MLM";
+export const webSocialHandle = "@mlm.india";
+export const webSocialLink = "https://instagram.com/mlm.india";
 
 export const Product = [
     {

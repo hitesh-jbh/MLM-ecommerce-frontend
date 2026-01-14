@@ -61,7 +61,6 @@ const Card3Modi = ({ product }) => {
   };
 
   // 5. Cart Handler
-  // 5. Cart Handler
   const handleAddItem = (e) => {
     e.stopPropagation();
 
@@ -103,9 +102,14 @@ const Card3Modi = ({ product }) => {
         className="relative aspect-[4/5] m-1.5 sm:m-2 overflow-hidden rounded-[18px] sm:rounded-[24px] bg-[#F7F7F7] cursor-pointer"
       >
         <img
-          src={Array.isArray(product.images) ? product.images[0] : (product.image || product.images)}
-          alt={product.name}
+          src={Array.isArray(product.images) && product.images.length > 0 
+            ? product.images[0] 
+            : (product.image || product.images || 'https://dummyimage.com/400x500')}
+          alt={product.name || 'Product'}
           className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
+          onError={(e) => {
+            e.target.src = 'https://via.placeholder.com/400x500?text=Image+Error';
+          }}
         />
         
         {/* Floating Badge */}

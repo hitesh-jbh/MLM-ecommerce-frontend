@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Icons from "../ui/Icon";
-import { createStaff } from "../../utils/Service/apiServicec";
+import { createStaff } from "../../utils/Service/apiService";
 
 function AddStaffModal({ isOpen, onClose, onSuccess }) {
     const initialState = {

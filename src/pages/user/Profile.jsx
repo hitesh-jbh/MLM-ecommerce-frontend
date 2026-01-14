@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 // UI Components
-import UserProfile from "../user/UserProfile";
+import UserProfile from "./UserProfile";
 import Wallet from "../../components/ui/Wallet";
 import LineChart from "../../components/partials/widget/chart/LineChart";
 import HierachyGraph from '../../components/partials/widget/chart/HierachyGraph';

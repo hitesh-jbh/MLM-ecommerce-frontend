@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import { Facebook, Instagram } from 'lucide-react';
 import FootersPage from './FooterPage.jsx';
 import { FooterPageData } from './FooterPageData.js';
+import { websiteName } from '../../../utils/Constants.jsx';
 
 export default function Footer() {
     const [email, setEmail] = useState('');
+    const date = new Date().getFullYear();
 
     const handleSubscribe = () => {
         console.log('Subscribed with email:', email);
@@ -135,7 +137,8 @@ export default function Footer() {
 
                         {/* Copyright */}
                         <div className="text-center md:text-left text-xs md:text-sm text-gray-500">
-                            © 2025 JBH Tech Innovation. All rights reserved.
+                            © {date} {websiteName}. All rights reserved.
+                            
                         </div>
 
                         {/* Payment Icons */}

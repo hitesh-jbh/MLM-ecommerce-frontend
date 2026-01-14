@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { addPaymentMethod, setDefaultPayment, removePaymentMethod } from '../../utils/Slice/paymentSlice';
-import Icons from '../../ui/Icon';
+import Icons from '../../components/ui/Icon';
 
 const PaymentMethods = () => {
   const payments = useSelector((state) => state.payments?.items || []);

@@ -1,13 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import cartReducer from '../utils/slice/cartSlice.js';
-import countReducer from "./slice/countSlice.js";
-import orderReducer from "./slice/orderSlice.js";
-import addressReducer from "./slice/addressSlice.js"
-import paymentReducer from "./slice/paymentSlice.js"
-import wishlistReducer from "./slice/wishlistSlice.js"
-import authReducer from "./slice/authSlice.js"
-import searchReducer from "./slice/searchSlice.js"
-import productReducer from "./slice/productSlice.js"
+import cartReducer from './Slice/cartSlice.js';
+import countReducer from "./Slice/countSlice.js";
+import orderReducer from "./Slice/orderSlice.js";
+import addressReducer from "./Slice/addressSlice.js"
+import paymentReducer from "./Slice/paymentSlice.js"
+import wishlistReducer from "./Slice/wishlistSlice.js"
+import authReducer from "./Slice/authSlice.js"
+import searchReducer from "./Slice/searchSlice.js"
+import productReducer from "./Slice/productSlice.js"
 
 const appStore = configureStore({
     reducer: {

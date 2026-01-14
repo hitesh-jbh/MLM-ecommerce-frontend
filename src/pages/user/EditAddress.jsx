@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { addAddress, updateAddress, setDefault, removeAddress } from '../../utils/Slice/addressSlice';
-import Icons from '../../ui/Icon';
+import Icons from '../../components/ui/Icon';
 
 const EditAddress = () => {
   const addresses = useSelector((state) => state.addresses?.items || []);

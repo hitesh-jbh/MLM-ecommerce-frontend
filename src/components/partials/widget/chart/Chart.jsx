@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { FiSearch, FiPlus, FiMessageSquare, FiMoreHorizontal } from 'react-icons/fi';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
-import LineChart from '../../ui/LineChart.jsx';
-import Testimonial from "../../../pages/admin/Testimonial.jsx";
+import LineChart from './LineChart.jsx';
+import Testimonial from "../../../admin_component/Testimonial.jsx";
 import { mlmData } from '../../../../utils/Constants.jsx';
 
 const UserManagementDashboard = () => {

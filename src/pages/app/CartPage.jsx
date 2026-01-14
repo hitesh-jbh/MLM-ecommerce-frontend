@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { clearCart, removeItem, updateQuantity } from "../../utils/slice/cartSlice";
+import { clearCart, removeItem, updateQuantity } from "../../utils/Slice/cartSlice";
 import { placeOrder } from "../../utils/Slice/orderSlice";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';

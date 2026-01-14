@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess, logout } from '../../../utils/Slice/authSlice';
 import { getProfile } from "../../../utils/Service/apiService";
 import Icons from '../../ui/Icon';
+import { websiteName } from "../../../utils/Constants"
 
 const RANK_CONFIG = {
   gold: { icon: "solar:medal-ribbon-bold", color: "text-yellow-600" },
@@ -139,11 +140,12 @@ export default function Nav() {
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <Link to="/" className="group flex items-center gap-3">
               <div className="w-9 h-9 bg-black rounded-sm flex items-center justify-center transition-transform group-hover:rotate-3">
-                <span className="text-white font-black text-xs tracking-tighter">GH</span>
+                {/* <span className="text-white font-black text-xs tracking-tighter">GH</span> */}
+                <span className="text-white font-black text-xs tracking-tighter">{websiteName}</span>
               </div>
               <div className="hidden sm:block">
-                <p className="text-black font-bold text-lg tracking-[0.1em] leading-none">GENTLEHAUS</p>
-                <p className="text-gray-400 text-[9px] tracking-[0.3em] uppercase mt-1.5">Menn's Couture</p>
+                <p className="text-black font-bold text-lg tracking-[0.1em] leading-none">{websiteName}</p>
+                {/* <p className="text-gray-400 text-[9px] tracking-[0.3em] uppercase mt-1.5">Menn's Couture</p> */}
               </div>
             </Link>
 

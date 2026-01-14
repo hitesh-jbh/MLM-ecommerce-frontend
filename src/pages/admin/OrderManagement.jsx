@@ -2,7 +2,7 @@ import React from "react";
 import StatCard from "../../components/admin_component/Statscard";
 import { GenericTable } from "../../components/partials/table/GenericTable";
 import Icons from "../../components/ui/Icon";
-import KpiCard from "../../components/admin_component/KpiCards";
+import KpiCard from "../../components/admin_component/KpiCards"
 import { orderData, orderTable } from "../../utils/Constants";
 import FixedDateLabelWithDropdown from "../../components/admin_component/Date";
 

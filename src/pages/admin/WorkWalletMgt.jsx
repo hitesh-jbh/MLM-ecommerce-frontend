@@ -1,7 +1,7 @@
 import React from "react";
 import KpiCard from "../../components/admin_component/KpiCards";
 import { GenericTable } from "../../components/partials/table/GenericTable";
-import TableActionFooter from "../../pages/admin/TableActionFooter";
+import TableActionFooter from "./TableActionFooter";
 import { workWalletData, workWalletTable } from "../../utils/Constants";
 
 function WorkWalletMgt() {

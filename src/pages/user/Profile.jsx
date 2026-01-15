@@ -9,7 +9,7 @@ import LineChart from "../../components/partials/widget/chart/LineChart";
 import HierachyGraph from '../../components/partials/widget/chart/HierachyGraph';
 
 // Logic & Data
-import { getProfile } from "../../utils/Service/apiService";
+import { getProfile } from "../../utils/service/apiService";
 import { loginSuccess, logout } from "../../utils/Slice/authSlice";
 import { salesData, treeData } from "../../utils/Constants";
 

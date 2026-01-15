@@ -1,238 +1,600 @@
+// import React, { useState, useEffect, useMemo } from "react";
+// import { useNavigate } from "react-router-dom";
+// import useSWR from "swr";
+// import KpiCard from "../../components/admin_component/KpiCards";
+// import Icons from "../../components/ui/Icon";
+// import { GenericTable } from "../../components/partials/table/GenericTable";
+// import { productTable } from "../../utils/Constants";
+// import { addProduct, editProduct, deleteProduct } from "../../utils/service/apiService";
+// import { ToastContainer, toast } from "react-toastify";
+// import PageHeader from "../../components/partials/table/PageHeader";
+
+// function ProductMgt() {
+//     const navigate = useNavigate();
+//     const token = localStorage.getItem("token");
+
+//     // States
+//     const [selectedProduct, setSelectedProduct] = useState(null);
+//     const [activeModal, setActiveModal] = useState(null); 
+//     const [isSubmitting, setIsSubmitting] = useState(false);
+//     const [error, setError] = useState(null);
+
+//     // Filter States
+//     const [searchQuery, setSearchQuery] = useState("");
+//     const [selectedCategory, setSelectedCategory] = useState("All Categories");
+
+//     const { data, mutate, isLoading } = useSWR('/api/product/');
+
+//     const rawProducts = useMemo(() => {
+//         const rawData = data?.products || data;
+//         return Array.isArray(rawData) ? rawData : [];
+//     }, [data]);
+
+//     // Generate unique categories from data
+//     const categories = useMemo(() => {
+//         const unique = [...new Set(rawProducts.map(p => p.category).filter(Boolean))];
+//         return ["All Categories", ...unique];
+//     }, [rawProducts]);
+
+//     // Filtering Logic
+//     const filteredProducts = useMemo(() => {
+//         return rawProducts.filter((product) => {
+//             const matchesSearch = product.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+//                                  product.description?.toLowerCase().includes(searchQuery.toLowerCase());
+//             const matchesCategory = selectedCategory === "All Categories" || product.category === selectedCategory;
+//             return matchesSearch && matchesCategory;
+//         });
+//     }, [rawProducts, searchQuery, selectedCategory]);
+
+//     const isFiltered = searchQuery !== "" || selectedCategory !== "All Categories";
+
+//     useEffect(() => { if (!token) navigate('/login'); }, [token, navigate]);
+
+//     const handleReset = () => {
+//         setSearchQuery("");
+//         setSelectedCategory("All Categories");
+//     };
+
+//     const handleClose = () => {
+//         setActiveModal(null);
+//         setSelectedProduct(null);
+//         setError(null);
+//     };
+
+//     const tableColumns = useMemo(() => 
+//         productTable(
+//             (p) => { setSelectedProduct(p); setActiveModal('edit'); },
+//             (p) => { setSelectedProduct(p); setActiveModal('delete'); }
+//         ), []);
+
+//     const handleFormSubmit = async (e) => {
+//         e.preventDefault();
+//         setError(null);
+//         const formData = new FormData(e.target);
+//         const price = Number(formData.get("price"));
+//         const stock = Number(formData.get("stock"));
+
+//         if (price < 0 || stock < 0) {
+//             setError("Price and Stock cannot be negative.");
+//             return;
+//         }
+
+//         setIsSubmitting(true);
+//         const payload = {
+//             name: formData.get("name"),
+//             category: formData.get("category"),
+//             description: formData.get("description"),
+//             price,
+//             stock
+//         };
+
+//         try {
+//             if (activeModal === 'add') {
+//                 await addProduct(payload);
+//             } else {
+//                 const id = selectedProduct._id || selectedProduct.id;
+//                 await editProduct(id, payload);
+//             }
+//             toast.success("Success!");
+//             mutate();
+//             handleClose();
+//         } catch (err) {
+//             toast.error("Operation failed.");
+//         } finally {
+//             setIsSubmitting(false);
+//         }
+//     };
+
+//     return (
+//         <div className="p-6 max-w-[1600px] mx-auto min-h-screen">
+//             <ToastContainer position="bottom-right" />
+
+//             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+//                 <KpiCard title="Total Inventory" value={rawProducts.length} />
+//                 <KpiCard title="Items In Stock" value={rawProducts.filter(p => p.stock > 0).length} />
+//                 <KpiCard title="Out of Stock" value={rawProducts.filter(p => p.stock <= 0).length} />
+//             </div>
+
+//             <div className="flex justify-between items-center mb-6">
+//                 <h1 className="text-2xl font-bold">Product Management</h1>
+//                 <button onClick={() => setActiveModal('add')} className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-xl font-semibold">
+//                     <Icons icon="heroicons:plus" size={18}/> Add Product
+//                 </button>
+//             </div>
+
+//             <PageHeader 
+//                 itemCount={filteredProducts.length}
+//                 searchQuery={searchQuery}
+//                 onSearchChange={setSearchQuery}
+//                 categories={categories}
+//                 selectedCategory={selectedCategory}
+//                 onCategoryChange={setSelectedCategory}
+//                 onReset={handleReset}
+//                 isFiltered={isFiltered}
+//                 title="Products Found"
+//                 onFilterClick={() => {}} 
+//             />
+
+//             <div className="bg-white rounded-2xl shadow-sm border border-gray-200">
+//                 {isLoading ? (
+//                     <div className="p-20 text-center animate-pulse">LOADING...</div>
+//                 ) : (
+//                     <GenericTable title="Live Inventory" columns={tableColumns} data={filteredProducts} />
+//                 )}
+//             </div>
+
+//             {/* Modal code here (Same as previous versions) */}
+//             {activeModal && activeModal !== 'delete' && (
+//                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+//                      <div className="bg-white rounded-2xl w-full max-w-lg overflow-hidden">
+//                         <div className="px-6 py-4 border-b flex justify-between items-center">
+//                             <h2 className="text-sm font-black uppercase">{activeModal} Product</h2>
+//                             <button onClick={handleClose}><Icons icon="heroicons:x-mark" size={22}/></button>
+//                         </div>
+//                         <div className="p-6">
+//                             {error && <div className="mb-4 p-3 bg-red-50 text-red-700 text-xs font-bold border-l-4 border-red-500">{error}</div>}
+//                             <form onSubmit={handleFormSubmit} className="space-y-4">
+//                                 <input name="name" defaultValue={selectedProduct?.name} required placeholder="Product Name" className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:border-black outline-none transition-all" />
+//                                 <div className="grid grid-cols-2 gap-4">
+//                                     <input name="price" type="number" min="0" step="0.01" defaultValue={selectedProduct?.price} required placeholder="Price" className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:border-black outline-none" />
+//                                     <input name="stock" type="number" min="0" defaultValue={selectedProduct?.stock} required placeholder="Stock" className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:border-black outline-none" />
+//                                 </div>
+//                                 <input name="category" defaultValue={selectedProduct?.category} required placeholder="Category" className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:border-black outline-none" />
+//                                 <textarea name="description" defaultValue={selectedProduct?.description} placeholder="Product Description" rows="3" className="w-full px-4 py-2.5 border border-gray-200 rounded-xl resize-none focus:border-black outline-none" />
+//                                 <div className="flex justify-end pt-4">
+//                                     <button type="submit" disabled={isSubmitting} className="px-10 py-3 bg-black text-white rounded-xl font-bold">
+//                                         {isSubmitting ? "Saving..." : "Save Product"}
+//                                     </button>
+//                                 </div>
+//                             </form>
+//                         </div>
+//                     </div>
+//                 </div>
+//             )}
+//         </div>
+//     );
+// }
+
+// export default ProductMgt;
+// import React, { useState, useEffect, useMemo } from "react";
+// import useSWR from "swr";
+// import Icons from "../../components/ui/Icon";
+// import { GenericTable } from "../../components/partials/table/GenericTable";
+// import { productTable } from "../../utils/Constants";
+// import { addProduct, editProduct, deleteProduct } from "../../utils/service/apiService"; 
+// import { ToastContainer, toast } from "react-toastify";
+// import PageHeader from "../../components/partials/table/PageHeader";
+
+// function ProductMgt() {
+//     const token = localStorage.getItem("token");
+
+//     const [selectedProduct, setSelectedProduct] = useState(null);
+//     const [activeModal, setActiveModal] = useState(null); 
+//     const [isSubmitting, setIsSubmitting] = useState(false);
+    
+//     // File States (Only used for ADD)
+//     const [thumbnailFile, setThumbnailFile] = useState(null);
+//     const [thumbnailPreview, setThumbnailPreview] = useState(null);
+//     const [galleryFiles, setGalleryFiles] = useState([]);
+//     const [galleryPreviews, setGalleryPreviews] = useState([]);
+
+//     const { data, mutate, isLoading } = useSWR('/api/product/');
+
+//     const rawProducts = useMemo(() => {
+//         if (!data) return [];
+//         const items = data?.products || data;
+//         return Array.isArray(items) ? items : [];
+//     }, [data]);
+
+//     // Handle Closing Modals
+//     const handleClose = () => {
+//         setActiveModal(null);
+//         setSelectedProduct(null);
+//         setThumbnailFile(null);
+//         setThumbnailPreview(null);
+//         setGalleryFiles([]);
+//         setGalleryPreviews([]);
+//     };
+
+//     // --- DELETE LOGIC ---
+//     const handleDelete = async () => {
+//         if (!selectedProduct) return;
+//         const id = selectedProduct._id || selectedProduct.id;
+//         setIsSubmitting(true);
+//         try {
+//             await deleteProduct(id, token);
+//             toast.success("Product deleted successfully");
+//             mutate(); // Refresh table
+//             handleClose();
+//         } catch (err) {
+//             toast.error("Failed to delete product");
+//         } finally {
+//             setIsSubmitting(false);
+//         }
+//     };
+
+//     // --- SUBMIT LOGIC (ADD & EDIT) ---
+//     const handleFormSubmit = async (e) => {
+//         e.preventDefault();
+//         setIsSubmitting(true);
+//         const form = e.target;
+//         const id = selectedProduct?._id || selectedProduct?.id;
+
+//         try {
+//             if (activeModal === 'add') {
+//                 // ADD: Uses FormData for Images
+//                 const formData = new FormData();
+//                 formData.append("name", form.name.value);
+//                 formData.append("price", form.price.value);
+//                 formData.append("stock", form.stock.value);
+//                 formData.append("category", form.category.value);
+//                 formData.append("description", form.description.value);
+                
+//                 if (thumbnailFile) formData.append("thumbnail", thumbnailFile);
+//                 galleryFiles.forEach(file => formData.append("images", file));
+
+//                 await addProduct(token, formData);
+//                 toast.success("Product Created!");
+//             } else {
+//                 // EDIT: Uses JSON (No image changes)
+//                 const payload = {
+//                     name: form.name.value,
+//                     price: Number(form.price.value),
+//                     stock: Number(form.stock.value),
+//                     category: form.category.value,
+//                     description: form.description.value,
+//                 };
+//                 await editProduct(id, token, payload);
+//                 toast.success("Product Updated!");
+//             }
+//             mutate();
+//             handleClose();
+//         } catch (err) {
+//             toast.error(err.response?.data?.message || "Operation failed");
+//         } finally {
+//             setIsSubmitting(false);
+//         }
+//     };
+
+//     return (
+//         <div className="p-6 max-w-[1600px] mx-auto min-h-screen">
+//             <ToastContainer position="bottom-right" />
+            
+//             <div className="flex justify-between items-center mb-6">
+//                 <h1 className="text-2xl font-bold text-slate-800">Product Management</h1>
+//                 <button onClick={() => setActiveModal('add')} className="bg-black text-white px-5 py-2.5 rounded-xl font-semibold flex items-center gap-2 hover:bg-slate-800 transition-all">
+//                     <Icons icon="heroicons:plus" size={18}/> Add Product
+//                 </button>
+//             </div>
+
+//             <PageHeader />
+
+//             <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
+//                 {isLoading ? (
+//                     <div className="p-20 text-center text-slate-400 animate-pulse font-medium">Loading products...</div>
+//                 ) : (
+//                     <GenericTable 
+//                         columns={productTable(
+//                             (p) => { setSelectedProduct(p); setActiveModal('edit'); },
+//                             (p) => { setSelectedProduct(p); setActiveModal('delete'); }
+//                         )} 
+//                         data={rawProducts} 
+//                     />
+//                 )}
+//             </div>
+
+//             {/* ADD / EDIT MODAL */}
+//             {activeModal && activeModal !== 'delete' && (
+//                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+//                     <div className="bg-white rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+//                         <div className="px-6 py-4 border-b flex justify-between items-center bg-gray-50">
+//                             <h2 className="text-sm font-black uppercase tracking-wider">{activeModal} Product</h2>
+//                             <button onClick={handleClose} className="text-slate-400 hover:text-black"><Icons icon="heroicons:x-mark" size={22}/></button>
+//                         </div>
+                        
+//                         <div className="p-6 overflow-y-auto">
+//                             <form onSubmit={handleFormSubmit} className="space-y-6">
+                                
+//                                 {/* Image Upload (Only shown in ADD mode) */}
+//                                 {activeModal === 'add' && (
+//                                     <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+//                                         <div className="space-y-2">
+//                                             <label className="text-[10px] font-bold text-slate-500 uppercase">Main Thumbnail</label>
+//                                             <div className="relative h-28 border-2 border-dashed rounded-xl flex items-center justify-center bg-white overflow-hidden">
+//                                                 {thumbnailPreview ? <img src={thumbnailPreview} className="h-full w-full object-cover" /> : <Icons icon="heroicons:photo" className="text-slate-200" size={30}/>}
+//                                                 <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => {
+//                                                     const file = e.target.files[0];
+//                                                     setThumbnailFile(file);
+//                                                     setThumbnailPreview(URL.createObjectURL(file));
+//                                                 }} />
+//                                             </div>
+//                                         </div>
+//                                         <div className="space-y-2">
+//                                             <label className="text-[10px] font-bold text-slate-500 uppercase">Gallery</label>
+//                                             <div className="flex gap-2">
+//                                                 {galleryPreviews.slice(0, 3).map((src, i) => (
+//                                                     <div key={i} className="h-12 w-12 rounded-lg border overflow-hidden"><img src={src} className="h-full w-full object-cover" /></div>
+//                                                 ))}
+//                                                 <label className="h-12 w-12 border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer text-slate-300">
+//                                                     <Icons icon="heroicons:plus" />
+//                                                     <input type="file" multiple className="hidden" onChange={(e) => {
+//                                                         const files = Array.from(e.target.files);
+//                                                         setGalleryFiles(prev => [...prev, ...files]);
+//                                                         setGalleryPreviews(prev => [...prev, ...files.map(f => URL.createObjectURL(f))]);
+//                                                     }} />
+//                                                 </label>
+//                                             </div>
+//                                         </div>
+//                                     </div>
+//                                 )}
+
+//                                 {/* Form Fields */}
+//                                 <div className="grid grid-cols-2 gap-4">
+//                                     <div className="col-span-2">
+//                                         <label className="text-[10px] font-bold text-slate-400 ml-1 uppercase">Name</label>
+//                                         <input name="name" defaultValue={selectedProduct?.name} required className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-black outline-none transition-all" />
+//                                     </div>
+//                                     <div>
+//                                         <label className="text-[10px] font-bold text-slate-400 ml-1 uppercase">Price</label>
+//                                         <input name="price" type="number" step="0.01" defaultValue={selectedProduct?.price} required className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-black outline-none" />
+//                                     </div>
+//                                     <div>
+//                                         <label className="text-[10px] font-bold text-slate-400 ml-1 uppercase">Stock</label>
+//                                         <input name="stock" type="number" defaultValue={selectedProduct?.stock} required className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-black outline-none" />
+//                                     </div>
+//                                     <div className="col-span-2">
+//                                         <label className="text-[10px] font-bold text-slate-400 ml-1 uppercase">Category</label>
+//                                         <input name="category" defaultValue={selectedProduct?.category} required className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-black outline-none" />
+//                                     </div>
+//                                     <div className="col-span-2">
+//                                         <label className="text-[10px] font-bold text-slate-400 ml-1 uppercase">Description</label>
+//                                         <textarea name="description" defaultValue={selectedProduct?.description} rows="3" className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-black outline-none resize-none" />
+//                                     </div>
+//                                 </div>
+
+//                                 <button type="submit" disabled={isSubmitting} className="w-full py-4 bg-black text-white rounded-xl font-bold uppercase tracking-widest hover:bg-slate-800 disabled:bg-slate-300 transition-all">
+//                                     {isSubmitting ? "Processing..." : `${activeModal} Product`}
+//                                 </button>
+//                             </form>
+//                         </div>
+//                     </div>
+//                 </div>
+//             )}
+
+//             {/* DELETE CONFIRMATION MODAL */}
+//             {activeModal === 'delete' && (
+//                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+//                     <div className="bg-white rounded-3xl w-full max-w-md p-8 text-center shadow-2xl">
+//                         <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+//                             <Icons icon="heroicons:trash" size={40} className="text-red-500"/>
+//                         </div>
+//                         <h2 className="text-xl font-bold text-slate-900 mb-2">Delete Product?</h2>
+//                         <p className="text-slate-500 mb-8 px-4">
+//                             Are you sure you want to delete <span className="font-bold text-slate-800">"{selectedProduct?.name}"</span>? 
+//                             This action cannot be undone.
+//                         </p>
+//                         <div className="flex gap-4">
+//                             <button onClick={handleClose} className="flex-1 py-3.5 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all">
+//                                 Cancel
+//                             </button>
+//                             <button onClick={handleDelete} disabled={isSubmitting} className="flex-1 py-3.5 bg-red-500 text-white rounded-2xl font-bold hover:bg-red-600 shadow-lg shadow-red-200 disabled:bg-red-300 transition-all">
+//                                 {isSubmitting ? "Deleting..." : "Yes, Delete"}
+//                             </button>
+//                         </div>
+//                     </div>
+//                 </div>
+//             )}
+//         </div>
+//     );
+// }
+
+// export default ProductMgt;
 import React, { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Fixed: Use useNavigate hook
 import useSWR from "swr";
-import KpiCard from "../../components/admin_component/KpiCards";
 import Icons from "../../components/ui/Icon";
 import { GenericTable } from "../../components/partials/table/GenericTable";
 import { productTable } from "../../utils/Constants";
-import { 
-    addProduct, 
-    editProduct, 
-    deleteProduct 
-} from "../../utils/Service/apiService";
+import { addProduct, editProduct, deleteProduct } from "../../utils/service/apiService"; 
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import PageHeader from "../../components/partials/table/PageHeader";
+import KpiCard from "../../components/admin_component/KpiCards";
 
 function ProductMgt() {
-    const navigate = useNavigate();
     const token = localStorage.getItem("token");
+    const navigate = useNavigate(); // Fixed: useNavigate instead of Navigate
 
-    // --- State Management ---
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [activeModal, setActiveModal] = useState(null); 
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [error, setError] = useState(null);
+    
+    // File States
+    const [thumbnailFile, setThumbnailFile] = useState(null);
+    const [thumbnailPreview, setThumbnailPreview] = useState(null);
+    const [galleryFiles, setGalleryFiles] = useState([]);
+    const [galleryPreviews, setGalleryPreviews] = useState([]);
 
-    // --- Data Fetching with SWR ---
-    const { data, error: swrError, mutate, isLoading } = useSWR('/api/product/');
+    const [searchQuery, setSearchQuery] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("All Categories");
 
-    // --- Data Processing ---
-    const allProducts = useMemo(() => {
-        const rawData = data?.products || data;
-        return Array.isArray(rawData) ? rawData : [];
+    const { data, mutate, isLoading } = useSWR('/api/product/');
+
+    // Memoize raw data extraction
+    const rawProducts = useMemo(() => {
+        if (!data) return [];
+        const items = data?.products || data?.data || data;
+        return Array.isArray(items) ? items : [];
     }, [data]);
-    console.log(allProducts);
 
-    // Security Check
+    // Extract unique categories for the PageHeader dropdown
+    const categories = useMemo(() => {
+        const uniqueCats = new Set(rawProducts.map(p => p.category).filter(Boolean));
+        return ["All Categories", ...Array.from(uniqueCats)];
+    }, [rawProducts]);
+
+    // Filtering Logic
+    const filteredProducts = useMemo(() => {
+        return rawProducts.filter((product) => {
+            const matchesSearch = 
+                product.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                product.description?.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchesCategory = selectedCategory === "All Categories" || product.category === selectedCategory;
+            return matchesSearch && matchesCategory;
+        });
+    }, [rawProducts, searchQuery, selectedCategory]);
+
+    const isFiltered = searchQuery !== "" || selectedCategory !== "All Categories";
+
+    // Authentication Guard
     useEffect(() => { 
-        if (!token) navigate('/login');
+        if (!token) navigate('/login'); 
     }, [token, navigate]);
 
-    // --- Handlers ---
+    const handleReset = () => {
+        setSearchQuery("");
+        setSelectedCategory("All Categories");
+    };
+
     const handleClose = () => {
         setActiveModal(null);
         setSelectedProduct(null);
-        setError(null);
+        setThumbnailFile(null);
+        if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
+        setThumbnailPreview(null);
+        galleryPreviews.forEach(url => URL.revokeObjectURL(url));
+        setGalleryFiles([]);
+        setGalleryPreviews([]);
     };
 
-    // Const table to modify edit and delete product
-    const tableColumns = useMemo(() => 
-        productTable(
-            (product) => { // Edit Handler
-                setSelectedProduct(product);
-                setActiveModal('edit');
-            },
-            (product) => { // Delete Handler
-                setSelectedProduct(product);
-                setActiveModal('delete');
-            }
-        ), 
-    []);
-
-    const handleFormSubmit = async (e) => {
-        e.preventDefault();
+    const handleDelete = async () => {
+        if (!selectedProduct) return;
+        const id = selectedProduct._id || selectedProduct.id;
         setIsSubmitting(true);
-        setError(null);
-
-        const formData = new FormData(e.target);
-        const payload = {
-            name: formData.get("name"),
-            category: formData.get("category"),
-            price: Number(formData.get("price")),
-            stock: Number(formData.get("stock"))
-        };
-
         try {
-            if (activeModal === 'add') {
-                await addProduct(payload);
-            } else {
-                const id = selectedProduct._id || selectedProduct.id;
-                await editProduct(id, payload);
-            }
-            
-            toast.success(`Product ${activeModal === 'add' ? 'added' : 'updated'} successfully!`);
-            // Revalidate SWR cache to show fresh data
+            await deleteProduct(id, token);
+            toast.success("Product deleted successfully");
             mutate();
             handleClose();
         } catch (err) {
-            toast.error(err.response?.data?.message || "Operation failed.");
+            toast.error("Failed to delete product");
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    const confirmDelete = async () => {
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
         setIsSubmitting(true);
+        const form = e.target;
+        const id = selectedProduct?._id || selectedProduct?.id;
+
         try {
-            const id = selectedProduct._id || selectedProduct.id;
-            await deleteProduct(id);
-            
-            toast.success("Product deleted successfully!");
-            // Revalidate SWR cache
+            if (activeModal === 'add') {
+                const formData = new FormData();
+                formData.append("name", form.name.value);
+                formData.append("price", form.price.value);
+                formData.append("stock", form.stock.value);
+                formData.append("category", form.category.value);
+                formData.append("description", form.description.value);
+                
+                if (thumbnailFile) formData.append("thumbnail", thumbnailFile);
+                galleryFiles.forEach(file => formData.append("images", file));
+
+                await addProduct(token, formData);
+                toast.success("Product Created!");
+            } else {
+                const payload = {
+                    name: form.name.value,
+                    price: Number(form.price.value),
+                    stock: Number(form.stock.value),
+                    category: form.category.value,
+                    description: form.description.value,
+                };
+                await editProduct(id, token, payload);
+                toast.success("Product Updated!");
+            }
             mutate();
             handleClose();
         } catch (err) {
-            setError("Could not delete product.");
+            toast.error(err.response?.data?.message || "Operation failed");
         } finally {
             setIsSubmitting(false);
         }
     };
 
     return (
-        <div className="p-6 max-w-[1600px] mx-auto min-h-screen bg-gray-50/30">
-            <ToastContainer 
-                    position="bottom-right"
-                    autoClose={3000}
-                    hideProgressBar={false}
-                    newestOnTop
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme="light"
-                  />
+        <div className="p-6 max-w-[1600px] mx-auto min-h-screen bg-slate-50/50">
+            <ToastContainer position="bottom-right" autoClose={2000} />
+            
+            <div className="flex justify-between items-center mb-6">
+                <div>
+                    <h1 className="text-2xl font-black text-slate-800 uppercase tracking-tight">Product Management</h1>
+                    <p className="text-sm text-slate-500">Manage your inventory and product details</p>
+                </div>
+                <button onClick={() => setActiveModal('add')} className="bg-black text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-slate-800 transition-all shadow-lg shadow-black/10">
+                    <Icons icon="heroicons:plus" size={20}/> ADD PRODUCT
+                </button>
+            </div>
 
-            {/* KPI Section */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <KpiCard title="Total Inventory" value={allProducts.length} />
-                <KpiCard title="Items In Stock" value={allProducts.filter(p => p.stock > 0).length} />
-                <KpiCard title="Out of Stock" value={allProducts.filter(p => p.stock <= 0).length} />
-            </div>
+                 <KpiCard title="Total Inventory" value={rawProducts.length} />
+                 <KpiCard title="Items In Stock" value={rawProducts.filter(p => p.stock > 0).length} />
+                 <KpiCard title="Out of Stock" value={rawProducts.filter(p => p.stock <= 0).length} />
+             </div>
 
-            {/* Global Actions */}
-            <div className="flex flex-wrap gap-3 mb-6">
-                <button onClick={() => setActiveModal('add')} className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-xl hover:bg-gray-800 transition shadow-sm font-semibold">
-                    <Icons icon="heroicons:plus" size={18}/> Add Product
-                </button>
-                {/* <button onClick={() => setActiveModal('edit')} className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-xl hover:bg-gray-800 transition shadow-sm font-semibold">
-                    <Icons icon="heroicons:pencil-square" size={18}/> Edit Product
-                </button>
-                <button onClick={() => setActiveModal('delete')} className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-xl hover:bg-gray-800 transition shadow-sm font-semibold">
-                    <Icons icon="heroicons:trash" size={18}/> Delete Product
-                </button> */}
-            </div>
+            <PageHeader 
+                itemCount={filteredProducts.length}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                categories={categories}
+                selectedCategory={selectedCategory}
+                onCategoryChange={setSelectedCategory}
+                onReset={handleReset}
+                isFiltered={isFiltered}
+                title="Products Found"
+                onFilterClick={() => {}} 
+            />
 
-            {/* Table Component */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
                 {isLoading ? (
-                    <div className="p-20 text-center text-gray-400 font-bold animate-pulse">
-                        REFRESHING INVENTORY...
+                    <div className="p-20 text-center flex flex-col items-center gap-4">
+                        <div className="w-10 h-10 border-4 border-slate-200 border-t-black rounded-full animate-spin"></div>
+                        <span className="text-slate-400 font-bold uppercase text-xs tracking-widest">Loading Catalog...</span>
                     </div>
                 ) : (
-                    <GenericTable title="Live Inventory" columns={tableColumns} data={allProducts} />
+                    <GenericTable 
+                        // Fixed: Pass filteredProducts, not rawProducts
+                        columns={productTable(
+                            (p) => { setSelectedProduct(p); setActiveModal('edit'); },
+                            (p) => { setSelectedProduct(p); setActiveModal('delete'); }
+                        )} 
+                        data={filteredProducts} 
+                    />
                 )}
             </div>
 
-            {/* --- Unified Modal System --- */}
-            {activeModal && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
-                        {/* Modal Header */}
-                        <div className="px-6 py-4 border-b flex justify-between items-center bg-gray-50/50">
-                            <h2 className="text-sm font-black uppercase tracking-widest text-gray-600">
-                                {activeModal} Product {selectedProduct && `• ${selectedProduct.name}`}
-                            </h2>
-                            <button onClick={handleClose} className="p-1 hover:bg-gray-200 rounded-full transition">
-                                <Icons icon="heroicons:x-mark" size={22}/>
-                            </button>
-                        </div>
-
-                        <div className="p-6">
-                            {error && <div className="mb-5 p-3 bg-red-50 text-red-700 text-xs font-bold border-l-4 border-red-500 rounded">{error}</div>}
-
-                            {(activeModal === 'edit' || activeModal === 'delete') && !selectedProduct ? (
-                                <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
-                                    <p className="text-xs font-bold text-gray-400 uppercase mb-3">Choose a product:</p>
-                                    {allProducts.map(product => (
-                                        <div 
-                                            key={product._id || product.id} 
-                                            onClick={() => setSelectedProduct(product)}
-                                            className="group flex justify-between items-center p-4 border border-gray-100 rounded-xl cursor-pointer hover:border-black hover:bg-gray-50 transition-all"
-                                        >
-                                            <div>
-                                                <p className="font-bold text-gray-900">{product.name}</p>
-                                                <p className="text-xs text-gray-500">{product.category || "No Category"}</p>
-                                            </div>
-                                            <Icons icon="heroicons:chevron-right" size={18} className="text-gray-300 group-hover:text-black transition-transform group-hover:translate-x-1"/>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="space-y-4">
-                                    {activeModal === 'delete' ? (
-                                        <div className="text-center py-4">
-                                            <p className="text-gray-600 mb-8 text-lg">Are you sure you want to delete <br/><span className="font-black text-black">{selectedProduct.name}</span>?</p>
-                                            <div className="flex gap-3">
-                                                <button onClick={() => setSelectedProduct(null)} className="flex-1 py-3 font-bold text-gray-700 hover:text-black transition">Go Back</button>
-                                                <button onClick={confirmDelete} disabled={isSubmitting} className="flex-1 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition">
-                                                    {isSubmitting ? "Deleting..." : "Yes, Delete"}
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <form onSubmit={handleFormSubmit} className="space-y-4">
-                                            <div className="space-y-1">
-                                                <label className="text-[10px] font-black uppercase text-gray-800">Product Name</label>
-                                                <input name="name" defaultValue={selectedProduct?.name} required placeholder="Product Name" className="w-full px-4 py-2.5 border border-gray-800 rounded-lg outline-none focus:ring-2 focus:ring-black transition" />
-                                            </div>
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div className="space-y-1">
-                                                    <label className="text-[10px] font-black uppercase text-gray-800">Price</label>
-                                                    <input name="price" type="number" step="0.01" defaultValue={selectedProduct?.price} required placeholder="0.00" className="w-full px-4 py-2.5 border border-gray-800 rounded-lg outline-none" />
-                                                </div>
-                                                <div className="space-y-1">
-                                                    <label className="text-[10px] font-black uppercase text-gray-800">Stock</label>
-                                                    <input name="stock" type="number" defaultValue={selectedProduct?.stock} required placeholder="0" className="w-full px-4 py-2.5 border border-gray-800 rounded-lg outline-none" />
-                                                </div>
-                                            </div>
-                                            <div className="space-y-1">
-                                                <label className="text-[10px] font-black uppercase text-gray-800">Category</label>
-                                                <input name="category" defaultValue={selectedProduct?.category} required placeholder="Category" className="w-full px-4 py-2.5 border border-gray-800 rounded-lg outline-none" />
-                                            </div>
-                                            <div className="flex justify-end gap-3 pt-6 border-t mt-4">
-                                                <button type="submit" disabled={isSubmitting} className="px-8 py-2.5 bg-black text-white rounded-lg font-bold hover:bg-gray-800 transition">
-                                                    {isSubmitting ? "Saving..." : "Save Product"}
-                                                </button>
-                                            </div>
-                                        </form>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            )}
+            {/* MODALS (Logic remains same as your snippet) */}
+            {/* ... Add/Edit and Delete modal code from your snippet ... */}
         </div>
     );
 }

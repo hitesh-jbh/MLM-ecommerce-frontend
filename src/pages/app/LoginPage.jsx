@@ -7,8 +7,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { login, forgotPassword } from "../../utils/Service/apiService";
+import { login, forgotPassword } from "../../utils/service/apiService";
 import { loginSuccess } from "../../utils/Slice/authSlice";
+import { currentYear, dummyEmail, websiteName } from '../../utils/Constants';
 
 const signInSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email'),
@@ -40,10 +41,11 @@ const Login = () => {
           user: responseData.user, 
           token: responseData.token 
         }));
-        toast.success("Welcome back to GentleHaus.",);
-        setTimeout(() => {
-          navigate('/profile');
-        }, 3000);
+        toast.success("Welcome back to MLM.",);
+        navigate('/profile');
+        // setTimeout(() => {
+        //   navigate('/profile');
+        // }, 2000);
       } else {
         toast.error("Authentication failed. Please try again.");
       }
@@ -99,28 +101,28 @@ const Login = () => {
         {/* Brand Side */}
         <div className="w-full lg:w-1/2 bg-black p-8 md:p-12 flex flex-col justify-between text-white min-h-[300px] lg:min-h-[700px]">
           <div>
-            <h1 className="text-2xl md:text-3xl font-light tracking-[0.3em] uppercase">GentleHaus</h1>
+            <h1 className="text-2xl md:text-3xl font-light tracking-[0.3em] uppercase">{websiteName}</h1>
             <div className="h-[1px] w-12 bg-white mt-4"></div>
           </div>
           <div className="space-y-6">
             <h2 className="text-4xl md:text-6xl font-extralight tracking-tight leading-none">Refined Access.</h2>
             <p className="text-gray-400 font-light max-w-xs text-base md:text-lg">Experience a curated ecosystem designed for excellence.</p>
           </div>
-          <div className="hidden lg:block text-[10px] tracking-[0.4em] uppercase text-gray-500">© 2026 GentleHaus International</div>
+          <div className="hidden lg:block text-[10px] tracking-[0.4em] uppercase text-gray-500">© {currentYear} {websiteName}</div>
         </div>
 
         {/* Form Side */}
         <div className="w-full lg:w-1/2 p-6 md:p-12 lg:p-20 bg-white">
           <div className="max-w-md mx-auto">
             <header className="mb-12">
-              <h3 className="text-sm font-bold uppercase tracking-[0.2em] mb-2">Member Login</h3>
+              <h3 className="text-sm font-bold uppercase tracking-[0.2em] mb-2">Login</h3>
               <p className="text-gray-400 text-sm">Please enter your credentials.</p>
             </header>
 
             <form onSubmit={handleSubmit(onSignIn)} className="space-y-4">
               <div>
                 <label className={labelStyle}>Email Address</label>
-                <input {...register("email")} placeholder="email@gentlehaus.com" className={inputStyle} />
+                <input {...register("email")} placeholder={dummyEmail} className={inputStyle} />
                 {errors.email && <p className="text-[10px] text-red-500 mt-1 uppercase font-bold">{errors.email.message}</p>}
               </div>
               

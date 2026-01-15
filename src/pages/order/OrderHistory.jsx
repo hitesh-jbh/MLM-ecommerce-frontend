@@ -6,6 +6,7 @@ import { Package, CheckCircle } from "lucide-react";
 
 export default function OrderHistory() {
   const orders = useSelector((state) => state.order.orderHistory);
+  console.log(orders)
 
   if (orders.length === 0) {
     return (
@@ -42,7 +43,7 @@ export default function OrderHistory() {
                     <p className="text-[10px] uppercase text-gray-400 font-bold tracking-widest">Total Amount</p>
                     <p className="text-sm font-bold text-black">
                       {/* Fixes the NaN error by ensuring it's a number */}
-                      ₹ {Number(order.totalAmount || 0).toFixed(2)}
+                      ₹ {Number(order.total_amount || 0).toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -84,3 +85,4 @@ export default function OrderHistory() {
     </div>
   );
 }
+

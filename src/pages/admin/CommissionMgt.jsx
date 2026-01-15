@@ -3,6 +3,7 @@ import KpiCard from "../../components/admin_component/KpiCards";
 import CompactCommissionConfig from "../../components/admin_component/Comission";
 import { GenericTable } from "../../components/partials/table/GenericTable";
 import { commissionData, commissionTable } from "../../utils/Constants";
+import { Link } from "react-router-dom";
 
 function CommissionMgt() {
     const KpiData = [
@@ -36,6 +37,15 @@ function CommissionMgt() {
             {/* Configuration Section: Added margin-top for breathing room */}
             <div className="mt-10">
                 <CompactCommissionConfig />
+            </div>
+
+            <div className="flex gap-5 items-center mb-6 mt-6">
+                <Link to="/admin/comission/set">
+                    <div className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-xl font-semibold">Commission Percentage</div>
+                </Link>
+                <Link to="/admin/comission/rank">
+                    <div className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-xl font-semibold">Rank</div>
+                </Link>
             </div>
 
             {/* Table Section: Wrapped in a container to handle horizontal scrolling */}

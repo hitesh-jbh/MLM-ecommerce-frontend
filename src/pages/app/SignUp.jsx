@@ -8,7 +8,8 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from "../../utils/Slice/authSlice";
-import { registerUser, getProfile } from "../../utils/Service/apiService";
+import { registerUser, getProfile } from "../../utils/service/apiService";
+import { currentYear, dummyEmail, websiteName } from '../../utils/Constants';
 
 const signUpSchema = z.object({
   firstName: z.string().min(2, 'First name is required'),
@@ -16,6 +17,10 @@ const signUpSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(6, '6+ characters').regex(/^(?=.*[a-zA-Z])(?=.*\d)/, 'Need 1 letter & 1 number'),
   confirmPassword: z.string(),
+  referralCode: z.preprocess(
+    (val) => (val === "" || val === undefined ? null : val),
+    z.string().length(8).regex(/^[a-zA-Z0-9]+$/).nullable()
+  ),
   gender: z.enum(['Male', 'Female', 'Other'], { errorMap: () => ({ message: "Select gender" })}),
   contact: z.string().min(10, "Contact must be 10 digits").max(15),
   dob: z.string().min(1, "Date of birth is required")
@@ -82,14 +87,14 @@ const SignUp =() => {
         {/* Brand Side */}
         <div className="w-full md:w-1/2 bg-black p-12 flex flex-col justify-between text-white min-h-[300px] md:min-h-[700px]">
           <div>
-            <h1 className="text-3xl font-light tracking-[0.3em] uppercase">GentleHaus</h1>
+            <h1 className="text-3xl font-light tracking-[0.3em] uppercase">{websiteName}</h1>
             <div className="h-[1px] w-12 bg-white mt-4"></div>
           </div>
           <div className="space-y-6">
             <h2 className="text-5xl md:text-6xl font-extralight tracking-tight leading-none">The Modern Standard.</h2>
             <p className="text-gray-400 font-light max-w-xs text-lg">Join a curated ecosystem designed for excellence.</p>
           </div>
-          <div className="text-[10px] tracking-[0.4em] uppercase text-gray-500">© 2025 GentleHaus International</div>
+          <div className="text-[10px] tracking-[0.4em] uppercase text-gray-500">© {currentYear} {websiteName}</div>
         </div>
 
         {/* Form Side */}
@@ -121,7 +126,7 @@ const SignUp =() => {
               
               <div>
                 <label className={labelStyle}>Email Address</label>
-                <input {...register("email")} placeholder="email@gentlehaus.com" className={inputStyle} />
+                <input {...register("email")} placeholder={dummyEmail} className={inputStyle} />
                 {errors.email && <p className="text-[10px] text-red-500 font-bold uppercase mt-1">{errors.email.message}</p>}
               </div>
               
@@ -156,6 +161,25 @@ const SignUp =() => {
               <div>
                 <label className={labelStyle}>Contact Number</label>
                 <input {...register("contact")} placeholder="Phone number" className={inputStyle} />
+              </div>
+
+              {/* NEW: Referral Code Section */}
+              <div>
+                <div className="flex justify-between items-end">
+                  <label className={labelStyle}>Referral Code</label>
+                  <span className="text-[9px] text-gray-400 uppercase tracking-widest mb-1">(Optional)</span>
+                </div>
+                <input 
+                  {...register("referralCode")} 
+                  placeholder="8-character code" 
+                  className={`${inputStyle} uppercase placeholder:normal-case`} 
+                  maxLength={8}
+                />
+                {errors.referralCode && (
+                  <p className="text-[10px] text-red-500 font-bold uppercase mt-1">
+                    {errors.referralCode.message}
+                  </p>
+                )}
               </div>
 
               <div className="pt-8">

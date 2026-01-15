@@ -26,9 +26,9 @@ const Sidebar = () => {
 
   const menuItems = [
     { id: 'dashboard', name: 'Dashboard', icon: <FaTachometerAlt />, count: null, link: '/admin/dashboard' },
-    { id: 'orders', name: 'Orders', icon: <FaShoppingCart />, count: 12, link: '/admin/orderoverview' },
-    { id: 'products', name: 'Products', icon: <FaProductHunt />, count: 45, link: '/admin/product' },
-    { id: 'commissions', name: 'Commissions', icon: <FaMoneyCheckAlt />, count: 8, link: '/admin/comission' },
+    { id: 'orders', name: 'Orders', icon: <FaShoppingCart />, count: null, link: '/admin/orderoverview' },
+    { id: 'products', name: 'Products', icon: <FaProductHunt />, count: null, link: '/admin/product' },
+    { id: 'commissions', name: 'Commissions', icon: <FaMoneyCheckAlt />, count: null, link: '/admin/comission' },
     { id: 'reports', name: 'Reports', icon: <FaChartBar />, count: null, link: '/admin/report' },
     {
       id: 'wallets',
@@ -41,8 +41,8 @@ const Sidebar = () => {
         { name: 'Work Wallet', link: '/admin/wallets/work' }
       ]
     },
-    { id: 'users', name: 'Users', icon: <FaUsers />, count: 234, link: '/admin/user' },
-    { id: 'notification', name: 'Notification', icon: <FaBell />, count: 3, link: '/admin/notifications' },
+    { id: 'users', name: 'Users', icon: <FaUsers />, count: null, link: '/admin/user' },
+    { id: 'notification', name: 'Notification', icon: <FaBell />, count: null, link: '/admin/notifications' },
     { id: 'mlm', name: 'MLM Management', icon: <FaSitemap />, count: null, link: '/admin/mlm' },
     { id: 'hierarchy', name: 'Hierarchy', icon: <FaNetworkWired />, count: null, link: '/admin/hierachy' },
     { id: 'setting', name: 'Setting', icon: <FaCog />, count: null, link: '/admin/setting' },

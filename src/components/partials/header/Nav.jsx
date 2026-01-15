@@ -4,9 +4,11 @@ import { ToastContainer, toast } from 'react-toastify'; // Correctly imported
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess, logout } from '../../../utils/Slice/authSlice';
-import { getProfile } from "../../../utils/Service/apiService";
+import { getProfile } from "../../../utils/service/apiService";
 import Icons from '../../ui/Icon';
 import { websiteName } from "../../../utils/Constants"
+import useSWR from 'swr';
+import { viewCartItem } from "../../../utils/service/apiService";
 
 const RANK_CONFIG = {
   gold: { icon: "solar:medal-ribbon-bold", color: "text-yellow-600" },
@@ -23,8 +25,17 @@ export default function Nav() {
   const navigate = useNavigate();
 
   const { user, isLoggedIn } = useSelector((state) => state.auth);
-  const cartItemsLength = useSelector((store) => store.cart.items.length);
 
+  // 2. Fetch cart data using the same SWR key as the Cart component
+  const token = useSelector((state) => state.auth?.token);
+  const { data: cartData } = useSWR(
+    token ? ["/api/cart/", token] : null,
+    ([url, tkn]) => viewCartItem(tkn).then(res => res.data)
+  );
+
+  // 3. Derive the length from SWR data, falling back to Redux if SWR isn't loaded yet
+  const reduxCartLength = useSelector((store) => store.cart.items.length);
+  const cartItemsLength = cartData?.data?.items?.length ?? reduxCartLength;
   // Session Validation
   useEffect(() => {
     const validateSession = async () => {
@@ -59,9 +70,7 @@ export default function Nav() {
     localStorage.removeItem('token');
     dispatch(logout());
     toast.success("Logged out successfully.");
-    setTimeout(() => {
-      navigate('/');
-    }, 3000); 
+    navigate('/'); 
   };
 
   const ProfileSection = () => {

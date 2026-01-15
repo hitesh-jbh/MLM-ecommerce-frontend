@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Icons from "../ui/Icon";
-import { createStaff } from "../../utils/Service/apiService";
+import { createStaff } from "../../utils/service/apiService";
+import { toast, ToastContainer } from "react-toastify";
 
 function AddStaffModal({ isOpen, onClose, onSuccess }) {
     const initialState = {
@@ -25,7 +26,8 @@ function AddStaffModal({ isOpen, onClose, onSuccess }) {
         setLoading(true);
         try {
             await createStaff(formData);
-            alert("Staff added successfully!");
+            // alert("Staff added successfully!");
+            toast.success("Staff added successfully");
             onSuccess();
             setFormData(initialState);
             onClose();
@@ -42,7 +44,20 @@ function AddStaffModal({ isOpen, onClose, onSuccess }) {
     };
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">z
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            {/* Toast Container Configuration */}
+                  <ToastContainer 
+                    position="bottom-right"
+                    autoClose={3000}
+                    hideProgressBar={false}
+                    newestOnTop
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                  />
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200">
                 
                 {/* Header */}

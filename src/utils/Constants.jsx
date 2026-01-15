@@ -4,6 +4,8 @@ import Icons from "../components/ui/Icon";
 export const websiteName = "MLM";
 export const webSocialHandle = "@mlm.india";
 export const webSocialLink = "https://instagram.com/mlm.india";
+export const currentYear = new Date().getFullYear();
+export const dummyEmail = "email@mlm.com";
 
 export const Product = [
     {
@@ -334,75 +336,89 @@ export const treeData = {
 
 
 // --- ORDERS TABLE CONFIG ---
-export const orderTable = [
+export const orderTable = (openModal) => [
   { 
     header: 'Order ID', 
     key: 'orderId', 
-    render: (val) => <span className="text-blue-500 font-medium cursor-pointer">{val}</span> 
+    render: (val) => <span className="text-blue-500 font-medium">{val}</span> 
   },
-  { header: 'Buyer Name', key: 'name', render: (val) => <span className="font-semibold">{val}</span> },
-  { header: 'Referral Code', key: 'referralCode' },
-  { header: 'Sponsor ID', key: 'sponsorId' },
-  { header: 'Level', key: 'level' },
-  { header: 'Order Amount', key: 'amount', render: (val) => `₹${val.toLocaleString()}` },
+  { header: 'Buyer Name', key: 'buyerName', render: (val) => <span className="font-semibold">{val}</span> },
+  { header: 'Buyer Email', key: 'email', render: (val) => <span className="font-semibold">{val}</span> },
+  { header: 'Amount', key: 'orderAmount', render: (val) => `₹${Number(val).toLocaleString()}` },
   { 
-    header: 'Quantity', 
-    key: 'quantity', 
+    header: 'Order Status', 
+    key: 'orderStatus',
     render: (val) => (
-      <div className="bg-gray-200 text-center rounded px-2 py-1 w-12 text-xs">{val}</div>
-    ) 
-  },
-  { 
-    header: 'Payment Status', 
-    key: 'paymentStatus',
-    render: (val) => {
-      const isPaid = val === 'Paid';
-      const isPacked = val === 'Packed';
-      return (
-        <div className={`flex items-center gap-1 px-2 py-1 rounded border text-xs font-medium w-fit ${
-          isPaid ? 'bg-emerald-50 border-emerald-200 text-emerald-600' : 
-          isPacked ? 'bg-green-50 border-green-200 text-green-600' : 'bg-orange-50 border-orange-200 text-orange-600'
-        }`}>
-          <span className="text-lg leading-none">{isPaid || isPacked ? '✓' : '◷'}</span>
-          {val}
-        </div>
-      );
-    }
-  },
-  { header: 'Order Status', key: 'orderStatus' },
-  { header: 'Shipment Status', key: 'shipmentStatus', render: () => <div className="h-8 w-24 bg-gray-50 rounded border border-dashed"></div> },
-  { 
-    header: 'Date', 
-    key: 'date',
-    render: (val) => (
-      <div className="flex gap-2">
-        {val}
-      </div>
+      <span className="px-2 py-1 rounded border border-gray-200 text-[10px] font-bold bg-gray-50 uppercase">
+        {val || 'CREATED'}
+      </span>
     )
   },
   {
     header: "Action",
     key: 'action',
     render: (_, row) => (
-      <div className="flex items-center gap-3">
-        {/* Checkbox */}
-        <input 
-          type="checkbox" 
-          className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer" 
-        />
-
-        {/* Edit Pencil Icon */}
-        <button 
-          className="text-gray-500 hover:text-blue-600 transition-colors" 
-          onClick={() => console.log("Editing row:", row.orderId)}
-          title="Edit Order"
-        >
-          <Icons icon="heroicons:pencil-square-solid" size={16} />
-        </button>
-      </div>
+      <button 
+        className="text-gray-400 hover:text-blue-600 transition-colors" 
+        onClick={() => openModal(row)}
+      >
+        <Icons icon="heroicons:pencil-square-solid" size={16} />
+      </button>
     )
   },
 ];
+
+// Change parameter name to 'openModal' to match the calls inside
+// export const orderTable = (openModal) => [
+//   { 
+//     header: 'Order ID', 
+//     key: 'orderId', 
+//     render: (val) => <span className="text-blue-500 font-medium cursor-pointer">{val}</span> 
+//   },
+//   { header: 'Buyer Name', key: 'buyerName', render: (val) => <span className="font-semibold">{val}</span> },
+//   { header: 'Order Amount', key: 'orderAmount', render: (val) => `₹${val?.toLocaleString()}` },
+//   { 
+//     header: 'Payment Status', 
+//     key: 'paymentStatus',
+//     render: (val) => (
+//       <span className={`px-2 py-1 rounded border text-[10px] font-bold uppercase ${
+//           val === 'Paid' ? 'bg-emerald-50 border-emerald-200 text-emerald-600' : 'bg-orange-50 border-orange-200 text-orange-600'
+//       }`}>
+//         {val || 'PENDING'}
+//       </span>
+//     )
+//   },
+//   { 
+//     header: 'Order Status', 
+//     key: 'orderStatus',
+//     render: (val, row) => (
+//       <div className="flex items-center gap-2">
+//         <span className="px-2 py-1 rounded border border-gray-200 text-[10px] font-bold bg-gray-50 uppercase">
+//           {val || 'CREATED'}
+//         </span>
+//       </div>
+//     )
+//   },
+//   { 
+//     header: 'Date', 
+//     key: 'date',
+//     render: (val) => <div className="text-xs text-gray-500">{val}</div>
+//   },
+//   {
+//     header: "Action",
+//     key: 'action',
+//     render: (_, row) => (
+//       <div className="flex items-center gap-3">
+//         <button 
+//           className="text-gray-400 hover:text-blue-600 transition-colors" 
+//           onClick={() => openModal(row)}
+//         >
+//           <Icons icon="heroicons:pencil-square-solid" size={16} />
+//         </button>
+//       </div>
+//     )
+//   },
+// ];
 
 export const orderData = [
   { 
@@ -540,7 +556,7 @@ export const productData = [
 ];
 
 // User Table
-export const userTable = [
+export const userTable = (onEdit) => [
   { 
     header: '# Member ID', 
     key: 'id', 
@@ -548,9 +564,8 @@ export const userTable = [
   },
   { 
     header: 'User', 
-    key: 'first_name', // We use first_name as the primary key for the render function
+    key: 'first_name', 
     render: (_, row) => {
-      // Combine first and last name
       const fullName = `${row.first_name} ${row.last_name}`;
       return (
         <div className="flex items-center gap-3">
@@ -570,30 +585,26 @@ export const userTable = [
   },
   { header: 'Level', key: 'level' },
   { 
-    header: 'Email', 
-    key: 'email', 
-    render: (val) => <span className="text-gray-400 italic">{val}</span> 
+    header: 'Type', 
+    key: 'user_type',
+    render: (val) => (
+      <span className="px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-[10px] font-bold uppercase">
+        {val || 'General'}
+      </span>
+    )
   },
-  { header: 'Join Date', key: 'created_at', render: (val) => {
-    if(!val) return 'N/A';
-    const date = new Date(val);
-    return date.toLocaleDateString();
-  } },
+  { header: 'Join Date', key: 'created_at', render: (val) => val ? new Date(val).toLocaleDateString() : 'N/A' },
   {
     header: "Action",
     key: 'action',
     render: (_, row) => (
       <div className="flex items-center gap-3">
-        <input 
-          type="checkbox" 
-          className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer" 
-        />
         <button 
-          className="text-gray-500 hover:text-blue-600 transition-colors" 
-          onClick={() => console.log("Editing row:", row.pid)}
-          title="Edit Product"
+          className="text-gray-500 hover:text-blue-600 transition-colors p-1 hover:bg-blue-50 rounded" 
+          onClick={() => onEdit(row)}
+          title="Update User Permissions"
         >
-          <Icons icon="heroicons:pencil-square-solid" size={16} />
+          <Icons icon="heroicons:pencil-square-solid" size={18} />
         </button>
       </div>
     )
@@ -1212,3 +1223,30 @@ export const pieReportData = [
   { name: 'Level 4', value: 15, color: '#34D399' },
   { name: 'Level 5', value: 25, color: '#6366F1' }
 ]
+
+// --- Updated Table Configuration (Using 'render' as per your reference) ---
+export const rankTable = [
+  {
+    header: "ID",
+    key: "id",
+    render: (val) => <span className="font-bold text-gray-500">#{val}</span>
+  },
+  {
+    header: "Rank Name",
+    key: "rank",
+    render: (val) => <span className="font-black uppercase text-gray-800">{val || "N/A"}</span>
+  },
+  {
+    header: "Min. Referrals",
+    key: "referral_count",
+    render: (val) => <span className="font-bold">{val ?? 0}</span>
+  },
+  {
+  header: "Total Commission",
+  key: "total_commission",
+    render: (val) => {
+      const num = parseFloat(val);
+      return <span className="text-green-600 font-bold">₹{isNaN(num) ? "0" : num.toLocaleString('en-IN')}</span>
+    }
+  }
+];

@@ -3,6 +3,9 @@ import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import { SWRConfig } from "swr";
 import { fetcher } from "./utils/Api/axiosInstance.js";
 
+// Scroll to top
+import ScrollToTop from "./utils/ScrollToTop.jsx"
+
 // Page Imports
 import Home from "./pages/app/Home.jsx";
 import AboutUS from "./pages/app/AboutUs.jsx"
@@ -67,12 +70,16 @@ import EKYC from "./pages/user/EKYC.jsx";
 import AccountSetting from "./pages/user/AccountSetting.jsx";
 import UserLayout from "./pages/user/UserLayout.jsx";
 import ReportMgt from "./pages/admin/ReportMgt.jsx";
+import ViewOrder from "./pages/order/ViewOrder.jsx";
+import SetCommission from "./components/admin_component/SetCommission.jsx";
+import Rank from "./components/admin_component/Rank.jsx";
 
 const AppLayout = () => {
   return (
     <SWRConfig value={{refreshInterval: 3000 ,fetcher: fetcher}}>
         <Provider store={appStore}>
           <div className="app">
+            <ScrollToTop />
             <Nav />
             <Outlet />
             <Footer />
@@ -185,6 +192,14 @@ const appRouter = createBrowserRouter([
             element: <CommissionMgt />,
           },
           {
+            path: "/admin/comission/set",
+            element: <SetCommission />,
+          },
+          {
+            path: "/admin/comission/rank",
+            element: <Rank />,
+          },
+          {
             path: "/admin/report",
             element: <ReportMgt />,
           },
@@ -229,6 +244,10 @@ const appRouter = createBrowserRouter([
       {
         path: "/order-history",
         element: <OrderHistory />,
+      },
+      {
+        path: "/view-order/:id",
+        element: <ViewOrder />
       },
       {
         path: "/product/:id",

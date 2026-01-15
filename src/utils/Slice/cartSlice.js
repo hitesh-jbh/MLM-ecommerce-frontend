@@ -9,7 +9,7 @@ const cartSlice = createSlice({
       const { id, selectedSize, quantity } = action.payload;
       // Key check: match both ID and Size
       const existingItem = state.items.find(
-        (item) => item.id === id && item.size === selectedSize.size
+        (item) => item.id === id
       );
 
       if (existingItem) {
@@ -26,7 +26,7 @@ const cartSlice = createSlice({
           id,
           name: action.payload.name,
           image: action.payload.image,
-          size: selectedSize.size || action.payload.size || " ",
+          
           price: selectedSize.price || action.payload.price || 0,
           stock: selectedSize.stock,
           quantity: quantity,
@@ -36,7 +36,7 @@ const cartSlice = createSlice({
     },
     updateQuantity: (state, action) => {
       const { id, size, quantity } = action.payload;
-      const item = state.items.find(i => i.id === id && i.size === size);
+      const item = state.items.find(i => i.id === id );
       if (item && quantity > 0 && quantity <= item.stock) {
         item.quantity = quantity;
       }
@@ -45,7 +45,7 @@ const cartSlice = createSlice({
   removeItem: (state, action) => {
     const { id, size } = action.payload;
     // Filter out the item matching both ID and Size
-    state.items = state.items.filter(item => !(item.id === id && item.size === size));
+    state.items = state.items.filter(item => !(item.id === id ));
   },
 
   clearCart: (state, action) => {

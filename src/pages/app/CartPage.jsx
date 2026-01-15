@@ -1,118 +1,183 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Minus, Plus, Trash2 } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
-import { clearCart, removeItem, updateQuantity } from "../../utils/Slice/cartSlice";
-import { placeOrder } from "../../utils/Slice/orderSlice";
-import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import { Minus, Plus, Trash2, Loader2, ShoppingBag } from "lucide-react";
+import { useSelector } from "react-redux";
+import useSWR from "swr";
+import { 
+  viewCartItem, 
+  updateCartQuantity, 
+  removeCartIem, 
+  createOrder // Integrated Generic Service
+} from "../../utils/service/apiService";
+import { toast } from "react-toastify";
 
 export default function Cart() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const cartItems = useSelector((state) => state.cart.items);
+  const token = useSelector((state) => state.auth?.token);
 
-  // Calculate Subtotal
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
+  // Fetch Cart Data
+  const { data, isLoading, mutate } = useSWR(
+    token ? ["/api/cart/", token] : null,
+    ([url, tkn]) => viewCartItem(tkn).then((res) => res.data)
   );
 
-  const handleQuantityChange = (id, size, currentQty, adjustment) => {
-    const newQty = currentQty + adjustment;
-    dispatch(updateQuantity({ id, size, quantity: newQty }));
-  };
+  // Derive cart items from backend response structure
+  const cartItems = useMemo(() => {
+    return data?.data?.items || [];
+  }, [data]);
 
-  const handleRemove = (id, size) => {
-    dispatch(removeItem({ id, size }));
-  };
+  const totalAmount = data?.data?.totalAmount || "0.00";
 
-  const handlePlaceOrder = () => {
-    const finalOrder = {
-      // id: `ORD-${Date.now()}`,
-      items: [...cartItems],
-      totalAmount: subtotal,
-      date: new Date().toLocaleString(),
-      status: "Processing"
+  // --- QUANTITY UPDATE (Optimistic UI) ---
+  const updateQty = async (productId, currentQty, delta) => {
+    const newQty = currentQty + delta;
+    if (newQty < 1) return;
+
+    const optimisticItems = cartItems.map((item) =>
+      item.productId === productId
+        ? { ...item, quantity: newQty, total: (Number(item.price) * newQty).toFixed(2) }
+        : item
+    );
+
+    const optimisticTotal = optimisticItems
+      .reduce((acc, item) => acc + Number(item.total), 0)
+      .toFixed(2);
+
+    const optimisticData = {
+      ...data,
+      data: { ...data.data, items: optimisticItems, totalAmount: optimisticTotal },
+    };
+
+    try {
+      await mutate(updateCartQuantity(token, productId, newQty), {
+        optimisticData: optimisticData,
+        rollbackOnError: true,
+        revalidate: true,
+        populateCache: false,
+      });
+    } catch (err) {
+      toast.error("Failed to update quantity");
     }
-    dispatch(placeOrder(finalOrder));
-    dispatch(clearCart());
-    navigate('/order-history'); 
-    toast.info(`Order Placed Successfully! Total: ₹${subtotal.toFixed(2)}`);
-  }
+  };
 
-  if (cartItems.length === 0) {
+  // --- REMOVE ITEM ---
+  const remove = async (productId) => {
+    try {
+      await removeCartIem(token, productId);
+      mutate();
+      toast.success("Item removed");
+    } catch (err) {
+      toast.error("Could not remove item");
+    }
+  };
+
+  // --- CREATE ORDER (Checkout Integration) ---
+  const handleCheckout = async () => {
+    if (!token) {
+      toast.error("Please login to proceed");
+      return navigate("/login");
+    }
+
+    try {
+      // 1. Map current UI items to the backend payload
+      const orderPayload = {
+        items: cartItems.map((item) => ({
+          productId: item.productId,
+          quantity: item.quantity,
+        })),
+      };
+
+      // 2. Call the backend to create the order
+      const response = await createOrder(token, orderPayload);
+
+      if (response.data.success) {
+        toast.success("Order placed successfully!");
+
+        await mutate({ success: true, data: { items: [], totalAmount: "0.00" } }, false);
+        
+        // 5. Navigate to order history
+        navigate('/cart');
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Checkout failed");
+    }
+  };
+
+  if (isLoading)
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-        <h2 className="text-xl font-medium mb-4">Your cart is empty</h2>
-        <Link to="/" className="bg-black text-white px-6 py-2 rounded-md">
-          Continue Shopping
+      <div className="h-[60vh] flex items-center justify-center">
+        <Loader2 className="animate-spin text-gray-400" size={40} />
+      </div>
+    );
+
+  if (cartItems.length === 0)
+    return (
+      <div className="h-[70vh] flex flex-col items-center justify-center px-4 text-center">
+        <ShoppingBag size={64} className="text-gray-300 mb-6" />
+        <h2 className="text-2xl font-bold text-gray-900">Your cart is empty</h2>
+        <Link
+          to="/"
+          className="mt-8 bg-black text-white px-10 py-4 rounded-xl font-bold uppercase tracking-widest"
+        >
+          Start Shopping
         </Link>
       </div>
     );
-  }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 md:px-10 py-10">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-2xl font-semibold text-black mb-8">Shopping Cart</h1>
+    <div className="max-w-6xl mx-auto p-6 py-12">
+      <h1 className="text-3xl font-bold mb-10">Shopping Cart</h1>
 
-        <div className="space-y-6 mb-10">
+      <div className="flex flex-col gap-10">
+        {/* ITEMS LIST AREA */}
+        <div className="space-y-2">
           {cartItems.map((item) => (
             <div
-              key={`${item.id}-${item.size}`}
-              className="flex gap-4 pb-5 border-b border-gray-200"
+              key={item.cartItemId}
+              className="relative bg-white p-6 border-b border-gray-100 flex gap-6 items-start group"
             >
-              <Link to={`/product/${item.id}`} className="w-20 h-24 flex-shrink-0">
+              <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                 <img
-                  src={item.image}
+                  src={item.thumbnail || "https://via.placeholder.com/100"}
                   alt={item.name}
-                  className="w-full h-full object-cover rounded-md bg-gray-100"
+                  className="w-full h-full object-cover"
                 />
-              </Link>
+              </div>
 
               <div className="flex-1">
                 <div className="flex justify-between items-start">
-                  <Link to={`/product/${item.id}`} className="hover:underline">
-                    <h3 className="text-sm font-medium text-gray-900 leading-snug line-clamp-2">
-                      {item.name}
-                    </h3>
-                  </Link>
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
+                    <p className="text-lg font-semibold mt-2">₹ {item.price}</p>
+                  </div>
                   <button
-                    onClick={() => handleRemove(item.id, item.size)}
-                    className="text-gray-400 hover:text-red-500 transition"
+                    onClick={() => remove(item.productId)}
+                    className="text-gray-300 hover:text-red-500 transition-colors"
                   >
-                    <Trash2 size={18} />
+                    <Trash2 size={20} />
                   </button>
                 </div>
 
-                <p className="text-xs text-gray-500 mt-1">Size: {item.size}</p>
-                <p className="text-sm font-semibold text-black mt-2">
-                  {/* ₹ {item.price} */}
-                  ₹ {item.price.toFixed(2)}
-                </p>
-
-                <div className="flex items-center justify-between mt-4">
-                  <div className="flex items-center border border-gray-300 rounded-md">
+                <div className="flex justify-between items-center mt-4">
+                  <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
                     <button
-                      disabled={item.quantity <= 1}
-                      onClick={() => handleQuantityChange(item.id, item.size, item.quantity, -1)}
-                      className="px-2 py-1 hover:bg-gray-100 disabled:opacity-30"
+                      onClick={() => updateQty(item.productId, item.quantity, -1)}
+                      className="px-3 py-1 hover:bg-gray-50 text-gray-500"
                     >
                       <Minus size={14} />
                     </button>
-                    <span className="px-3 text-xs font-medium">{item.quantity}</span>
+                    <span className="px-4 py-1 text-sm font-bold min-w-[40px] text-center border-x border-gray-200">
+                      {item.quantity}
+                    </span>
                     <button
-                      disabled={item.quantity >= item.stock}
-                      onClick={() => handleQuantityChange(item.id, item.size, item.quantity, 1)}
-                      className="px-2 py-1 hover:bg-gray-100 disabled:opacity-30"
+                      onClick={() => updateQty(item.productId, item.quantity, 1)}
+                      className="px-3 py-1 hover:bg-gray-50 text-gray-500"
                     >
                       <Plus size={14} />
                     </button>
                   </div>
-                  
-                  <p className="text-xs text-gray-400">
-                    Total: ₹ {(item.price * item.quantity).toFixed(2)}
+                  <p className="text-sm text-gray-400">
+                    Total: <span className="text-gray-900 font-medium">₹ {item.total}</span>
                   </p>
                 </div>
               </div>
@@ -120,22 +185,19 @@ export default function Cart() {
           ))}
         </div>
 
-        {/* Summary Section */}
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <div className="flex justify-between items-center mb-6">
-            <p className="text-lg font-semibold text-black">Subtotal</p>
-            <p className="text-lg font-semibold text-black">₹ {subtotal.toFixed(2)}</p>
+        {/* SUMMARY SECTION - CENTERED */}
+        <div className="bg-gray-50/50 rounded-2xl p-8 max-w-lg mx-auto w-full border border-gray-100 mt-10">
+          <div className="flex justify-between items-center mb-8">
+            <span className="text-xl font-medium text-gray-900">Subtotal</span>
+            <span className="text-2xl font-bold">₹ {totalAmount}</span>
           </div>
 
-          <button onClick={handlePlaceOrder} className="w-full bg-black hover:bg-gray-900 text-white py-4 rounded-md text-sm font-semibold transition">
+          <button
+            onClick={handleCheckout}
+            className="w-full bg-black text-white py-5 rounded-xl text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl active:scale-[0.98]"
+          >
             PROCEED TO CHECKOUT
           </button>
-          
-          <div className="mt-6 flex justify-center gap-3 opacity-60 grayscale">
-            {/* Payment Icons */}
-            <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" className="h-4" />
-            <img src="https://cyberinnovate.ie/wp-content/uploads/2024/02/mastercard.webp" alt="Mastercard" className="h-4" />
-          </div>
         </div>
       </div>
     </div>

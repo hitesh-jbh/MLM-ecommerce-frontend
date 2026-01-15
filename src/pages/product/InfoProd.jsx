@@ -10,7 +10,7 @@ import ProductInfoShimmer from '../../components/shimmer/ProductInfoShimmer.jsx'
 import HappyCustomersCards from "../../components/ui/HappyCustomersCards.jsx";
 
 import { useDispatch } from 'react-redux';
-import { viewProduct, viewAllProducts } from '../../utils/Service/apiService.js';
+import { viewProduct, viewAllProducts } from '../../utils/service/apiService.js';
 
 const InfoProd = () => {
     const { id } = useParams();

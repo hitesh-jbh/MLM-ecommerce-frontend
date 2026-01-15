@@ -7,7 +7,7 @@ import {
     setProducts, toggleBrand, toggleSize, 
     setPriceRange, setSearchQuery, setSortBy, clearFilters 
 } from "../../utils/Slice/productSlice.js";
-import { viewAllProducts } from '../../utils/Service/apiService.js';
+import { viewAllProducts } from '../../utils/service/apiService.js';
 import { Brands } from '../../utils/Constants.jsx';
 
 // UI Components

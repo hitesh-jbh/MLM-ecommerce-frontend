@@ -1,126 +1,34 @@
-// import React, { useState, useEffect, useMemo, useCallback } from "react";
-// import { useSelector } from "react-redux";
-// import useSWR from "swr"; 
-// import { ToastContainer, toast } from "react-toastify";
-// import 'react-toastify/dist/ReactToastify.css';
-
-// // API & UI Components
-// import { fetcher } from "../../../utils/Api/axiosInstance";
-// import KpiCard from "../../components/admin_component/KpiCards";
-// import { GenericTable } from "../../components/partials/table/GenericTable";
-// import { userTable } from "../../../utils/Constants";
-// import FilterBar from "./Filterbar";
-// import AddStaffModal from "./AddStaffModal";
-
-// function UserMgt() {
-//     const { token: reduxToken } = useSelector((state) => state.auth);
-//     const [userType, setUserType] = useState("admin"); 
-//     const [filteredUsers, setFilteredUsers] = useState([]);
-//     const [isModalOpen, setIsModalOpen] = useState(false);
-
-//     // Fetch data based on active userType
-//     const { data, isLoading, mutate } = useSWR(
-//         reduxToken ? `/api/admin/all?userType=${userType}` : null, 
-//         fetcher
-//     );
-
-//     const allUsers = useMemo(() => {
-//         const rawUsers = data?.users || data;
-//         return Array.isArray(rawUsers) ? rawUsers : [];
-//     }, [data]);
-
-//     useEffect(() => {
-//         setFilteredUsers(allUsers);
-//     }, [allUsers]);
-
-//     const applyFilters = useCallback((filters) => {
-//         if (filters.userType && filters.userType.toLowerCase() !== userType) {
-//             setUserType(filters.userType.toLowerCase());
-//             return;
-//         }
-
-//         let result = [...allUsers];
-//         if (filters.role && filters.role !== "All") {
-//             result = result.filter(u => u.role?.toLowerCase() === filters.role.toLowerCase());
-//         }
-//         setFilteredUsers(result);
-//     }, [allUsers, userType]);
-
-//     const activeCount = useMemo(() => 
-//         filteredUsers.filter(u => u.is_active === true || u.status === 'active').length, 
-//     [filteredUsers]);
-
-//     return (
-//         <div className="p-4 sm:p-6 space-y-8 max-w-[1600px] mx-auto">
-//             {/* The single container that handles all toasts in this view */}
-//             <ToastContainer position="bottom-right" theme="colored" autoClose={3000} />
-            
-//             <div className="flex justify-between items-center">
-//                  <div>
-//                      <h1 className="text-2xl font-bold text-gray-800 tracking-tight">User Management</h1>
-//                      <p className="text-gray-500 text-sm mt-1">Viewing <span className="font-bold text-black uppercase">{userType}</span> accounts.</p>
-//                  </div>
-//                  <button 
-//                     onClick={() => setIsModalOpen(true)}
-//                     className="bg-black text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:scale-105 transition-transform"
-//                  >
-//                     + Add Staff
-//                  </button>
-//              </div>
-
-//             <AddStaffModal 
-//                 isOpen={isModalOpen} 
-//                 onClose={() => setIsModalOpen(false)} 
-//                 onSuccess={() => {
-//                     mutate(); // Refetch the table data
-//                     toast.success("Account created successfully!");
-//                 }} 
-//             />
-
-//             <div className="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-4 lg:grid-cols-4">
-//                 <KpiCard title="Total Users" value={allUsers.length} />
-//                 <KpiCard title="Active Users" value={activeCount} />
-//                 <KpiCard title="Inactive Users" value={allUsers.length - activeCount} />
-//                 <KpiCard title="New Members" value="--" />
-//             </div>
-
-//             <FilterBar onFilterChange={applyFilters} />
-
-//             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden min-h-[400px]">
-//                 {isLoading ? (
-//                     <div className="p-24 flex flex-col items-center justify-center">
-//                         <div className="w-10 h-10 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
-//                         <p className="mt-4 text-gray-400 text-xs font-bold uppercase tracking-widest">Loading...</p>
-//                     </div>
-//                 ) : (
-//                     <GenericTable columns={userTable} data={filteredUsers} />
-//                 )}
-//             </div>
-//         </div>
-//     );
-// }
-
-// export default UserMgt;
 
 
-import React, { useState, useEffect, useMemo, useCallback } from "react"; // Added useMemo
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useSelector } from "react-redux";
 import useSWR from "swr"; 
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import KpiCard from "../../components/admin_component/KpiCards";
 import { GenericTable } from "../../components/partials/table/GenericTable";
-import { userData, userTable } from "../../utils/Constants";
+import { userTable } from "../../utils/Constants";
 import FilterBar from "../../components/ui/bar/Filterbar";
 import AddStaffModal from "../../components/admin_component/AddStaffModal";
+import Icons from "../../components/ui/Icon";
+import { updateStaff } from "../../utils/service/apiService";
+import { statusUpdate } from "../../utils/service/apiService"; 
 
 function UserMgt() {
-    const [filteredUsers, setFilteredUsers] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(false); // Added missing state
+    const { token } = useSelector((state) => state.auth);
     
-    const { token: reduxToken } = useSelector((state) => state.auth);
+    // UI States
+    const [filteredUsers, setFilteredUsers] = useState([]);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    
+    // Selection & Payload States
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [editPayload, setEditPayload] = useState({ role: "", user_type: "" });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { data, error: swrError, isLoading, mutate } = useSWR('/api/admin/all');
+    // Fetch Data
+    const { data, isLoading, mutate } = useSWR('/api/admin/all');
 
     const allUsers = useMemo(() => {
         const rawUsers = data?.users || data;
@@ -131,92 +39,139 @@ function UserMgt() {
         setFilteredUsers(allUsers);
     }, [allUsers]);
 
+    // Handle Edit Click
+    const handleOpenEdit = (user) => {
+        setSelectedUser(user);
+        setEditPayload({
+            role: user.role || "user",
+            user_type: user.user_type || "general"
+        });
+        setIsEditModalOpen(true);
+    };
+
+    // Handle API Update
+    const handleUpdatePermissions = async () => {
+        if (!selectedUser) return;
+        
+        setIsSubmitting(true);
+        try {
+            const userId = selectedUser.id || selectedUser._id;
+            // API expects: token, userId, and object with role/user_type
+            await updateStaff(token, userId, editPayload);
+            
+            toast.success(`Updated ${selectedUser.first_name} successfully!`);
+            mutate(); // Revalidation
+            setIsEditModalOpen(false);
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to update permissions");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     const applyFilters = useCallback((filters) => {
         let result = [...allUsers];
         if (filters.role && filters.role !== "All") {
             result = result.filter(u => u.role?.toLowerCase() === filters.role.toLowerCase());
         }
-        if (filters.rank && filters.rank !== "All") {
-            result = result.filter(u => u.rank === filters.rank);
-        }
         setFilteredUsers(result);
     }, [allUsers]);
-    console.log(allUsers);
-
-    const activeFilteredCount = useMemo(() => {
-        return filteredUsers.filter(u => u.is_active === true || u.status === 'active').length;
-    }, [filteredUsers]);
-
-    const isNewThisMonth = (dateString) => {
-        if (!dateString) return false;
-        const date = new Date(dateString);
-        const now = new Date();
-        return (
-            date.getMonth() === now.getMonth() && 
-            date.getFullYear() === now.getFullYear()
-        );
-    };
-
-    const KpiData = [
-        { id: "1", title: "Total Users", value: allUsers.length },
-        { id: "2", title: "Active Users", value: filteredUsers.length },
-        { id: "3", title: "Inactive Users", value: allUsers.length - filteredUsers.length },
-        { id: "4", title: "New This Month", value: isNewThisMonth.length || "0" }, 
-    ];
 
     return (
-        <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-[1600px] mx-auto">
-            <ToastContainer 
-                    position="bottom-right"
-                    autoClose={3000}
-                    hideProgressBar={false}
-                    newestOnTop
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme="light"
-                  />
-             <div className="flex justify-between items-center">
-                 <div>
+        <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-[1600px] mx-auto min-h-screen">
+            <ToastContainer position="bottom-right" />
+
+            <div className="flex justify-between items-center">
+                <div>
                     <h1 className="text-2xl font-bold text-gray-800 tracking-tight">User Management</h1>
-                    <p className="text-gray-500 text-sm mt-1">Monitor user activity and referral structures.</p>
-                 </div>
-                 {/* Added a button to actually open your modal */}
-                 <button 
-                    onClick={() => setIsModalOpen(true)}
-                    className="bg-black text-white px-4 py-2 rounded-lg font-bold text-sm"
-                 >
-                    Add Staff
-                 </button>
-             </div>
+                    <p className="text-gray-500 text-sm mt-1">Manage user roles and partner types.</p>
+                </div>
+                <button 
+                    onClick={() => setIsAddModalOpen(true)}
+                    className="bg-black text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition"
+                >
+                    + Add Staff
+                </button>
+            </div>
 
-             <AddStaffModal 
-                isOpen={isModalOpen} 
-                onClose={() => setIsModalOpen(false)} 
-                onSuccess={() => mutate()} // Tell SWR to refresh data after adding
-            />
-
-             <div className="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-4 lg:grid-cols-4">
-                 {KpiData.map((item) => (
-                    <KpiCard key={item.id} {...item} />
-                ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <KpiCard title="Total Users" value={allUsers.length} />
+                <KpiCard title="Filtered List" value={filteredUsers.length} />
             </div>
             
             <FilterBar onFilterChange={applyFilters} />
 
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                 {isLoading ? (
-                    <div className="p-20 flex flex-col items-center justify-center space-y-4">
-                        <div className="w-8 h-8 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
-                        <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">Fetching Database...</p>
+                    <div className="p-20 text-center text-gray-400 animate-pulse font-bold tracking-widest uppercase text-xs">
+                        Loading User Directory...
                     </div>
                 ) : (
-                    <GenericTable columns={userTable} data={filteredUsers} />
-                    // <GenericTable columns={userTable} data={userData} />
+                    <GenericTable columns={userTable(handleOpenEdit)} data={filteredUsers} />
                 )}
             </div>
+
+            {/* ASSIGN ROLE & TYPE MODAL */}
+            {isEditModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in duration-200">
+                        <div className="px-6 py-4 border-b flex justify-between items-center bg-gray-50">
+                            <div>
+                                <h3 className="font-bold text-gray-800">Assign Permissions</h3>
+                                <p className="text-[10px] font-mono text-blue-600 mt-0.5">UID: #{selectedUser?.id || selectedUser?._id}</p>
+                            </div>
+                            <button onClick={() => setIsEditModalOpen(false)} className="text-gray-400 hover:text-gray-600">
+                                <Icons icon="heroicons:x-mark" size={20}/>
+                            </button>
+                        </div>
+                        
+                        <div className="p-6 space-y-6">
+                            {/* Role Select */}
+                            <div>
+                                <label className="block text-[10px] font-black text-gray-400 uppercase mb-2 tracking-widest">System Role</label>
+                                <select 
+                                    className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-black outline-none bg-white transition"
+                                    value={editPayload.role}
+                                    onChange={(e) => setEditPayload({...editPayload, role: e.target.value})}
+                                >
+                                    <option value="customer">Customer</option>
+                                    <option value="inventory_manager">Manager</option>
+                                    <option value="super_admin">Super Administrator</option>
+                                </select>
+                            </div>
+
+                            {/* User Type Select */}
+                            <div>
+                                <label className="block text-[10px] font-black text-gray-400 uppercase mb-2 tracking-widest">User Category</label>
+                                <select 
+                                    className="w-full border border-gray-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-black outline-none bg-white transition"
+                                    value={editPayload.user_type}
+                                    onChange={(e) => setEditPayload({...editPayload, user_type: e.target.value})}
+                                >
+                                    <option value="customer">Customer</option>
+                                    <option value="staff">Staff</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="px-6 py-4 bg-gray-50 border-t flex justify-end gap-3">
+                            <button onClick={() => setIsEditModalOpen(false)} className="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-700">
+                                Cancel
+                            </button>
+                            <button 
+                                onClick={handleUpdatePermissions} 
+                                disabled={isSubmitting}
+                                className="px-8 py-2.5 bg-black text-white rounded-xl font-bold text-sm disabled:bg-gray-400 shadow-lg shadow-black/10 active:scale-95 transition-all"
+                            >
+                                {isSubmitting ? "Updating..." : "Confirm Changes"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <AddStaffModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} onSuccess={() => mutate()} />
         </div>
     );
 }

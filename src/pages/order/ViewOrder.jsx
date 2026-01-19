@@ -79,9 +79,11 @@ const ViewOrder = () => {
                         <div key={index} className="flex flex-col sm:flex-row gap-6 pb-8 border-b last:border-0 border-gray-100 last:pb-0">
                             {/* Product Image Placeholder */}
                             <div className="w-full sm:w-32 h-32 bg-gray-100 rounded-xl border border-gray-200 flex items-center justify-center shrink-0">
-                                <span className="text-gray-400 text-[10px] font-bold uppercase tracking-tighter text-center px-2">
-                                    {item.name}
-                                </span>
+                                <img 
+                                    src={item.thumbnail_url || "https://via.placeholder.com/150"} 
+                                    alt={item.name} 
+                                    className="w-full h-full object-contain" 
+                                />
                             </div>
 
                             {/* Product Info */}
@@ -89,7 +91,7 @@ const ViewOrder = () => {
                                 <div className="space-y-1">
                                     <h3 
                                         className="text-[#B12704] font-bold hover:underline cursor-pointer text-lg leading-tight"
-                                        onClick={() => navigate(`/info/${item.product_id}`)}
+                                        onClick={() => navigate(`/product/${item.product_id}`)}
                                     >
                                         {item.name}
                                     </h3>
@@ -104,7 +106,7 @@ const ViewOrder = () => {
                                 {/* Action Buttons */}
                                 <div className="flex flex-col gap-2 w-full sm:w-48 justify-start">
                                     <button 
-                                        onClick={() => navigate(`/info/${item.product_id}`)}
+                                        onClick={() => navigate(`/product/${item.product_id}`)}
                                         className="w-full bg-[#FFD814] hover:bg-[#F7CA00] text-black text-xs py-2.5 rounded-lg font-bold border border-[#F2C200] shadow-sm transition-colors"
                                     >
                                         Buy it again

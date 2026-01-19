@@ -80,15 +80,19 @@ export default function Cart() {
 
     try {
       // 1. Map current UI items to the backend payload
+      // const orderPayload = {
+      //   items: cartItems.map((item) => ({
+      //     productId: item.productId,
+      //     quantity: item.quantity,
+      //     source: "CART",
+      //   })),
+      // };
       const orderPayload = {
-        items: cartItems.map((item) => ({
-          productId: item.productId,
-          quantity: item.quantity,
-          source: "CART",
-        })),
-      };
+        source: "CART"
+      }
 
       // 2. Call the backend to create the order
+      // const response = await createOrder(token, orderPayload);
       const response = await createOrder(token, orderPayload);
 
       if (response.data.success) {

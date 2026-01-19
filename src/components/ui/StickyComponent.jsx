@@ -6,11 +6,14 @@ import Modal from "../ui/Modal.jsx";
 
 const StickyComponent = () => {
   const [isVisible, setIsVisible] = useState(false);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   // function modalClick() {
   //   navigate("/modal");
   // }
+  function modalClick() {
+    navigate("/gentle");
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,11 +31,12 @@ const StickyComponent = () => {
       
       <div className="pointer-events-auto w-full sm:w-auto order-2 sm:order-1">
         <NormalButton 
-          content="BUY MORE, SAVE MORE | GET1FREE" 
+          // content="BUY MORE, SAVE MORE | GET1FREE" 
+          content="BUY NOW" 
           bg="bg-black" 
           noHover={true} 
-          className="sm:w-auto text-[10px] md:text-[10px] lg:text-[12px] tracking-[0.15em] py-1 px-1 lg:px-4 shadow-2xl rounded-full md:rounded-lg" 
-          // onClick={modalClick}
+          className="sm:w-auto text-[10px] md:text-[10px] lg:text-[12px] tracking-[0.15em] py-1 px-1 lg:px-4 shadow-2xl rounded-full md:rounded-lg cursor-pointer" 
+          onClick={modalClick}
         />
       </div>
 

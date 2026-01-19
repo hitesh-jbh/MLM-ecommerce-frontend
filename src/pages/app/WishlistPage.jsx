@@ -95,7 +95,8 @@ export default function WishlistPage() {
                 <div className="flex-1 flex flex-col justify-between py-1">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-bold text-lg text-gray-900">{item.product_name || item.name}</h3>
+                      <h3 className="font-bold text-lg text-gray-900 cursor-pointer" 
+                        onClick={() => navigate(`/product/${prodId}`)}>{item.product_name || item.name}</h3>
                     </div>
                     <button 
                       onClick={() => handleRemove(prodId)} 

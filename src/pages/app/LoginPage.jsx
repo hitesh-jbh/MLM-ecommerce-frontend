@@ -69,6 +69,9 @@ const Login = () => {
       
       setIsModalOpen(false);
       setForgotEmail('');
+      setTimeout(() => {
+        navigate("/reset-password")
+      }, 2000);
     } catch (err) {
       const errorMessage = err.response?.data?.message || 'Failed to send reset link.';
       toast.error(errorMessage);

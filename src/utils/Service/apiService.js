@@ -30,6 +30,14 @@ export const editProfile = (token, userData) => {
   });
 };
 
+export const refferalTree = (token) => {
+    return api.get("/api/referral", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+}
+
 
 
 // Admin Api
@@ -282,6 +290,25 @@ export const getReview = (token, prodId) => {
 }
 export const deleteReview = (token, prodId) => {
     return api.delete(`api/review/${prodId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+}
+
+export const productReview = (token, prodId) => {
+    return api.get(`/api/review/product/${prodId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+}
+
+
+// Address
+export const saveAddress = (token, addressData) => {
+    return api.post("/api/address/", addressData, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+}
+export const getAddress = (token,) => {
+    return api.get("/api/address/", {
         headers: { Authorization: `Bearer ${token}` }
     });
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { resetPassword } from '../../utils/Service/apiService';// Adjust path as needed
+import { resetPassword } from '../../utils/service/apiService';// Adjust path as needed
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -100,12 +100,12 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 flex items-center justify-center py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center py-12 px-4">
       <div className="max-w-md w-full space-y-8 bg-white rounded-2xl shadow-xl p-8">
         <div className="text-center">
           <div className="flex justify-center mb-6">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <svg className="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-gray-100 p-3 rounded-full">
+              <svg className="w-12 h-12 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
@@ -117,21 +117,21 @@ const ResetPassword = () => {
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email Address</label>
+            <label className="block text-sm font-medium text-gray-900">Email Address</label>
             <div className="flex gap-2">
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
+                className={`flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="you@example.com"
               />
               <button
                 type="button"
                 onClick={handleSendOTP}
                 disabled={isLoading}
-                className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium"
+                className="px-4 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 disabled:opacity-50 font-medium transition-colors"
               >
                 Send OTP
               </button>
@@ -141,14 +141,14 @@ const ResetPassword = () => {
 
           {/* OTP */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">OTP Code</label>
+            <label className="block text-sm font-medium text-gray-900">OTP Code</label>
             <input
               type="text"
               name="otp"
               value={formData.otp}
               onChange={handleChange}
               maxLength="6"
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 ${errors.otp ? 'border-red-500' : 'border-gray-300'}`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 ${errors.otp ? 'border-red-500' : 'border-gray-300'}`}
               placeholder="6-digit OTP"
             />
             {errors.otp && <p className="mt-1 text-xs text-red-600">{errors.otp}</p>}
@@ -156,19 +156,19 @@ const ResetPassword = () => {
 
           {/* New Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">New Password</label>
+            <label className="block text-sm font-medium text-gray-900">New Password</label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 name="newPassword"
                 value={formData.newPassword}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 ${errors.newPassword ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 ${errors.newPassword ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder="Min 6 characters"
               />
               <button
                 type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600 hover:text-gray-900"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? "Hide" : "Show"}
@@ -179,13 +179,13 @@ const ResetPassword = () => {
 
           {/* Confirm Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
+            <label className="block text-sm font-medium text-gray-900">Confirm Password</label>
             <input
               type="password"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'}`}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'}`}
               placeholder="Repeat password"
             />
             {errors.confirmPassword && <p className="mt-1 text-xs text-red-600">{errors.confirmPassword}</p>}
@@ -193,7 +193,7 @@ const ResetPassword = () => {
 
           {/* Message Alert */}
           {message.text && (
-            <div className={`p-4 rounded-lg text-sm font-medium ${message.type === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+            <div className={`p-4 rounded-lg text-sm font-medium ${message.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'}`}>
               {message.text}
             </div>
           )}
@@ -203,14 +203,14 @@ const ResetPassword = () => {
             <button
               type="button"
               onClick={() => navigate('/profile')}
-              className="flex-1 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
+              className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-all"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 shadow-md font-medium"
+              className="flex-1 px-4 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 disabled:opacity-50 shadow-md font-medium transition-colors"
             >
               {isLoading ? 'Processing...' : 'Reset Password'}
             </button>

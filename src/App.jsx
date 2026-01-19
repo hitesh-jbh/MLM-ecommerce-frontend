@@ -161,7 +161,11 @@ const appRouter = createBrowserRouter([
       },
       {
         path: "/reset-password",
-        element: <ResetPassword />,
+        element: 
+          // <PublicRoute requireResetToken={true} >
+            <ResetPassword />,
+          // </PublicRoute>
+        // )
       },
       {
         path: "/edit-profile",

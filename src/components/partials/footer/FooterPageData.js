@@ -1,9 +1,11 @@
+import { contactEmail, contactNumber, websiteName } from "../../../utils/Constants";
+
 // policyContent.js
 export const FooterPageData = [
     {
         id: "shipping-cancellation",
         title: "Shipping & Cancellation Policy",
-        intro: "At Gentlehaus, we are committed to ensuring a satisfying shopping experience. Please review the following policy to understand our guidelines on returns, refunds, and cancellations.",
+        intro: `At ${websiteName}, we are committed to ensuring a satisfying shopping experience. Please review the following policy to understand our guidelines on returns, refunds, and cancellations.`,
         sections: [
             {
             id: "shipping-eligibility",
@@ -34,7 +36,7 @@ export const FooterPageData = [
                 items: [
                     {
                     type: "paragraph",
-                    text: "To initiate a return, contact us on WhatsApp at **+91 74360 04465** with your Order Number and photo proof."
+                    text: "To initiate a return, contact us on WhatsApp at **`${contactNumber}`** with your Order Number and photo proof."
                     },
                     {
                     type: "warning",
@@ -44,14 +46,13 @@ export const FooterPageData = [
                 }
             ],
             contact: {
-                email: "contact.gentlehaus@gmail.com",
-                whatsapp: "+91 74360 04465"
-            }
+                email: `${contactEmail}`,
+                whatsapp: `${contactNumber}`            }
         },
     {
         id: "policy",
         title: "Policy",
-        intro: "At Gentlehaus, we are committed to ensuring a satisfying shopping experience. Please review the following policy to understand our guidelines on returns, refunds, and cancellations.",
+        intro: `At ${websiteName}, we are committed to ensuring a satisfying shopping experience. Please review the following policy to understand our guidelines on returns, refunds, and cancellations.`,
         sections: [
             {
             id: "eligibility",
@@ -82,7 +83,7 @@ export const FooterPageData = [
                 items: [
                     {
                     type: "paragraph",
-                    text: "To initiate a return, contact us on WhatsApp at **+91 74360 04465** with your Order Number and photo proof."
+                    text: "To initiate a return, contact us on WhatsApp at **`${contactNumber}`** with your Order Number and photo proof."
                     },
                     {
                     type: "warning",
@@ -92,14 +93,13 @@ export const FooterPageData = [
                 }
             ],
             contact: {
-                email: "contact.gentlehaus@gmail.com",
-                whatsapp: "+91 74360 04465"
-            }
+                email: `${contactEmail}`,
+                whatsapp: `${contactNumber}`            }
         },
     {
         id: "retun-refund",
         title: "Return & Refund Policy",
-        intro: "At Gentlehaus, we are committed to ensuring a satisfying shopping experience. Please review the following policy to understand our guidelines on returns, refunds, and cancellations.",
+        intro: `At ${websiteName}, we are committed to ensuring a satisfying shopping experience. Please review the following policy to understand our guidelines on returns, refunds, and cancellations.`,
         sections: [
             {
             id: "retun-eligibility",
@@ -130,7 +130,7 @@ export const FooterPageData = [
                 items: [
                     {
                     type: "paragraph",
-                    text: "To initiate a return, contact us on WhatsApp at **+91 74360 04465** with your Order Number and photo proof."
+                    text: "To initiate a return, contact us on WhatsApp at **`${contactNumber}`** with your Order Number and photo proof."
                     },
                     {
                     type: "warning",
@@ -140,14 +140,13 @@ export const FooterPageData = [
                 }
             ],
             contact: {
-                email: "contact.gentlehaus@gmail.com",
-                whatsapp: "+91 74360 04465"
-            }
+                email: `${contactEmail}`,
+                whatsapp: `${contactNumber}`            }
         },
     {
         id: "term-condition",
         title: "Terms & Conditions Policy",
-        intro: "At Gentlehaus, we are committed to ensuring a satisfying shopping experience. Please review the following policy to understand our guidelines on returns, refunds, and cancellations.",
+        intro: `At ${websiteName}, we are committed to ensuring a satisfying shopping experience. Please review the following policy to understand our guidelines on returns, refunds, and cancellations.`,
         sections: [
             {
             id: "term-eligibility",
@@ -178,7 +177,7 @@ export const FooterPageData = [
                 items: [
                     {
                     type: "paragraph",
-                    text: "To initiate a return, contact us on WhatsApp at **+91 74360 04465** with your Order Number and photo proof."
+                    text: "To initiate a return, contact us on WhatsApp at **`${contactNumber}`** with your Order Number and photo proof."
                     },
                     {
                     type: "warning",
@@ -188,14 +187,13 @@ export const FooterPageData = [
                 }
             ],
             contact: {
-                email: "contact.gentlehaus@gmail.com",
-                whatsapp: "+91 74360 04465"
-            }
+                email: `${contactEmail}`,
+                whatsapp: `${contactNumber}`            }
         },
     {
         id: "privacy-policy",
         title: "Privacy Policy",
-        intro: "At Gentlehaus, we are committed to ensuring a satisfying shopping experience. Please review the following policy to understand our guidelines on returns, refunds, and cancellations.",
+        intro: `At ${websiteName}, we are committed to ensuring a satisfying shopping experience. Please review the following policy to understand our guidelines on returns, refunds, and cancellations.`,
         sections: [
             {
             id: "privacy-eligibility",
@@ -226,7 +224,7 @@ export const FooterPageData = [
                 items: [
                     {
                     type: "paragraph",
-                    text: "To initiate a return, contact us on WhatsApp at **+91 74360 04465** with your Order Number and photo proof."
+                    text: "To initiate a return, contact us on WhatsApp at **`${contactNumber}`** with your Order Number and photo proof."
                     },
                     {
                     type: "warning",
@@ -236,8 +234,7 @@ export const FooterPageData = [
                 }
             ],
             contact: {
-                email: "contact.gentlehaus@gmail.com",
-                whatsapp: "+91 74360 04465"
-            }
+                email: `${contactEmail}`,
+                whatsapp: `${contactNumber}`            }
         },
 ];

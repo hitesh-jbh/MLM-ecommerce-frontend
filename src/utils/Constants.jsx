@@ -6,6 +6,9 @@ export const webSocialHandle = "@mlm.india";
 export const webSocialLink = "https://instagram.com/mlm.india";
 export const currentYear = new Date().getFullYear();
 export const dummyEmail = "email@mlm.com";
+export const contactEmail = "contact.mlm@gmail.com";
+export const contactNumber = "+91 74360 04454";
+
 
 export const Product = [
     {
@@ -195,13 +198,22 @@ export const Product = [
     },
 ];
 
+// export const Brands = [
+//         { name: 'Nike', count: 123, logo: 'ℕ' },
+//         { name: 'Adidas', count: 55, logo: '𝔄' },
+//         { name: 'Puma', count: 325, logo: '𝕻' },
+//         { name: 'Uniqlo', count: 61, logo: 'ⓤ' },
+//         { name: 'New Balance', count: 99, logo: '𝔵' },
+//         { name: 'Apple', count: 65, logo: '𝕴' },
+//     ];
 export const Brands = [
-        { name: 'Nike', count: 123, logo: 'ℕ' },
-        { name: 'Adidas', count: 55, logo: '𝔄' },
-        { name: 'Puma', count: 325, logo: '𝕻' },
-        { name: 'Uniqlo', count: 61, logo: 'ⓤ' },
-        { name: 'New Balance', count: 99, logo: '𝔵' },
-        { name: 'Apple', count: 65, logo: '𝕴' },
+        { name: 'Electronics'},
+        { name: 'Fashion'},
+        { name: 'Food'},
+        { name: 'Health'},
+        { name: 'Beauty'},
+        { name: 'Furniture'},
+        { name: 'Toys'},
     ];
 
 export const shippedProducts = [

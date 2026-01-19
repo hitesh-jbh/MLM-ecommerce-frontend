@@ -54,12 +54,22 @@ export const setCommission = (token, level, commissionData) => {
     });
 };
 
-export const updateStaff = (token, staffData) => {
-    return api.put('/api/admin/staff', staffData, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        }
-    });
+// apiService.js
+export const updateStaff = async (token, staffData) => {
+    try {
+        console.log("Making API call to /api/admin/staff with data:", staffData);
+        const response = await api.put('/api/admin/staff', staffData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log("API call successful:", response.data);
+        return response;
+    } catch (error) {
+        console.error("API call failed:", error);
+        throw error;
+    }
 };
 
 export const viewCommission = (token) => {
@@ -224,4 +234,54 @@ export const forgotPassword = (data) => {
 
 export const resetPassword = (data) => {
     return api.post('/api/auth/reset-password', data);
+}
+
+// wallet
+export const getWallet = (token) => {
+    return api.get('/api/wallet/', {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+}
+
+// wishlist
+// utils/service/apiService.js
+
+export const getWishlist = (token) => {
+    return api.get('/api/wishlist/', {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+export const addToWishlist = (token, prodId) => {
+    return api.post('/api/wishlist/', { productId: prodId }, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+export const removeToWishlist = (token, prodId) => {
+    // Matches your Postman screenshot: DELETE /api/wishlist/6
+    return api.delete(`/api/wishlist/${prodId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+};
+
+
+// review
+export const addReview = (token, reviewData) => {
+    return api.post('/api/review/', reviewData, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+        }
+    });
+}
+export const getReview = (token, prodId) => {
+    return api.get(`api/review/${prodId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+}
+export const deleteReview = (token, prodId) => {
+    return api.delete(`api/review/${prodId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
 }

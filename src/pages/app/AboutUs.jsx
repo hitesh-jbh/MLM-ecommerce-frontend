@@ -1,4 +1,5 @@
 import Breadcrumb from '../../components/ui/BreadCrumb.jsx';
+import { websiteName } from '../../utils/Constants.jsx';
 
 
 const AboutUs = () => {
@@ -20,7 +21,7 @@ const AboutUs = () => {
         <div className="relative overflow-hidden rounded-lg">
           <img 
             src="https://gentlehaus.in/cdn/shop/files/about_us_banner_175d66c4-5083-4403-8aa5-28c81ae439d8.webp?v=1754661865&width=1500" 
-            alt="Gentlehaus Banner" 
+            alt="MLM Banner" 
             className="w-full h-[200px] sm:h-[300px] md:h-[700px] object-cover"
           />
         </div>
@@ -38,8 +39,8 @@ const AboutUs = () => {
           
           <div className="space-y-4 text-xs sm:text-sm md:text-base leading-relaxed text-gray-600">
             <p>
-              At Gentlehaus, we believe true style lies in the balance of elegance and simplicity. 
-              Luxury doesn't always need to shout — it can be subtle and refined.
+              {`At ${websiteName}, we believe true style lies in the balance of elegance and simplicity. 
+              Luxury doesn't always need to shout — it can be subtle and refined.`}
             </p>
             <p>
               We design for the modern man who lives with purpose. Creating fashion that resonates 

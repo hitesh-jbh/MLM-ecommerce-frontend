@@ -12,7 +12,6 @@ import FilterBar from "../../components/ui/bar/Filterbar";
 import AddStaffModal from "../../components/admin_component/AddStaffModal";
 import Icons from "../../components/ui/Icon";
 import { updateStaff } from "../../utils/service/apiService";
-import { statusUpdate } from "../../utils/service/apiService"; 
 
 function UserMgt() {
     const { token } = useSelector((state) => state.auth);
@@ -51,23 +50,39 @@ function UserMgt() {
 
     // Handle API Update
     const handleUpdatePermissions = async () => {
-        if (!selectedUser) return;
+    if (!selectedUser || !token) return;
+    
+    setIsSubmitting(true);
+    try {
+        const userId = selectedUser.id || selectedUser._id;
         
-        setIsSubmitting(true);
-        try {
-            const userId = selectedUser.id || selectedUser._id;
-            // API expects: token, userId, and object with role/user_type
-            await updateStaff(token, userId, editPayload);
-            
-            toast.success(`Updated ${selectedUser.first_name} successfully!`);
-            mutate(); // Revalidation
-            setIsEditModalOpen(false);
-        } catch (error) {
-            toast.error(error.response?.data?.message || "Failed to update permissions");
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+        console.log("Token exists:", !!token);
+        console.log("User ID:", userId);
+        console.log("Edit Payload:", editPayload);
+        
+        // Prepare the data in the correct format
+        const staffData = {
+            id: userId,
+            ...editPayload
+        };
+        // Call API with token and staffData
+        const response = await updateStaff(token, staffData);
+        
+        toast.success(`Updated ${selectedUser.first_name || selectedUser.firstName} successfully!`);
+        mutate(); // Revalidate the data
+        
+        setIsEditModalOpen(false);
+        setSelectedUser(null);
+    } catch (error) {
+        toast.error(
+            error.response?.data?.message || 
+            error.response?.data?.error || 
+            "Failed to update permissions. Please try again."
+        );
+    } finally {
+        setIsSubmitting(false);
+    }
+};
 
     const applyFilters = useCallback((filters) => {
         let result = [...allUsers];
@@ -135,7 +150,7 @@ function UserMgt() {
                                     onChange={(e) => setEditPayload({...editPayload, role: e.target.value})}
                                 >
                                     <option value="customer">Customer</option>
-                                    <option value="inventory_manager">Manager</option>
+                                    <option value="inventory_manager">Inventory Manager</option>
                                     <option value="super_admin">Super Administrator</option>
                                 </select>
                             </div>

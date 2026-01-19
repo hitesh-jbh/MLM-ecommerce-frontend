@@ -12,7 +12,7 @@ import AboutUS from "./pages/app/AboutUs.jsx"
 import FilterProductPage from "./pages/app/FilterProductPage.jsx";
 import Nav from "./components/partials/header/Nav.jsx";
 import Footer from "./components/partials/footer/footer.jsx";
-import Contact from "./pages/app/AboutUs.jsx";
+import Contact from "./pages/app/contact.jsx";
 import InfoProd from "./pages/product/InfoProd.jsx";
 import Modal from "./components/ui/Modal.jsx";
 import Cart from "./pages/app/CartPage.jsx"
@@ -73,6 +73,7 @@ import ReportMgt from "./pages/admin/ReportMgt.jsx";
 import ViewOrder from "./pages/order/ViewOrder.jsx";
 import SetCommission from "./components/admin_component/SetCommission.jsx";
 import Rank from "./components/admin_component/Rank.jsx";
+import AdminPro from "./pages/admin/AdminPro.jsx";
 
 const AppLayout = () => {
   return (
@@ -168,8 +169,11 @@ const appRouter = createBrowserRouter([
       },
       {
         path: "/admin",
-        element: <AdminProfile />,
-        // element: <AdminProtectedRoute />,
+        element: (
+          <AdminProtectedRoute>
+            <AdminProfile />
+          </AdminProtectedRoute>
+        ),
         children: [
           {
             index: true,
@@ -178,6 +182,10 @@ const appRouter = createBrowserRouter([
           {
             path: "/admin/dashboard",
             element: <AdminDashboard />
+          },
+          {
+            path: "/admin/adminProfile",
+            element: <AdminPro/>
           },
           {
             path: "/admin/orderoverview",
@@ -266,7 +274,7 @@ const appRouter = createBrowserRouter([
         element: <HierachyGraph />,
       },
       {
-        path: "/write-review/:orderId",
+        path: "/write-review/:productId",
         element: <WriteReview />
       },
       {

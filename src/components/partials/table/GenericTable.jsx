@@ -3,7 +3,6 @@ import Icons from '../../ui/Icon';
 
 export const GenericTable = ({ columns, data, title }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  // NEW: State for changeable rows per page
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   // Pagination Logic
@@ -67,9 +66,47 @@ export const GenericTable = ({ columns, data, title }) => {
         </table>
       </div>
 
-      {/* 3. Mobile Card View (Omitted for brevity, remains the same) */}
-      <div className="sm:hidden">
-        {/* ... existing mobile mapping logic ... */}
+      {/* 3. Mobile Card View */}
+      <div className="sm:hidden p-4 space-y-3">
+        {currentRows.length === 0 ? (
+          <div className="text-center py-8 text-gray-400 text-sm">
+            No data available
+          </div>
+        ) : (
+          currentRows.map((row, rowIndex) => (
+            <div 
+              key={rowIndex} 
+              className="bg-gray-50 rounded-lg border border-gray-200 p-3 space-y-2"
+            >
+              {columns.map((col, colIndex) => {
+                // Skip certain columns on mobile if needed, or show all
+                const cellValue = row[col.key];
+                
+                return (
+                  <div 
+                    key={colIndex} 
+                    className="flex items-start justify-between gap-2"
+                  >
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                      {col.header}:
+                    </span>
+                    <div className="text-right flex-1 max-w-[60%]">
+                      {col.render ? (
+                        <div className="text-xs text-gray-700 font-medium">
+                          {col.render(cellValue, row)}
+                        </div>
+                      ) : (
+                        <span className="text-xs text-gray-700 font-medium truncate block">
+                          {cellValue || '—'}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ))
+        )}
       </div>
 
       {/* 4. Pagination Controls */}
@@ -90,7 +127,7 @@ export const GenericTable = ({ columns, data, title }) => {
         </div>
 
         <p className="text-[10px] text-slate-400 font-medium">
-          Showing {indexOfFirstRow + 1} to {Math.min(indexOfLastRow, data.length)} of {data.length}
+          Showing {indexOfFirstRow + 1} to {Math.min(indexOfLastRow, data?.length || 0)} of {data?.length || 0}
         </p>
         
         <div className="flex items-center gap-2">

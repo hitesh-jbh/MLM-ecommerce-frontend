@@ -2,6 +2,7 @@ import { Facebook, Instagram } from 'lucide-react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { contactEmail, contactNumber } from '../../utils/Constants';
 
 // Define Zod schema for validation
 const contactFormSchema = z.object({
@@ -151,10 +152,10 @@ export default function Contact() {
               </h2>
               <div className="space-y-3">
                 <p className="text-gray-700 text-xs md:text-base font-medium">
-                  +91 74360 04465
+                  {`${contactNumber}`}
                 </p>
                 <p className="text-gray-700 text-sm md:text-base">
-                  contact.gentlehaus@gmail.com
+                  {`${contactEmail}`}
                 </p>
               </div>
             </div>

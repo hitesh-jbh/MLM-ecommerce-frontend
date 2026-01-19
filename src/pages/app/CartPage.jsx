@@ -84,6 +84,7 @@ export default function Cart() {
         items: cartItems.map((item) => ({
           productId: item.productId,
           quantity: item.quantity,
+          source: "CART",
         })),
       };
 

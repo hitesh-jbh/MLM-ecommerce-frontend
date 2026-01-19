@@ -593,8 +593,107 @@ function ProductMgt() {
                 )}
             </div>
 
-            {/* MODALS (Logic remains same as your snippet) */}
-            {/* ... Add/Edit and Delete modal code from your snippet ... */}
+            {/* ADD / EDIT MODAL */}
+             {activeModal && activeModal !== 'delete' && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                    <div className="bg-white rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                        <div className="px-6 py-4 border-b flex justify-between items-center bg-gray-50">
+                            <h2 className="text-sm font-black uppercase tracking-wider">{activeModal} Product</h2>
+                            <button onClick={handleClose} className="text-slate-400 hover:text-black"><Icons icon="heroicons:x-mark" size={22}/></button>
+                        </div>
+                        
+                        <div className="p-6 overflow-y-auto">
+                            <form onSubmit={handleFormSubmit} className="space-y-6">
+                                
+                                {/* Image Upload (Only shown in ADD mode) */}
+                                {activeModal === 'add' && (
+                                    <div className="grid grid-cols-2 gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-bold text-slate-500 uppercase">Main Thumbnail</label>
+                                            <div className="relative h-28 border-2 border-dashed rounded-xl flex items-center justify-center bg-white overflow-hidden">
+                                                {thumbnailPreview ? <img src={thumbnailPreview} className="h-full w-full object-cover" /> : <Icons icon="heroicons:photo" className="text-slate-200" size={30}/>}
+                                                <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => {
+                                                    const file = e.target.files[0];
+                                                    setThumbnailFile(file);
+                                                    setThumbnailPreview(URL.createObjectURL(file));
+                                                }} />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-bold text-slate-500 uppercase">Gallery</label>
+                                            <div className="flex gap-2">
+                                                {galleryPreviews.slice(0, 3).map((src, i) => (
+                                                    <div key={i} className="h-12 w-12 rounded-lg border overflow-hidden"><img src={src} className="h-full w-full object-cover" /></div>
+                                                ))}
+                                                <label className="h-12 w-12 border-2 border-dashed rounded-lg flex items-center justify-center cursor-pointer text-slate-300">
+                                                    <Icons icon="heroicons:plus" />
+                                                    <input type="file" multiple className="hidden" onChange={(e) => {
+                                                        const files = Array.from(e.target.files);
+                                                        setGalleryFiles(prev => [...prev, ...files]);
+                                                        setGalleryPreviews(prev => [...prev, ...files.map(f => URL.createObjectURL(f))]);
+                                                    }} />
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Form Fields */}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="col-span-2">
+                                        <label className="text-[10px] font-bold text-slate-400 ml-1 uppercase">Name</label>
+                                        <input name="name" defaultValue={selectedProduct?.name} required className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-black outline-none transition-all" />
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] font-bold text-slate-400 ml-1 uppercase">Price</label>
+                                        <input name="price" type="number" step="0.01" defaultValue={selectedProduct?.price} required className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-black outline-none" />
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] font-bold text-slate-400 ml-1 uppercase">Stock</label>
+                                        <input name="stock" type="number" defaultValue={selectedProduct?.stock} required className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-black outline-none" />
+                                    </div>
+                                    <div className="col-span-2">
+                                        <label className="text-[10px] font-bold text-slate-400 ml-1 uppercase">Category</label>
+                                        <input name="category" defaultValue={selectedProduct?.category} required className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-black outline-none" />
+                                    </div>
+                                    <div className="col-span-2">
+                                        <label className="text-[10px] font-bold text-slate-400 ml-1 uppercase">Description</label>
+                                        <textarea name="description" defaultValue={selectedProduct?.description} rows="3" className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-black outline-none resize-none" />
+                                    </div>
+                                </div>
+
+                                <button type="submit" disabled={isSubmitting} className="w-full py-4 bg-black text-white rounded-xl font-bold uppercase tracking-widest hover:bg-slate-800 disabled:bg-slate-300 transition-all">
+                                    {isSubmitting ? "Processing..." : `${activeModal} Product`}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* DELETE CONFIRMATION MODAL */}
+            {activeModal === 'delete' && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                    <div className="bg-white rounded-3xl w-full max-w-md p-8 text-center shadow-2xl">
+                        <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <Icons icon="heroicons:trash" size={40} className="text-red-500"/>
+                        </div>
+                        <h2 className="text-xl font-bold text-slate-900 mb-2">Delete Product?</h2>
+                        <p className="text-slate-500 mb-8 px-4">
+                            Are you sure you want to delete <span className="font-bold text-slate-800">"{selectedProduct?.name}"</span>? 
+                            This action cannot be undone.
+                        </p>
+                        <div className="flex gap-4">
+                            <button onClick={handleClose} className="flex-1 py-3.5 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all">
+                                Cancel
+                            </button>
+                            <button onClick={handleDelete} disabled={isSubmitting} className="flex-1 py-3.5 bg-red-500 text-white rounded-2xl font-bold hover:bg-red-600 shadow-lg shadow-red-200 disabled:bg-red-300 transition-all">
+                                {isSubmitting ? "Deleting..." : "Yes, Delete"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

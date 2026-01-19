@@ -90,6 +90,7 @@ import OrderCard from '../../components/ui/order/OrderCard.jsx';
 import { useSelector } from 'react-redux';
 import useSWR from 'swr'; // Ensure you use 'swr' or 'use-swr'
 import { getMyAllOrders } from '../../utils/service/apiService.js';
+import { Link } from 'react-router-dom';
 
 const YourOrder = () => {
     const token = useSelector((state) => state.auth?.token);
@@ -133,7 +134,16 @@ const YourOrder = () => {
 
     return (
         <div className="max-w-5xl mx-auto px-4 py-6 font-sans">
-            <h1 className="text-3xl font-medium mb-6">Your Orders</h1>
+            {/* Breadcrumb */}
+            <nav className="text-sm mb-4">
+                <Link to="/profile" className="text-gray-700 hover:underline cursor-pointer">Your Account</Link>
+                <span className="mx-1 text-gray-500">›</span>
+                <span className="text-black">Your Orders</span>
+            </nav>
+
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                <h1 className="text-3xl font-normal text-gray-900">Your Orders</h1>
+            </div>
             
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-gray-200">
                 <div className="flex gap-8 text-sm">

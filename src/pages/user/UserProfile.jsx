@@ -1,109 +1,100 @@
-import React, { useState, useRef, useEffect } from "react";
-import { z } from "zod";
+import React, { useState, useEffect } from "react";
+import { Copy, Check } from "lucide-react"; // Optional: for a nice copy button
 import StatsDashboard from "../../components/ui/StatsDashboard";
-import ProfileMenuCard from "../../components/ui/ProfileMenuCard";
-import { profileMenuIcon } from "../../utils/Constants";
-
-// Define the schema inside or import it to ensure handleSave works
-const userSchema = z.object({
-  firstName: z.string().min(2, "Required"),
-  lastName: z.string().min(2, "Required"),
-  email: z.string().email(),
-  contact: z.string().min(10, "Invalid phone"),
-  gender: z.string(),
-  dob: z.string(),
-});
 
 const UserProfile = ({ user }) => {
-  // 1. Map incoming SQL snake_case to Frontend camelCase
   const mapUserToState = (u) => ({
-    profileImage: u?.profileImage || "https://thumbs.dreamstime.com/b/vector-illustration-avatar-dummy-logo-collection-image-icon-stock-isolated-object-set-symbol-web-137160339.jpg",
+    profileImage: u?.imageUrl || "https://thumbs.dreamstime.com/b/vector-illustration-avatar-dummy-logo-collection-image-icon-stock-isolated-object-set-symbol-web-137160339.jpg",
     firstName: u?.first_name || u?.firstName || "",
     lastName: u?.last_name || u?.lastName || "",
     email: u?.email || "",
     contact: u?.contact || "", 
-    rank: u?.role || u?.rank || "Member",
-    dob: u?.dob ? u.dob.split('T')[0] : "Not specified", 
-    gender: u?.gender || "Male"
+    rank: u?.rank || "Rookie",
+    dob: u?.dob ? u.dob.split('T')[0] : "Not specified",
+    referralCode: u?.referralCode || u?.referral_code || "N/A" // Added field
   });
 
   const [userData, setUserData] = useState(mapUserToState(user));
-  const [formData, setFormData] = useState(mapUserToState(user));
-  const [errors, setErrors] = useState({});
-  const [imagePreview, setImagePreview] = useState(userData.profileImage);
+  const [copied, setCopied] = useState(false);
 
-  // Sync state if Redux user updates (e.g., after an edit)
   useEffect(() => {
-    const updated = mapUserToState(user);
-    setUserData(updated);
-    setFormData(updated);
-    setImagePreview(updated.profileImage);
+    setUserData(mapUserToState(user));
   }, [user]);
 
-  // Handle Input Changes (Simplified for non-nested state)
-  const handleChange = (key, value) => {
-    setFormData((prev) => ({ ...prev, [key]: value }));
-    if (errors[key]) setErrors((prev) => ({ ...prev, [key]: "" }));
+  const handleCopy = (code) => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
-  const { profileImage, firstName, lastName, email, rank, dob, contact } = userData;
+  const { profileImage, firstName, lastName, email, rank, dob, contact, referralCode } = userData;
   const fullName = `${firstName} ${lastName}`;
 
   return (
-    <div className="w-full bg-gray-50">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div className="w-full bg-[#F9F9F9] p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         
-        {/* PROFILE HEADER */}
-        <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-          <div className="flex flex-col lg:flex-row gap-6 items-center lg:items-start">
+        {/* PROFILE HEADER CARD */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-10">
+          <div className="flex flex-col xl:flex-row items-center xl:items-start gap-8">
             
             {/* Avatar Section */}
-            <div className="relative">
+            <div className="flex-shrink-0">
               <img
-                src={imagePreview}
+                src={profileImage}
                 alt={fullName}
-                className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
+                className="w-28 h-28 md:w-36 md:h-36 rounded-full object-cover border-4 border-white shadow-xl"
               />
             </div>
 
-            {/* Info Section */}
-            <div className="flex-1 w-full text-center lg:text-left">
-              <h1 className="text-2xl font-black text-gray-900 mb-4 uppercase tracking-tight">
-                {fullName}
+            {/* Info Container */}
+            <div className="flex-1 w-full overflow-hidden">
+              <h1 className="text-2xl md:text-4xl font-black text-[#001f3f] mb-8 uppercase tracking-tight text-center xl:text-left">
+                {fullName || "User Name"}
               </h1>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-gray-800 uppercase tracking-widest">Rank</p>
-                  <p className="text-sm text-black uppercase">{rank}</p>
+              {/* Responsive Grid: 2 cols on mobile, 3 on tablet, 5 on desktop */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-y-10 gap-x-6">
+                
+                {/* 1. Rank */}
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-bold text-black uppercase tracking-widest">Rank</span>
+                  <span className="text-sm font-bold text-gray-700 uppercase">{rank}</span>
                 </div>
                 
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-gray-800 uppercase tracking-widest">Birth Date</p>
-                  <p className="text-sm font-medium text-gray-700">{dob}</p>
+                {/* 2. Birth Date */}
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-bold text-black uppercase tracking-widest">Birth Date</span>
+                  <span className="text-sm font-bold text-gray-700">{dob}</span>
+                </div>
+
+                {/* 3. Referral Code (New Field) */}
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-bold text-black uppercase tracking-widest">Referral Code</span>
+                  <div className="flex items-center gap-2 group cursor-pointer" onClick={() => handleCopy(referralCode)}>
+                    <span className="text-sm font-bold text-blue-600 uppercase">{referralCode}</span>
+                    {copied ? <Check size={14} className="text-green-500" /> : <Copy size={14} className="text-gray-300 group-hover:text-blue-500 transition-colors" />}
+                  </div>
                 </div>
                 
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-gray-800 uppercase tracking-widest">Email Address</p>
-                  <p className="text-sm font-medium text-gray-700">{email}</p>
+                {/* 4. Email Address */}
+                <div className="flex flex-col gap-1 overflow-hidden sm:col-span-2 lg:col-span-1">
+                  <span className="text-[10px] font-bold text-black uppercase tracking-widest">Email Address</span>
+                  <span className="text-sm font-bold text-gray-700 break-all">
+                    {email}
+                  </span>
                 </div>
                 
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-gray-800 uppercase tracking-widest">Verified Contact</p>
-                  <p className="text-sm font-medium text-gray-700">{contact}</p>
+                {/* 5. Verified Contact */}
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-bold text-black uppercase tracking-widest">Verified Contact</span>
+                  <span className="text-sm font-bold text-gray-700">{contact}</span>
                 </div>
+
               </div>
             </div>
           </div>
         </div>
-
-        {/* Navigation Cards */}
-        {/* <section className="py-2">
-          <ProfileMenuCard
-            sections={profileMenuIcon} 
-            pageTitle="Account Management" 
-          />
-        </section> */}
 
         {/* Analytics Section */}
         <StatsDashboard />

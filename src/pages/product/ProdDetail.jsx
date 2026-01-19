@@ -394,7 +394,7 @@ const ProdDetails = ({ product }) => {
                             <ShoppingBag className="inline mr-2" size={18} /> {isOutOfStock ? "Sold Out" : "Add to Cart"}
                         </button>
                     </div>
-                    <div onClick={!isOutOfStock ? () => {} : undefined} className="w-full"><BuyNowButton /></div>
+                    <div onClick={!isOutOfStock ? () => {} : undefined} className="w-full"><BuyNowButton  product={product}/></div>
                 </div>
             </div>
         </div>

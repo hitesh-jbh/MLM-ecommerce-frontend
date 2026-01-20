@@ -101,13 +101,13 @@ const FooterPage = () => {
         <footer className="mt-24 pt-12 border-t border-gray-100">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-center md:text-left">
             <div>
-              <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold block mb-2">Official Support</span>
+              <span className="text-[15px] uppercase tracking-widest text-gray-700 font-bold block mb-2">Official Support</span>
               <a href={`mailto:${data.contact.email}`} className="text-lg md:text-xl font-light hover:text-gray-600 transition-colors">
                 {data.contact.email}
               </a>
             </div>
             <div className="md:text-right">
-              <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold block mb-2">WhatsApp Assistance</span>
+              <span className="text-[15px] uppercase tracking-widest text-gray-700 font-bold block mb-2">WhatsApp Assistance</span>
               <p className="text-lg md:text-xl font-light tracking-wide">
                 {data.contact.whatsapp}
               </p>

@@ -36,7 +36,7 @@ export const FooterPageData = [
                 items: [
                     {
                     type: "paragraph",
-                    text: "To initiate a return, contact us on WhatsApp at **`${contactNumber}`** with your Order Number and photo proof."
+                    text: `To initiate a return, contact us on WhatsApp at **${contactNumber}** with your Order Number and photo proof.`
                     },
                     {
                     type: "warning",
@@ -47,7 +47,7 @@ export const FooterPageData = [
             ],
             contact: {
                 email: `${contactEmail}`,
-                whatsapp: `${contactNumber}`            }
+                whatsapp: `${contactNumber}`}
         },
     {
         id: "policy",
@@ -83,7 +83,7 @@ export const FooterPageData = [
                 items: [
                     {
                     type: "paragraph",
-                    text: "To initiate a return, contact us on WhatsApp at **`${contactNumber}`** with your Order Number and photo proof."
+                    text: `To initiate a return, contact us on WhatsApp at **${contactNumber}** with your Order Number and photo proof.`
                     },
                     {
                     type: "warning",
@@ -94,7 +94,7 @@ export const FooterPageData = [
             ],
             contact: {
                 email: `${contactEmail}`,
-                whatsapp: `${contactNumber}`            }
+                whatsapp: `${contactNumber}`}
         },
     {
         id: "retun-refund",
@@ -130,7 +130,7 @@ export const FooterPageData = [
                 items: [
                     {
                     type: "paragraph",
-                    text: "To initiate a return, contact us on WhatsApp at **`${contactNumber}`** with your Order Number and photo proof."
+                    text: `To initiate a return, contact us on WhatsApp at **${contactNumber}** with your Order Number and photo proof.`
                     },
                     {
                     type: "warning",
@@ -141,7 +141,7 @@ export const FooterPageData = [
             ],
             contact: {
                 email: `${contactEmail}`,
-                whatsapp: `${contactNumber}`            }
+                whatsapp: `${contactNumber}`}
         },
     {
         id: "term-condition",
@@ -177,7 +177,7 @@ export const FooterPageData = [
                 items: [
                     {
                     type: "paragraph",
-                    text: "To initiate a return, contact us on WhatsApp at **`${contactNumber}`** with your Order Number and photo proof."
+                    text: `To initiate a return, contact us on WhatsApp at **${contactNumber}** with your Order Number and photo proof.`
                     },
                     {
                     type: "warning",
@@ -188,7 +188,7 @@ export const FooterPageData = [
             ],
             contact: {
                 email: `${contactEmail}`,
-                whatsapp: `${contactNumber}`            }
+                whatsapp: `${contactNumber}`}
         },
     {
         id: "privacy-policy",
@@ -235,6 +235,6 @@ export const FooterPageData = [
             ],
             contact: {
                 email: `${contactEmail}`,
-                whatsapp: `${contactNumber}`            }
+                whatsapp: `${contactNumber}`}
         },
 ];

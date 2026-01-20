@@ -313,6 +313,7 @@
 //     </div>
 //   );
 // }
+
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
@@ -345,6 +346,9 @@ export default function Nav() {
 
   const { user, isLoggedIn } = useSelector((state) => state.auth);
   const token = useSelector((state) => state.auth?.token);
+
+  // Get rank config based on user data
+  const rank = RANK_CONFIG[user?.rank?.toLowerCase()] || RANK_CONFIG.default;
 
   // Cart Logic
   const { data: cartData } = useSWR(
@@ -413,7 +417,6 @@ export default function Nav() {
 
   const isAdmin = user?.role === 'super_admin' || user?.role === 'admin';
   const isCustomer = user?.role?.toLowerCase() === 'customer';
-
   const shouldShowFullSearch = isSearchOpen && !location.pathname.includes('/gentle');
 
   return (
@@ -426,7 +429,7 @@ export default function Nav() {
             {/* Logo */}
             <Link to="/" className="flex items-center gap-3">
               <div className="w-10 h-10 bg-black rounded flex items-center justify-center">
-                <span className="text-white font-black text-sm">{websiteName?.slice(0, 2).toUpperCase()}</span>
+                <span className="text-white font-black text-sm">{websiteName?.slice(0, 3).toUpperCase()}</span>
               </div>
               <span className="font-bold text-xl hidden sm:block tracking-tight">{websiteName}</span>
             </Link>
@@ -442,42 +445,72 @@ export default function Nav() {
 
             {/* Icons Group */}
             <div className="flex items-center gap-5 sm:gap-7">
-              {/* Search */}
               <button onClick={() => setIsSearchOpen(true)} className="p-2 -m-2 hover:opacity-60 transition-opacity">
                 <Icons icon="solar:magnifer-linear" size={24} />
               </button>
 
-              {/* Notification Bell - HIDDEN ON SMALL DEVICES */}
-              <button className="relative p-2 -m-2 hover:text-orange-600 transition-colors hidden md:block">
-                <Icons icon="solar:bell-bing-linear" size={24} />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+              <button className="relative p-2 -m-2 hover:text-gray-700 transition-colors hidden md:block">
+                <Icons icon="solar:bell-linear" size={24} />
+                {/* <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span> */}
               </button>
 
-              {/* Profile */}
-              <div className="relative" ref={profileMenuRef}>
+              {/* PROFILE DROPDOWN WITH HOVER */}
+              <div className="relative group py-2" ref={profileMenuRef}>
                 {isLoggedIn && user ? (
-                  <button onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)} className="p-1 focus:outline-none">
-                    <div className="w-9 h-9 rounded-full border-2 border-black p-0.5 bg-gray-50 overflow-hidden hover:scale-105 transition">
-                      {user.imageUrl ? (
-                        <img src={user.imageUrl} alt="Profile" className="w-full h-full object-cover rounded-full" />
-                      ) : (
-                        <Icons icon="solar:user-bold" size={18} />
-                      )}
+                  <>
+                    <button 
+                      onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)} 
+                      className="p-1 focus:outline-none"
+                    >
+                      <div className="w-9 h-9 rounded-full border-2 border-black p-0.5 bg-gray-50 overflow-hidden hover:scale-105 transition">
+                        {user.imageUrl ? (
+                          <img src={user.imageUrl} alt="Profile" className="w-full h-full object-cover rounded-full" />
+                        ) : (
+                          <Icons icon="solar:user-bold" size={18} />
+                        )}
+                      </div>
+                    </button>
+
+                    {/* The Menu: shows on hover (group-hover) OR when clicked (isProfileMenuOpen) */}
+                    <div className={`
+                      absolute top-full right-0 mt-1
+                      ${isProfileMenuOpen ? 'flex' : 'hidden'} 
+                      group-hover:flex 
+                      flex-col bg-white border border-gray-100 shadow-2xl rounded-sm p-5 min-w-[260px] z-[120] 
+                      animate-in fade-in slide-in-from-top-1 duration-200
+                    `}>
+                      <div className="mb-4">
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-gray-700 font-bold mb-1">Account</p>
+                        <p className="text-black font-bold text-sm truncate">{user.firstName} {user.lastName}</p>
+                        <p className="text-gray-500 text-xs truncate mt-1">{user.email}</p>
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="text-[9px] px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded-sm font-bold uppercase tracking-tighter">
+                            {user.role?.replace('_', ' ')}
+                          </span>
+                          <Icons icon={rank.icon} size={14} className={rank.color} />
+                        </div>
+                      </div>
+
+                      <div className="space-y-1 border-t border-gray-100 pt-3">
+                        {isAdmin && (
+                          <Link to="/admin/dashboard" className="flex items-center gap-3 px-3 py-2 text-xs font-bold uppercase text-blue-600 hover:bg-blue-50 rounded" onClick={() => setIsProfileMenuOpen(false)}>
+                            <Icons icon="solar:widget-bold" size={16} />
+                            <span>Admin Panel</span>
+                          </Link>
+                        )}
+                        <Link to="/profile" className="flex items-center gap-3 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 rounded" onClick={() => setIsProfileMenuOpen(false)}>
+                          <Icons icon="solar:user-rounded-linear" size={16} />
+                          <span>Profile</span>
+                        </Link>
+                        <button onClick={handleLogout} className="flex items-center gap-3 w-full px-3 py-2 text-xs font-medium text-red-500 hover:bg-red-50 rounded mt-2 border-t pt-3">
+                          <Icons icon="solar:logout-bold" size={16} />
+                          <span>Logout</span>
+                        </button>
+                      </div>
                     </div>
-                  </button>
+                  </>
                 ) : (
                   <Link to="/login" className="p-2 -m-2 block"><Icons icon="solar:user-linear" size={24} /></Link>
-                )}
-
-                {isProfileMenuOpen && (
-                  <div className="absolute top-full right-0 mt-3 bg-white border border-gray-100 shadow-2xl rounded-lg p-5 min-w-[240px] z-[120] animate-in slide-in-from-top-2">
-                    <p className="font-bold text-sm truncate">{user.firstName} {user.lastName}</p>
-                    <div className="space-y-1 border-t mt-3 pt-3">
-                      {isAdmin && <Link to="/admin/dashboard" className="block px-2 py-2 text-xs font-bold text-blue-600 rounded hover:bg-blue-50">Admin Panel</Link>}
-                      <Link to="/profile" className="block px-2 py-2 text-xs font-medium hover:bg-gray-50 rounded">Profile</Link>
-                      <button onClick={handleLogout} className="w-full text-left px-2 py-2 text-xs font-medium text-red-500 hover:bg-red-50 rounded">Logout</button>
-                    </div>
-                  </div>
                 )}
               </div>
 
@@ -489,11 +522,11 @@ export default function Nav() {
                 </Link>
               )}
 
-              {/* Cart - Professional Badge & High Clickability */}
+              {/* Cart */}
               <Link to="/cart" className="relative p-2 -m-2 group transition-all duration-300">
                 <Icons icon="solar:cart-large-2-linear" size={26} className="group-hover:scale-110 transition-transform" />
                 {cartItemsLength > 0 && (
-                  <span className="absolute top-0.5 -right-0.5 bg-black text-white text-[9px] font-bold min-w-[18px] h-[18px] flex items-center justify-center rounded-full border-2 border-white shadow-sm ring-1 ring-black/5">
+                  <span className="absolute top-0.5 -right-0.5 bg-black text-white text-[9px] font-bold min-w-[18px] h-[18px] flex items-center justify-center rounded-full border-2 border-white shadow-sm">
                     {cartItemsLength}
                   </span>
                 )}

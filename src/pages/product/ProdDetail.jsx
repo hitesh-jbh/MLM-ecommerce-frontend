@@ -250,18 +250,17 @@
 // };
 
 // export default ProdDetails;
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Thumbs, FreeMode } from 'swiper/modules';
 import { ChevronLeft, ChevronRight, X, ShoppingBag, CheckCircle2 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import useSWR, { useSWRConfig } from 'swr'; // Added useSWR
+import useSWR, { useSWRConfig } from 'swr';
 
 import { toggleWishlist } from '../../utils/Slice/WishList.js';
 import { initializeProduct } from '../../utils/Slice/countSlice.js';
-import { addToCart, createOrder, addToWishlist, removeToWishlist, getWishlist } from '../../utils/service/apiService.js'; // Added getWishlist
+import { addToCart, addToWishlist, removeToWishlist, getWishlist } from '../../utils/service/apiService.js';
 import { toast } from 'react-toastify';
 
 import Icons from "../../components/ui/Icon.jsx"; 
@@ -280,13 +279,12 @@ const ProdDetails = ({ product }) => {
     const token = useSelector((state) => state.auth?.token);
     const productId = product?.id || product?._id;
 
-    // 1. Fetch Wishlist using SWR to serve as the Source of Truth
+    // Fetch Wishlist
     const { data: wishlistData } = useSWR(
         token ? ["/api/wishlist", token] : null,
         () => getWishlist(token).then(res => res.data.items || res.data.data || [])
     );
     
-    // 2. Accurate Like Detection: prevents trying to POST an item that exists
     const isLiked = useMemo(() => {
         return wishlistData?.some((item) => {
             const itemID = item.product_id || item._id || item.id || item.product?.id;
@@ -298,6 +296,7 @@ const ProdDetails = ({ product }) => {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [activeIndex, setActiveIndex] = useState(0);
 
+    // Get the current quantity from Redux
     const currentQuantity = useSelector((state) => state.count[`${productId}-Standard`] || 1);
     const isOutOfStock = (product?.stock ?? 0) <= 0;
 
@@ -307,28 +306,16 @@ const ProdDetails = ({ product }) => {
 
     const handleWishlistToggle = async () => {
         if (!token) return toast.warning("Please login first");
-        
         const loadingToast = toast.loading(isLiked ? "Removing..." : "Adding...");
         try {
-            if (isLiked) {
-                // DELETE path
-                await removeToWishlist(token, productId);
-            } else {
-                // POST path
-                await addToWishlist(token, productId);
-            }
+            if (isLiked) await removeToWishlist(token, productId);
+            else await addToWishlist(token, productId);
             
-            // Sync Redux and SWR
             dispatch(toggleWishlist(product));
             mutate(["/api/wishlist", token]);
-            
             toast.update(loadingToast, { render: isLiked ? "Removed" : "Added", type: "success", isLoading: false, autoClose: 2000 });
         } catch (error) {
-            console.error("Wishlist Error:", error.response?.data);
-            toast.update(loadingToast, { 
-                render: error.response?.data?.message || "Error updating wishlist", 
-                type: "error", isLoading: false, autoClose: 2000 
-            });
+            toast.update(loadingToast, { render: "Error updating wishlist", type: "error", isLoading: false, autoClose: 2000 });
         }
     };
 
@@ -358,14 +345,14 @@ const ProdDetails = ({ product }) => {
                 <div className="space-y-4">
                     <div className="relative group rounded-3xl overflow-hidden bg-gray-50 border">
                         <Swiper loop={images.length > 1} navigation thumbs={{ swiper: thumbsSwiper }} modules={[FreeMode, Navigation, Thumbs]} onSlideChange={(s) => setActiveIndex(s.realIndex)} className="h-[480px]">
-                            {images.map((img, i) => <SwiperSlide key={i}><img src={img} className="w-full h-full object-contain" /></SwiperSlide>)}
+                            {images.map((img, i) => <SwiperSlide key={i}><img src={img} className="w-full h-full object-contain" alt="product"/></SwiperSlide>)}
                         </Swiper>
                     </div>
                     <Swiper onSwiper={setThumbsSwiper} spaceBetween={12} slidesPerView={4} modules={[FreeMode, Navigation, Thumbs]} className="h-24">
                         {images.map((img, i) => (
                             <SwiperSlide key={i} className="cursor-pointer">
                                 <div className={`h-full rounded-xl border-2 ${activeIndex === i ? 'border-black' : 'border-transparent opacity-60'}`}>
-                                    <img src={img} className="w-full h-full object-cover" />
+                                    <img src={img} className="w-full h-full object-cover" alt="thumb"/>
                                 </div>
                             </SwiperSlide>
                         ))}
@@ -394,7 +381,11 @@ const ProdDetails = ({ product }) => {
                             <ShoppingBag className="inline mr-2" size={18} /> {isOutOfStock ? "Sold Out" : "Add to Cart"}
                         </button>
                     </div>
-                    <div onClick={!isOutOfStock ? () => {} : undefined} className="w-full"><BuyNowButton  product={product}/></div>
+                    
+                    {/* Updated BuyNowButton with quantity prop */}
+                    <div className="w-full">
+                        <BuyNowButton product={product} quantity={currentQuantity} />
+                    </div>
                 </div>
             </div>
         </div>

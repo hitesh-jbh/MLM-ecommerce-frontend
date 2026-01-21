@@ -109,9 +109,9 @@ function AddStaffModal({ isOpen, onClose, onSuccess }) {
                                 className="w-full border border-gray-300 rounded-xl p-3 text-sm bg-white outline-none cursor-pointer"
                             >
                                 <option value="staff">Staff Member</option>
-                                <option value="admin">Administrator</option>
+                                {/* <option value="admin">Administrator</option>
                                 <option value="super_admin">Super Admin</option>
-                                <option value="customer">Customer</option>
+                                <option value="customer">Customer</option> */}
                             </select>
                         </div>
                         <div className="space-y-1">
@@ -123,10 +123,10 @@ function AddStaffModal({ isOpen, onClose, onSuccess }) {
                                 className="w-full border border-gray-300 rounded-xl p-3 text-sm bg-white outline-none cursor-pointer"
                             >
                                 <option value="inventory_manager">Inventory Manager</option>
-                                <option value="sales_representative">Sales Rep</option>
+                                {/* <option value="sales_representative">Sales Rep</option>
                                 <option value="support_specialist">Support</option>
                                 <option value="delivery_partner">Delivery</option>
-                                <option value="accounts_manager">Accounts</option>
+                                <option value="accounts_manager">Accounts</option> */}
                             </select>
                         </div>
                     </div>

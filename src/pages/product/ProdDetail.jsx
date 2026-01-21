@@ -384,7 +384,8 @@ const ProdDetails = ({ product }) => {
                     
                     {/* Updated BuyNowButton with quantity prop */}
                     <div className="w-full">
-                        <BuyNowButton product={product} quantity={currentQuantity} />
+                        <BuyNowButton product={product} />
+                        {/* <BuyNowButton product={product} quantity={currentQuantity} /> */}
                     </div>
                 </div>
             </div>

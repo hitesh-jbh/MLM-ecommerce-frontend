@@ -1,18 +1,18 @@
 import React, { useState, useMemo } from "react";
 import { useSelector } from 'react-redux';
 import useSWR from 'swr';
+import StatCard from "../../components/admin_component/Statscard";
 import { GenericTable } from "../../components/partials/table/GenericTable";
 import { orderTable } from "../../utils/Constants";
-import { statusUpdate, orderList, dashboardStats } from "../../utils/service/apiService";
+import { statusUpdate, orderList, orderStats } from "../../utils/service/apiService"; // Updated import
 import FixedDateLabelWithDropdown from "../../components/admin_component/Date";
-import KpiCard from "../../components/admin_component/KpiCards"; 
 import { toast, ToastContainer } from "react-toastify";
-import { Loader2, X, RotateCcw } from "lucide-react";
+import { Loader2, X, RotateCcw, Users, ShoppingCart, Clock, CheckCircle, Truck, XCircle, Globe, UserPlus, ShieldCheck } from "lucide-react";
 import PageHeader from "../../components/partials/table/PageHeader";
 
 // Fetchers
 const orderFetcher = (token) => orderList(token).then(res => res.data?.data || []);
-const statsFetcher = (token) => dashboardStats(token).then(res => res.data?.data || {});
+const statsFetcher = (token) => orderStats(token).then(res => res.data?.data || {});
 
 function OrderManagement() {
     const token = useSelector((state) => state.auth?.token);
@@ -32,7 +32,7 @@ function OrderManagement() {
     );
 
     const { data: stats, isLoading: statsLoading, mutate: mutateStats } = useSWR(
-        token ? ["/api/order/stats", token] : null,
+        token ? ["/api/admin/dashboard/order", token] : null,
         () => statsFetcher(token)
     );
 
@@ -41,40 +41,35 @@ function OrderManagement() {
         mutateStats();
     };
 
-    // --- SEARCH & FILTER LOGIC (Updated to include Email) ---
+    // --- SEARCH & FILTER LOGIC ---
     const filteredOrders = useMemo(() => {
         if (!orders) return [];
-        
         const query = searchQuery.toLowerCase().trim();
-
         return orders.filter((order) => {
             const matchesSearch = 
                 order.orderId?.toString().toLowerCase().includes(query) ||
                 order.buyerName?.toLowerCase().includes(query) ||
-                // Search by Email (Checking both common keys: email and buyerEmail)
                 order.email?.toLowerCase().includes(query) ||
                 order.buyerEmail?.toLowerCase().includes(query);
-            
             const matchesStatus = statusFilter === "ALL" || order.orderStatus === statusFilter;
-            
             return matchesSearch && matchesStatus;
         });
     }, [orders, searchQuery, statusFilter]);
 
-    // --- KPI Mapping ---
-    const KpiData = useMemo(() => {
+    // --- API DATA MAPPING ---
+    const statsData = useMemo(() => {
         if (!stats) return [];
         return [
-            { id: "1", title: "Total Orders", value: stats.totalOrders || 0 },
-            { id: "2", title: "Today Orders", value: stats.todayOrders || 0 },
-            { id: "3", title: "Pending Orders", value: stats.pendingOrders || 0 },
-            { id: "4", title: "Shipped", value: `₹${stats.shippedOrders || 0}` },
-            { id: "5", title: "Delivered", value: `₹${stats.deliveredOrders || 0}` },
-            { id: "6", title: "Cancelled", value: `₹${stats.cancelledOrders || 0}` },
-            { id: "7", title: "Completed", value: `₹${stats.completedOrders || 0}` },
-            { id: "8", title: "Referral", value: `₹${stats.referralOrders || 0}` },
-            { id: "9", title: "Admin Ref.", value: `₹${stats.adminReferralOrders || 0}` },
-            { id: "10", title: "Website", value: `₹${stats.websiteOrders || 0}` },
+            { id: "1", title: "Total Orders", value: stats.totalOrders || 0, icon: <ShoppingCart className="w-5 h-5 text-white" /> },
+            { id: "2", title: "Today Orders", value: stats.todayOrders || 0, icon: <Clock className="w-5 h-5 text-white" /> },
+            { id: "3", title: "Pending", value: stats.pendingOrders || 0, icon: <Loader2 className="w-5 h-5  text-white" /> },
+            { id: "4", title: "Shipped", value: `₹${stats.shippedOrders || 0}`, icon: <Truck className="w-5 h-5 text-white" /> },
+            { id: "5", title: "Delivered", value: `₹${stats.deliveredOrders || 0}`, icon: <CheckCircle className="w-5 h-5 text-white" /> },
+            { id: "6", title: "Cancelled", value: `₹${stats.cancelledOrders || 0}`, icon: <XCircle className="w-5 h-5 text-white" /> },
+            { id: "7", title: "Completed", value: `₹${stats.completedOrders || 0}`, icon: <ShieldCheck className="w-5 h-5 text-white" /> },
+            { id: "8", title: "Referral", value: `₹${stats.referralOrders || 0}`, icon: <UserPlus className="w-5 h-5 text-white" /> },
+            { id: "9", title: "Admin Ref.", value: `₹${stats.adminReferralOrders || 0}`, icon: <Users className="w-5 h-5 text-white" /> },
+            { id: "10", title: "Website", value: `₹${stats.websiteOrders || 0}`, icon: <Globe className="w-5 h-5 text-white" /> },
         ];
     }, [stats]);
 
@@ -87,12 +82,11 @@ function OrderManagement() {
     const handleUpdateSubmit = async () => {
         const idToUpdate = selectedOrder?.orderId;
         if (!idToUpdate) return;
-
         setIsSubmitting(true);
         try {
             const response = await statusUpdate(token, idToUpdate, { status: newStatus });
             if (response.data.success) {
-                toast.success(`Order #${idToUpdate} updated to ${newStatus}`);
+                toast.success(`Order #${idToUpdate} updated`);
                 setIsModalOpen(false);
                 refreshData();
             }
@@ -109,32 +103,36 @@ function OrderManagement() {
     };
 
     return (
-        <div className="p-6 max-w-[1600px] mx-auto min-h-screen bg-slate-50/50">
+        <div className="p-4 max-w-[1600px] mx-auto min-h-screen bg-slate-50/50">
             <ToastContainer position="bottom-right" autoClose={2000} theme="colored" />
-            
-            <div className="flex justify-between items-center px-1">
+  
+            <div className="flex justify-between items-center px-1 mb-6">
                 <h1 className="text-2xl font-black text-gray-800 tracking-tight uppercase">
                     Order Management
                 </h1>
-                <FixedDateLabelWithDropdown />
+                {/* <FixedDateLabelWithDropdown /> */}
             </div>
 
-            {/* KPI Section */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-                {statsLoading 
-                    ? Array(10).fill(0).map((_, i) => (
+            {/* Stats Cards Section */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5 mb-8">
+                {statsLoading ? (
+                    Array(10).fill(0).map((_, i) => (
                         <div key={i} className="h-24 bg-gray-200 animate-pulse rounded-2xl" />
-                      ))
-                    : KpiData.map((item) => (
-                        <div key={item.id} className="transition-transform duration-200 hover:scale-[1.02]">
-                            <KpiCard {...item} />
-                        </div>
                     ))
-                }
+                ) : (
+                    statsData.map((item) => (
+                        <StatCard
+                            key={item.id}
+                            title={item.title}
+                            value={item.value}
+                            icon={item.icon}
+                        />
+                    ))
+                )}
             </div>
 
             {/* Filter Bar */}
-            <div className="flex flex-col lg:flex-row gap-4 items-end">
+            <div className="flex flex-col lg:flex-row gap-4 items-end mb-6">
                 <div className="flex-1 w-full">
                     <PageHeader 
                         itemCount={filteredOrders.length}
@@ -144,7 +142,7 @@ function OrderManagement() {
                     />
                 </div>
                 
-                <div className="flex gap-2 w-full lg:w-auto mb-6">
+                <div className="flex gap-2 w-full lg:w-auto">
                     <select 
                         className="flex-1 lg:w-56 h-[48px] border-2 border-white bg-white rounded-2xl px-4 text-xs font-bold uppercase tracking-wider outline-none focus:border-black shadow-sm transition-all cursor-pointer"
                         value={statusFilter}
@@ -168,7 +166,7 @@ function OrderManagement() {
             </div>
 
             {/* Table Area */}
-            <div className="bg-white rounded-3xl border border-gray-100 shadow-xl overflow-hidden relative min-h-[400px]">
+            <div className="bg-white rounded-3xl border border-gray-100 shadow-xl overflow-hidden relative">
                 {ordersLoading ? (
                     <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-20">
                         <Loader2 className="animate-spin text-black" size={40} />
@@ -188,7 +186,7 @@ function OrderManagement() {
                 )}
             </div>
 
-            {/* Modal */}
+            {/* Modal - Keeping your existing modal logic */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
                      <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">

@@ -3,10 +3,12 @@ import { useSelector } from 'react-redux';
 import useSWR from 'swr';
 import { setCommission, viewCommission } from '../../utils/service/apiService';
 import { toast, ToastContainer } from 'react-toastify';
-import { Loader2, Percent, Save, ShieldCheck, Activity, Lock } from 'lucide-react';
+import { Loader2, Percent, Save, ShieldCheck, Activity,ArrowLeft,  Lock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const SetCommission = () => {
     const token = useSelector((state) => state.auth?.token);
+    const navigate = useNavigate();
     
     // --- Data Fetching ---
     const { data: commissionData, isLoading, mutate } = useSWR(
@@ -71,7 +73,7 @@ const SetCommission = () => {
 
     return (
         <div className="p-4 md:p-6 max-w-xl mx-auto space-y-4">
-            <ToastContainer position="bottom-right" theme="dark" hideProgressBar autoClose={2000} />
+            <ToastContainer position="bottom-right" theme="light" hideProgressBar autoClose={2000} />
             
             <div className="flex gap-4 mb-6">
                 <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-gray-700 hover:text-black transition-all font-black text-[10px] uppercase tracking-widest bg-white px-3 py-1.5 rounded-lg border border-gray-100 shadow-sm">

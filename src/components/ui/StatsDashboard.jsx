@@ -1,31 +1,56 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function StatsDashboard() {
-  const [stats] = useState({
-    walletBalance: 460.75,
-    totalEarnings: 1520,
-    totalOrders: 80,
-    activeReferrals: 6,
-    resentRewards: 0
-  });
+export default function StatsDashboard({ stats }) {
+  
+  const formatValue = (val, type = 'number') => {
+    if (val === null || val === undefined) return "0";
+    if (type === 'currency') {
+      return `$${parseFloat(val).toFixed(2)}`;
+    }
+    return val;
+  };
 
   const statCards = [
-    { label: 'Commission Wallet Balance', link: "/wallet-balance", value: `$${stats.walletBalance.toFixed(2)}`, key: 'walletBalance' },
-    { label: 'Total Earnings', link: "#", value: stats.totalEarnings, key: 'totalEarnings' },
-    { label: 'Total Orders', link: "#", value: stats.totalOrders, key: 'totalOrders' },
-    { label: 'Active Referrals', link: "#", value: stats.activeReferrals, key: 'activeReferrals' },
-    { label: 'Recent Rewards', link: "#", value: stats.resentRewards, key: 'resentRewards' }
+    { 
+      label: 'Commission Wallet Balance', 
+      link: "#", 
+      value: formatValue(stats?.commissionWalletBalance, 'currency'), 
+      key: 'walletBalance' 
+    },
+    { 
+      label: 'Total Earnings', 
+      link: "#", 
+      value: formatValue(stats?.totalEarnings, 'currency'), 
+      key: 'totalEarnings' 
+    },
+    { 
+      label: 'Total Orders', 
+      link: "#", 
+      value: stats?.totalOrders || 0, 
+      key: 'totalOrders' 
+    },
+    { 
+      label: 'Active Referrals', 
+      link: "#", 
+      value: stats?.activeReferrals || 0, 
+      key: 'activeReferrals' 
+    },
+    { 
+      label: 'Recent Rewards', 
+      link: "#", 
+      value: stats?.recentRewards || 0, 
+      key: 'recentRewards' 
+    }
   ];
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-6 md:px-8">
+    <div className="w-full">
       <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center lg:text-left">
         Dashboard Stats
       </h1>
       
-      {/* Stats Display Container */}
-      <div className="bg-gradient-to-br from-gray-100 via-white to-gray-100 rounded-3xl shadow-xl p-4 md:p-8">
+      <div className="bg-gradient-to-br from-gray-100 via-white to-gray-100 rounded-3xl shadow-xl p-4 md:p-8 border border-white">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
           {statCards.map((card) => (
             <Link 
@@ -41,11 +66,6 @@ export default function StatsDashboard() {
                   <h2 className="text-xl md:text-2xl font-extrabold text-gray-900 truncate">
                     {card.value}
                   </h2>
-                </div>
-                
-                {/* Visual indicator for mobile interactivity */}
-                <div className="mt-4 flex items-center text-blue-600 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                  VIEW DETAILS →
                 </div>
               </div>
             </Link>

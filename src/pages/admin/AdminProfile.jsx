@@ -49,24 +49,3 @@ export const AdminProfile = () => {
     </div>
   );
 };
-
-
-// import React from 'react'
-// import Sidebar from '../../pages/admin/Sidebar'
-// import { Outlet } from 'react-router-dom'
-
-//  export const AdminProfile = () => {
-//   return (
-//     <div className="flex min-h-screen bg-gray-50">
-//       <aside className="w-64 shrink-0 border-r border-gray-200 bg-white">
-//         <Sidebar />
-//       </aside>
-
-//       <main className="flex-1 overflow-y-auto p-6 md:p-10">
-//         <div className="max-w-7xl mx-auto">
-//           <Outlet />
-//         </div>
-//       </main>
-//     </div>
-//   )
-// }

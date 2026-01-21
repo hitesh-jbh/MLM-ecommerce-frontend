@@ -638,40 +638,66 @@ export const userData = [
 
 // icon change
 // --- WALLET TRANSACTIONS CONFIG ---
+
 export const walletTable = [
-  { header: 'Date', key: 'date' },
-  { header: 'Transaction ID', key: 'txid' },
+  { 
+    header: 'Date', 
+    key: 'date',
+    render: (val) => (
+      <span className="text-gray-500 font-medium text-xs">
+        {new Date(val).toLocaleDateString('en-IN', {
+          day: '2-digit', month: 'short', year: 'numeric'
+        })}
+      </span>
+    )
+  },
+  { 
+    header: 'Transaction ID', 
+    key: 'transactionId', // Updated from txid to match API
+    render: (val) => <span className="font-bold text-[#1A1C1E]">#TXN-{val}</span>
+  },
   { 
     header: 'Type', 
     key: 'type', 
-    render: (val) => (
-      <div className="flex items-center gap-2">
-        {/* Matches the green wallet icon in the image */}
-        <div className="p-1.5 bg-emerald-50 text-emerald-600 rounded">
-          <Icons icon="heroicons:wallet-solid" size={14} />
+    render: (val) => {
+      const isCredit = val?.toLowerCase() === 'credit';
+      return (
+        <div className="flex items-center gap-2">
+          <div className={`p-1.5 rounded-lg ${isCredit ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
+            <Icons icon={isCredit ? "heroicons:arrow-up-right-solid" : "heroicons:arrow-down-left-solid"} size={14} />
+          </div>
+          <span className="text-[10px] font-black uppercase tracking-widest text-gray-700">{val}</span>
         </div>
-        <span className="text-gray-700">{val}</span>
-      </div>
-    ) 
+      );
+    }
   },
   { 
     header: 'Source', 
     key: 'source', 
-    render: (val) => <span className="text-blue-500 hover:underline cursor-pointer">{val}</span> 
+    render: (val) => (
+      <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-tighter">
+        {val}
+      </span>
+    ) 
   },
   { 
-    header: 'Amount (₹)', 
+    header: 'Amount', 
     key: 'amount', 
-    render: (val) => <span className="font-bold text-gray-900">₹{val}</span> 
+    render: (val, row) => {
+      const isCredit = row.type?.toLowerCase() === 'credit';
+      return (
+        <span className={`font-black text-sm ${isCredit ? 'text-emerald-600' : 'text-red-600'}`}>
+          {isCredit ? '+' : '-'} ₹{val}
+        </span>
+      );
+    }
   },
   {
     header: 'Status',
-    key: 'status', // Points to the "status" field in your data (e.g., 'View Details')
-    linkKey: 'detailsUrl', 
-    render: (val, row) => (
-      <div className={`${row.detailsUrl ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400'} text-white px-3 py-1.5 rounded-md text-xs flex items-center justify-center gap-1 transition-colors w-fit cursor-pointer`}>
-        {val} 
-        {row.detailsUrl && <Icons icon="heroicons:chevron-down-solid" size={14} />}
+    key: 'status', 
+    render: (val) => (
+      <div className="bg-[#1A1C1E] text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-black transition-all cursor-pointer w-fit">
+        {val || 'Success'}
       </div>
     )
   }
@@ -711,7 +737,8 @@ export const walletData = [
 export const workWalletTable = [
   { 
     header: 'User', 
-    key: 'user', 
+    // The API uses "userName" for the user's name
+    key: 'userName', 
     render: (val, row) => (
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-full bg-indigo-100 overflow-hidden border border-indigo-200">
@@ -727,18 +754,22 @@ export const workWalletTable = [
   { header: 'User ID', key: 'userId' },
   { header: 'Referral Income', key: 'referralIncome', render: (val) => `₹${val}` },
   { header: 'Level Income', key: 'levelIncome', render: (val) => `₹${val}` },
-  { header: 'Pending (₹)', key: 'pending', render: (val) => `₹${val}` },
-  {
-    header: 'Action',
-    key: 'status', // Points to the "status" field in your data (e.g., 'View Details')
-    linkKey: 'detailsUrl', 
-    render: (val, row) => (
-      <div className={`${row.detailsUrl ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400'} text-white px-3 py-1.5 rounded-md text-xs flex items-center justify-center gap-1 transition-colors w-fit cursor-pointer`}>
-        {val} 
-        {row.detailsUrl && <Icons icon="heroicons:chevron-down-solid" size={14} />}
-      </div>
-    )
-  }
+  { 
+    header: 'Pending (₹)', 
+    // The API field is "pendingAmount", not "pending"
+    key: 'pendingAmount', 
+    render: (val) => `₹${val}` 
+  },
+  // {
+  //   header: 'Action',
+  //   key: 'action', 
+  //   render: (val, row) => (
+  //     <div className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md text-xs flex items-center justify-center gap-1 transition-colors w-fit cursor-pointer">
+  //       View
+  //       <Icons icon="heroicons:chevron-down-solid" size={14} />
+  //     </div>
+  //   )
+  // }
 ];
 
 export const workWalletData = [
@@ -755,10 +786,108 @@ export const workWalletData = [
 ];
 
 // Commission Table
+// export const commissionTable = [
+//   { 
+//     header: 'User Name', 
+//     key: 'user', 
+//     render: (val, row) => (
+//       <div className="flex items-center gap-3">
+//         <div className="w-8 h-8 rounded-full bg-gray-100 overflow-hidden border">
+//            <img src={`https://ui-avatars.com/api/?name=${val}&background=random`} alt="avatar" />
+//         </div>
+//         <div className="flex flex-col">
+//           <span className="font-semibold text-gray-800 text-sm">{val}</span>
+//           <span className="text-[10px] text-gray-400">{row.userId}</span>
+//         </div>
+//       </div>
+//     )
+//   },
+//   { header: 'Order ID', key: 'orderId' },
+//   { header: 'Product Name', key: 'product' },
+//   { header: 'Commission Type', key: 'type' },
+//   { header: 'Level', key: 'level' },
+//   { header: 'Amount', key: 'amount', render: (val) => `$${val}` },
+//   { 
+//     header: 'Status', 
+//     key: 'status',
+//     render: (val) => (
+//       <span className={`px-3 py-1 rounded text-[10px] font-bold ${
+//         val === 'Approved' ? 'bg-emerald-100 text-emerald-600' : 
+//         val === 'Rejected' ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600'
+//       }`}>
+//         {val}
+//       </span>
+//     )
+//   },
+//   {
+//     header: 'Action',
+//     key: 'action',
+//     render: (_, row) => {
+//       // PENDING STATE
+//       if (row.status === 'Pending') {
+//         return (
+//           <div className="flex items-center gap-2">
+//             <button 
+//               className="flex items-center gap-1 px-2 py-1 bg-emerald-500 text-white rounded text-[10px] font-semibold hover:bg-emerald-600 transition-colors"
+//               onClick={() => console.log("Approving ID:", row.orderId)}
+//             >
+//               <Icons icon="heroicons:user-plus-solid" size={14} /> Approve
+//             </button>
+//             <button 
+//               className="flex items-center gap-1 px-2 py-1 bg-red-500 text-white rounded text-[10px] font-semibold hover:bg-red-600 transition-colors"
+//               onClick={() => console.log("Rejecting ID:", row.orderId)}
+//             >
+//               <Icons icon="heroicons:user-minus-solid" size={14} /> Reject
+//             </button>
+//           </div>
+//         );
+//       }
+
+//       // APPROVED STATE
+//       if (row.status === 'Approved') {
+//         return (
+//           <div className="flex items-center gap-3">
+//             <div className="flex items-center gap-1 text-emerald-600 font-bold text-[10px] uppercase">
+//               <Icons icon="heroicons:document-check-solid" size={16} />
+//               <span>Result Ready</span>
+//             </div>
+//             {row.resultLink ? (
+//               <a 
+//                 href={row.resultLink} 
+//                 download 
+//                 className="text-blue-500 hover:text-blue-700 transition-transform hover:scale-110 flex items-center"
+//                 title="Download Statement"
+//               >
+//                 <Icons icon="heroicons:cloud-arrow-down-solid" size={18} />
+//               </a>
+//             ) : (
+//               <div className="text-gray-300 flex items-center" title="Locked">
+//                 <Icons icon="heroicons:lock-closed-solid" size={16} />
+//               </div>
+//             )}
+//           </div>
+//         );
+//       }
+
+//       // REJECTED STATE
+//       if (row.status === 'Rejected') {
+//         return (
+//           <div className="flex items-center gap-1 text-red-500 font-bold text-[10px] uppercase opacity-80">
+//             <Icons icon="heroicons:no-symbol-solid" size={16} />
+//             <span>Rejected</span>
+//           </div>
+//         );
+//       }
+
+//       return <span className="text-gray-300 text-[10px]">N/A</span>;
+//     }
+//   }
+// ];
+
 export const commissionTable = [
   { 
     header: 'User Name', 
-    key: 'user', 
+    key: 'userName', // Updated to match API response
     render: (val, row) => (
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-full bg-gray-100 overflow-hidden border">
@@ -766,88 +895,48 @@ export const commissionTable = [
         </div>
         <div className="flex flex-col">
           <span className="font-semibold text-gray-800 text-sm">{val}</span>
-          <span className="text-[10px] text-gray-400">{row.userId}</span>
+          <span className="text-[10px] text-gray-400">ID: {row.id}</span>
         </div>
       </div>
     )
   },
-  { header: 'Order ID', key: 'orderId' },
-  { header: 'Product Name', key: 'product' },
-  { header: 'Commission Type', key: 'type' },
+  { header: 'Order ID', key: 'order_id' }, // Updated to match API order_id
+  // { header: 'Product Name', key: 'product', render: (val) => val || 'N/A' },
+  { header: 'Commission Type', key: 'type', render: (val) => val || 'Referral' },
   { header: 'Level', key: 'level' },
-  { header: 'Amount', key: 'amount', render: (val) => `$${val}` },
+  { header: 'Amount', key: 'amount', render: (val) => `₹${val}` },
   { 
     header: 'Status', 
     key: 'status',
-    render: (val) => (
-      <span className={`px-3 py-1 rounded text-[10px] font-bold ${
-        val === 'Approved' ? 'bg-emerald-100 text-emerald-600' : 
-        val === 'Rejected' ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600'
-      }`}>
-        {val}
-      </span>
-    )
+    render: (val) => {
+      const status = val?.toLowerCase();
+      return (
+        <span className={`px-3 py-1 rounded text-[10px] font-bold uppercase ${
+          status === 'approved' || status === 'paid' ? 'bg-emerald-100 text-emerald-600' : 
+          status === 'rejected' ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600'
+        }`}>
+          {val}
+        </span>
+      );
+    }
   },
   {
     header: 'Action',
     key: 'action',
     render: (_, row) => {
-      // PENDING STATE
-      if (row.status === 'Pending') {
+      const status = row.status?.toLowerCase();
+      if (status === 'pending') {
         return (
           <div className="flex items-center gap-2">
-            <button 
-              className="flex items-center gap-1 px-2 py-1 bg-emerald-500 text-white rounded text-[10px] font-semibold hover:bg-emerald-600 transition-colors"
-              onClick={() => console.log("Approving ID:", row.orderId)}
-            >
-              <Icons icon="heroicons:user-plus-solid" size={14} /> Approve
+            <button className="px-2 py-1 bg-emerald-500 text-white rounded text-[10px] font-semibold hover:bg-emerald-600 transition-colors">
+              Approve
             </button>
-            <button 
-              className="flex items-center gap-1 px-2 py-1 bg-red-500 text-white rounded text-[10px] font-semibold hover:bg-red-600 transition-colors"
-              onClick={() => console.log("Rejecting ID:", row.orderId)}
-            >
-              <Icons icon="heroicons:user-minus-solid" size={14} /> Reject
+            <button className="px-2 py-1 bg-red-500 text-white rounded text-[10px] font-semibold hover:bg-red-600 transition-colors">
+              Reject
             </button>
           </div>
         );
       }
-
-      // APPROVED STATE
-      if (row.status === 'Approved') {
-        return (
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1 text-emerald-600 font-bold text-[10px] uppercase">
-              <Icons icon="heroicons:document-check-solid" size={16} />
-              <span>Result Ready</span>
-            </div>
-            {row.resultLink ? (
-              <a 
-                href={row.resultLink} 
-                download 
-                className="text-blue-500 hover:text-blue-700 transition-transform hover:scale-110 flex items-center"
-                title="Download Statement"
-              >
-                <Icons icon="heroicons:cloud-arrow-down-solid" size={18} />
-              </a>
-            ) : (
-              <div className="text-gray-300 flex items-center" title="Locked">
-                <Icons icon="heroicons:lock-closed-solid" size={16} />
-              </div>
-            )}
-          </div>
-        );
-      }
-
-      // REJECTED STATE
-      if (row.status === 'Rejected') {
-        return (
-          <div className="flex items-center gap-1 text-red-500 font-bold text-[10px] uppercase opacity-80">
-            <Icons icon="heroicons:no-symbol-solid" size={16} />
-            <span>Rejected</span>
-          </div>
-        );
-      }
-
       return <span className="text-gray-300 text-[10px]">N/A</span>;
     }
   }
@@ -868,22 +957,22 @@ export const commissionData = [
 
 
 // Referal Table
-export const referTable =  [
+export const referTable = [
   { 
     header: 'User ID', 
     key: 'userId',
     render: (val) => (
       <span className="font-bold">UID {val}</span>
-    ) ,
+    ),
     width: '80px' 
   },
   { 
     header: 'Referral Code', 
-    key: 'referralCode',
-    render: (val, row) => (
+    key: 'referral_code', // Changed from referralCode to match your API
+    render: (val) => (
       <div className="flex flex-col">
-        <span className="font-bold text-slate-800">{val}</span>
-        <span className="text-[10px] text-slate-400">{row.expiryStatus}</span>
+        <span className="font-bold text-slate-800">{val || '—'}</span>
+        <span className="text-[10px] text-slate-400 uppercase tracking-tighter">Level {0}</span>
       </div>
     )
   },
@@ -892,66 +981,69 @@ export const referTable =  [
     key: 'assignedTo',
     render: (val) => (
       <div className="flex items-center gap-2">
-        <img src={val.avatar} className="w-6 h-6 rounded-full border" alt="avatar" />
+        <div className="w-6 h-6 rounded-full border bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-500 uppercase">
+          {val?.charAt(0) || '?'}
+        </div>
         <div className="flex flex-col">
-          <span className="font-medium text-slate-700">{val.name}</span>
-          <span className="text-[9px] text-slate-400">● Active {val.points}</span>
+          <span className="font-medium text-slate-700">{val || 'Unknown'}</span>
         </div>
       </div>
     )
   },
   { 
-    header: 'Used / Limit', 
-    key: 'usage',
+    header: 'Level', 
+    key: 'level',
     render: (val) => (
       <div className="flex flex-col">
-        <span className="font-medium">{val.current} / {val.limit}</span>
-        <span className="text-[9px] text-slate-400">● Rank {val.rankPoints}</span>
+        <span className="font-medium">Level {val}</span>
       </div>
     )
   },
   { 
-    header: 'Rank / Points', 
+    header: 'Rank', 
     key: 'rank',
     render: (val) => (
       <div className="flex flex-col">
-        <span className={`font-medium ${val.name === 'Gold' ? 'text-amber-600' : 'text-slate-600'}`}>
-          {val.name || '—'}
+        <span className="font-medium text-slate-600">
+          {val || 'No Rank'}
         </span>
-        <span className="text-[9px] text-slate-400">{val.points ? `● ${val.points}` : ''}</span>
       </div>
     )
   },
   { 
     header: 'Commission', 
     key: 'commission',
-    render: (val) => <span className="font-bold text-slate-700">{val}</span>
+    render: (val) => (
+      <span className="font-bold text-slate-700">
+        ₹{parseFloat(val || 0).toLocaleString('en-IN')}
+      </span>
+    )
   },
   { 
     header: 'Status', 
     key: 'status',
     render: (val) => {
       const colors = {
-        Active: 'bg-green-100 text-green-700',
-        Expired: 'bg-gray-100 text-gray-600',
-        Disabled: 'bg-slate-200 text-slate-500'
+        pending: 'bg-amber-100 text-amber-700',
+        active: 'bg-green-100 text-green-700',
+        expired: 'bg-gray-100 text-gray-600',
       };
       return (
-        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${colors[val]}`}>
+        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${colors[val?.toLowerCase()] || 'bg-slate-100 text-slate-600'}`}>
           {val}
         </span>
       );
     }
   },
-  {
-    header: 'Actions',
-    key: 'actions',
-    render: () => (
-      <button className="p-1 hover:bg-gray-100 rounded-full transition-colors">
-        <Icons icon="heroicons:ellipsis-horizontal-20-solid" size={18} />
-      </button>
-    )
-  }
+  // {
+  //   header: 'Actions',
+  //   key: 'actions',
+  //   render: () => (
+  //     <button className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+  //       <Icons icon="heroicons:ellipsis-horizontal-20-solid" size={18} />
+  //     </button>
+  //   )
+  // }
 ];
 
 export const referData = [
@@ -1116,55 +1208,141 @@ export const profileMenuIcon = [
 
 
   // Heirachy mgt data
- export const hierachyTable = [
+//  export const hierachyTable = [
+//   { 
+//     header: 'Level', 
+//     key: 'level', 
+//     width: '60px',
+//     render: (val) => <span className="font-bold text-slate-700 text-sm">{val}</span>
+//   },
+//   { 
+//     header: 'Member', 
+//     key: 'member',
+//     width: '180px',
+//     render: (member) => (
+//       <div className="flex items-center gap-2">
+//         <img src={member.avatar} alt="" className="w-9 h-9 rounded-full border border-gray-100 shrink-0" />
+//         <div className="min-w-0">
+//           <p className="font-bold text-slate-900 text-xs truncate">{member.name}</p>
+//           <p className="text-[10px] text-slate-400">{member.id}</p>
+//         </div>
+//       </div>
+//     )
+//   },
+//   { 
+//     header: 'Direct Members (5/5)', 
+//     key: 'directMembers',
+//     render: (members, row) => ( // Use the second argument 'row' to access confirmedMembers
+//       <div className="grid grid-cols-2 gap-x-8 gap-y-1 py-1 border-l border-r border-gray-100 px-4 min-w-[450px]">
+//         {/* Left Side: Uses the 'members' key (directMembers) */}
+//         <div className="space-y-1">
+//           {members?.map((m, idx) => (
+//             <div key={idx} className="flex items-center gap-2">
+//               <span className="text-slate-300 text-[10px] w-3">{idx + 1}</span>
+//               <span className="flex items-center justify-center w-5 h-5 bg-blue-600 text-white rounded-full text-[10px] shrink-0 font-bold">
+//                 {idx + 1}
+//               </span>
+//               <span className="text-blue-800 font-semibold text-[11px] truncate">{m.name}</span>
+//               <span className="text-slate-400 text-[10px]">{m.id}</span>
+//             </div>
+//           ))}
+//         </div>
+
+//         {/* Right Side: CORRECTED to use 'row.confirmedMembers' */}
+//         <div className="space-y-1">
+//           {row.confirmedMembers?.map((cm, idx) => (
+//             <div key={idx} className="flex items-center gap-2">
+//               <div className="bg-green-100 text-green-600 rounded p-0.5 shrink-0">
+//                  <Icons icon="heroicons:check-badge-solid" size={14} />
+//               </div>
+//               <span className="text-slate-600 font-medium text-[11px] truncate">{cm.name}</span>
+//               <span className="text-slate-400 text-[10px]">{cm.id}</span>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//     )
+//   },
+//   { 
+//     header: 'New Chain', 
+//     key: 'isChainComplete',
+//     width: '120px',
+//     render: (isComplete) => (
+//       <div className="flex items-center justify-center">
+//         {isComplete ? (
+//           <div className="w-7 h-7 bg-green-500 text-white rounded shadow-sm flex items-center justify-center">
+//             <Icons icon="heroicons:check-solid" size={18} />
+//           </div>
+//         ) : (
+//           <button className="group flex items-center gap-1.5 px-3 py-1.5 bg-white text-orange-500 border border-orange-200 rounded-md hover:bg-orange-50 transition-all shadow-sm">
+//              <Icons icon="heroicons:bolt-solid" size={14} className="text-orange-400" />
+//              <span className="text-[10px] font-bold uppercase tracking-wide">New Chain +5</span>
+//              <Icons icon="heroicons:chevron-right-solid" size={10} className="text-slate-300 group-hover:translate-x-0.5 transition-transform" />
+//           </button>
+//         )}
+//       </div>
+//     )
+//   },
+// ];
+
+// Inside your Constants.jsx or where hierachyTable is defined
+export const hierachyTable = [
   { 
     header: 'Level', 
     key: 'level', 
     width: '60px',
     render: (val) => <span className="font-bold text-slate-700 text-sm">{val}</span>
   },
-  { 
-    header: 'Member', 
-    key: 'member',
-    width: '180px',
-    render: (member) => (
-      <div className="flex items-center gap-2">
-        <img src={member.avatar} alt="" className="w-9 h-9 rounded-full border border-gray-100 shrink-0" />
-        <div className="min-w-0">
-          <p className="font-bold text-slate-900 text-xs truncate">{member.name}</p>
-          <p className="text-[10px] text-slate-400">{member.id}</p>
-        </div>
+ { 
+  header: 'Member', 
+  key: 'member', 
+  width: '180px',
+  render: (member) => (
+    <div className="flex items-center gap-3">
+      {/* Reduced size to w-7 h-7 and added rounded-md for a smaller, sharper icon */}
+      <img 
+        src={`https://ui-avatars.com/api/?name=${member.name}&background=random&bold=true`} 
+        alt={member.name} 
+        className="w-7 h-7 rounded-md shadow-sm shrink-0 object-cover"
+      />
+      <div className="min-w-0">
+        <p className="font-bold text-slate-900 text-[11px] truncate leading-none mb-1">
+          {member.name}
+        </p>
+        <p className="text-[9px] text-slate-400 font-mono uppercase tracking-tighter">
+          {member.id}
+        </p>
       </div>
-    )
-  },
+    </div>
+  )
+},
   { 
-    header: 'Direct Members (5/5)', 
+    header: 'Direct Members (Progress)', 
     key: 'directMembers',
-    render: (members, row) => ( // Use the second argument 'row' to access confirmedMembers
+    render: (members, row) => (
       <div className="grid grid-cols-2 gap-x-8 gap-y-1 py-1 border-l border-r border-gray-100 px-4 min-w-[450px]">
-        {/* Left Side: Uses the 'members' key (directMembers) */}
+        {/* Left Side: Direct Members */}
         <div className="space-y-1">
-          {members?.map((m, idx) => (
+          {members?.length > 0 ? members.map((m, idx) => (
             <div key={idx} className="flex items-center gap-2">
-              <span className="text-slate-300 text-[10px] w-3">{idx + 1}</span>
-              <span className="flex items-center justify-center w-5 h-5 bg-blue-600 text-white rounded-full text-[10px] shrink-0 font-bold">
+              <span className="flex items-center justify-center w-4 h-4 bg-blue-600 text-white rounded-full text-[9px] shrink-0 font-bold">
                 {idx + 1}
               </span>
               <span className="text-blue-800 font-semibold text-[11px] truncate">{m.name}</span>
-              <span className="text-slate-400 text-[10px]">{m.id}</span>
+              <span className="text-slate-400 text-[9px] font-mono">{m.id}</span>
             </div>
-          ))}
+          )) : <span className="text-slate-300 text-[10px] italic">No members yet</span>}
         </div>
 
-        {/* Right Side: CORRECTED to use 'row.confirmedMembers' */}
+        {/* Right Side: Confirmed/Active Status */}
         <div className="space-y-1">
           {row.confirmedMembers?.map((cm, idx) => (
             <div key={idx} className="flex items-center gap-2">
-              <div className="bg-green-100 text-green-600 rounded p-0.5 shrink-0">
+               <div className="text-green-500 shrink-0">
                  <Icons icon="heroicons:check-badge-solid" size={14} />
-              </div>
-              <span className="text-slate-600 font-medium text-[11px] truncate">{cm.name}</span>
-              <span className="text-slate-400 text-[10px]">{cm.id}</span>
+               </div>
+               <span className="text-slate-600 font-medium text-[11px] truncate">{cm.name}</span>
+               <span className="text-slate-400 text-[9px] font-mono">{cm.id}</span>
             </div>
           ))}
         </div>
@@ -1172,7 +1350,7 @@ export const profileMenuIcon = [
     )
   },
   { 
-    header: 'New Chain', 
+    header: 'Chain Status', 
     key: 'isChainComplete',
     width: '120px',
     render: (isComplete) => (
@@ -1184,8 +1362,7 @@ export const profileMenuIcon = [
         ) : (
           <button className="group flex items-center gap-1.5 px-3 py-1.5 bg-white text-orange-500 border border-orange-200 rounded-md hover:bg-orange-50 transition-all shadow-sm">
              <Icons icon="heroicons:bolt-solid" size={14} className="text-orange-400" />
-             <span className="text-[10px] font-bold uppercase tracking-wide">New Chain +5</span>
-             <Icons icon="heroicons:chevron-right-solid" size={10} className="text-slate-300 group-hover:translate-x-0.5 transition-transform" />
+             <span className="text-[10px] font-bold uppercase tracking-wide">Pending</span>
           </button>
         )}
       </div>

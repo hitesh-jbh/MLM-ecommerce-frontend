@@ -1,15 +1,55 @@
 import React from 'react';
+import useSWR from 'swr';
+import { useSelector } from 'react-redux';
 import { GenericTable } from '../../components/partials/table/GenericTable.jsx';
-import Icons from '../../components/ui/Icon.jsx';
-import { hierachyTable, hierachyData } from '../../utils/Constants.jsx';
+import { hierachyTable } from '../../utils/Constants.jsx';
+import { userHierachy } from '../../utils/service/apiService'; // Adjust path as needed
+import { Loader2 } from "lucide-react";
 
 const HierachyMgt = () => {
+  const { token } = useSelector((state) => state.auth);
 
-  const sortedData = hierachyData.sort((a, b) => a.level - b.level);
+  // Fetching data using SWR
+  const { data: response, error, isLoading } = useSWR(
+    token ? ['/api/admin/hierarchy', token] : null,
+    ([_, tkn]) => userHierachy(tkn).then(res => res.data)
+  );
+
+  // Data Mapping: Convert API response to Table format
+  const mappedData = React.useMemo(() => {
+    if (!response?.data) return [];
+
+    return response.data.map(item => ({
+      level: item.level,
+      // Map 'member' for the second column
+      member: {
+        name: `${item.firstName} ${item.lastName}`,
+        avatar: item.imageUrl || "https://thumbs.dreamstime.com/b/vector-illustration-avatar-dummy-logo-collection-image-icon-stock-isolated-object-set-symbol-web-137160339.jpg",
+        id: item.referralCode // Displaying referral code as the ID
+      },
+      // Map direct members for the third column (Left side)
+      directMembers: item.directMembers?.map(m => ({
+        name: `${m.firstName} ${m.lastName}`,
+        id: m.referralCode
+      })) || [],
+      // Assuming 'confirmedMembers' are the same as direct members for this view
+      // or you can filter them based on 'isActive'
+      confirmedMembers: item.directMembers?.filter(m => m.isActive === 1).map(m => ({
+        name: `${m.firstName} ${m.lastName}`,
+        id: m.referralCode
+      })) || [],
+      isChainComplete: item.chainCompleted
+    })).sort((a, b) => a.level - b.level);
+  }, [response]);
+
+  if (isLoading) return (
+    <div className="flex justify-center items-center h-64">
+      <Loader2 className="animate-spin text-blue-600" size={40} />
+    </div>
+  );
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
       <div className="text-center py-6 bg-white rounded-xl border border-gray-200 shadow-sm">
         <h1 className="text-xl font-black text-slate-800 tracking-tight uppercase px-4">
           1 Member Earns Commission From 5 Persons
@@ -19,14 +59,14 @@ const HierachyMgt = () => {
         </p>
       </div>
 
-      {/* Your Generic Table Integration */}
       <GenericTable
         title="Hierarchy Structure" 
         columns={hierachyTable} 
-        data={sortedData} 
+        data={mappedData} 
       />
     </div>
   );
 };
 
 export default HierachyMgt;
+

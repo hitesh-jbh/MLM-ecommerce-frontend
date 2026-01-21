@@ -75,7 +75,7 @@ const RankMgt = () => {
 
     return (
         <div className="p-4 md:p-8 max-w-[1400px] mx-auto min-h-screen bg-[#FBFBFB]">
-            <ToastContainer position="bottom-right" theme="dark" />
+            <ToastContainer position="bottom-right" theme="light" />
 
             {/* Header Section */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">

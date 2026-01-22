@@ -6,7 +6,7 @@ export default function StatsDashboard({ stats }) {
   const formatValue = (val, type = 'number') => {
     if (val === null || val === undefined) return "0";
     if (type === 'currency') {
-      return `$${parseFloat(val).toFixed(2)}`;
+      return `₹${parseFloat(val).toFixed(2)}`;
     }
     return val;
   };

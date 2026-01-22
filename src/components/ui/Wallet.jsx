@@ -46,7 +46,7 @@ const WalletPage = () => {
             {/* Right Side: Total Earnings - Compacted */}
             <div className="flex-1 p-6 md:p-8 bg-[#F8F9FA] flex flex-col justify-center">
               <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Total Life-Time Earnings</p>
-              <p className="text-4xl md:text-5xl font-black tracking-tighter">${Number(stats.totalEarned).toLocaleString()}</p>
+              <p className="text-4xl md:text-5xl font-black tracking-tighter">₹{Number(stats.totalEarned).toLocaleString()}</p>
               <div className="mt-3 flex items-center gap-2 text-green-600 font-bold text-[11px] uppercase">
                 <TrendingUp size={14} /> <span>Live Tracking Enabled</span>
               </div>
@@ -75,7 +75,7 @@ const StatBox = ({ label, value, primary }) => (
   <div className="border-l-4 border-black pl-4 py-1">
     <p className="text-[9px] font-black uppercase tracking-widest text-gray-400 leading-none mb-1">{label}</p>
     <p className={`text-2xl md:text-3xl font-black leading-none ${primary ? 'text-black' : 'text-gray-500'}`}>
-      ${Number(value).toLocaleString()}
+      ₹{Number(value).toLocaleString()}
     </p>
   </div>
 );
@@ -87,7 +87,7 @@ const DetailCard = ({ icon, label, value, sub }) => (
       {icon}
     </div>
     <p className="text-[9px] font-black uppercase tracking-widest opacity-60 mb-1">{label}</p>
-    <p className="text-2xl font-black mb-1">${Number(value).toLocaleString()}</p>
+    <p className="text-2xl font-black mb-1">₹{Number(value).toLocaleString()}</p>
     <p className="text-[9px] font-bold uppercase tracking-tighter opacity-40">{sub}</p>
   </div>
 );

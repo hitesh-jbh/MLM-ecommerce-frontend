@@ -8,6 +8,7 @@ import { Users, ShoppingCart, DollarSign, Clock,
   Ticket } from "lucide-react";
 import OrdersOverview from "../../components/admin_component/Ordersoverview";
 import { dashboard_Stat, referalRanking } from "../../utils/service/apiService"; 
+import { FaRupeeSign } from "react-icons/fa";
 
 function AdminDashboard() {
     const [stats, setStats] = useState(null);
@@ -65,16 +66,16 @@ function AdminDashboard() {
             id: "3",
             title: "Total Commission Paid",
             value: stats?.totalCommissionPaid 
-                ? `$${Math.floor(Number(stats.totalCommissionPaid)).toLocaleString()}` 
-                : "$0",
-            icon: <DollarSign className="w-6 h-6 text-black dark:text-white" />,
+                ? `₹${Math.floor(Number(stats.totalCommissionPaid)).toLocaleString()}` 
+                : "₹0",
+            icon: <FaRupeeSign className="w-6 h-6 text-black dark:text-white" />,
         },
         {
             id: "4",
             title: "Pending Withdrawals",
             value: stats?.pendingWithdrawals 
-                ? `$${Number(stats.pendingWithdrawals).toLocaleString()}` 
-                : "$0",
+                ? `₹${Number(stats.pendingWithdrawals).toLocaleString()}` 
+                : "₹0",
             icon: <Clock className="w-6 h-6 text-black dark:text-white" />,
         },
         {

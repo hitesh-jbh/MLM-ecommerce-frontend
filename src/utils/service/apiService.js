@@ -129,6 +129,10 @@ export const dashboardStats = (token) => api.get("/api/order/dashboard/stats", {
     headers: { Authorization: `Bearer ${token}` }
 });
 
+export const cancelOrder = (token, prodId) => api.patch(`/api/order/${prodId}/cancel`, {
+    headers: { Authorization: `Bearer ${token}` }
+})
+
 
 
 
@@ -203,6 +207,13 @@ export const getAddress = (token) => api.get("/api/address/", {
     headers: { Authorization: `Bearer ${token}` }
 });
 
+export const editAddress = (token, addressId, addressData) => api.put(`/api/address/${addressId}`, addressData, {
+    headers: { Authorization: `Bearer ${token}` }
+});
+
+export const deleteAddress = (token, addressId) => api.delete(`/api/address/${addressId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+});
 
 
 

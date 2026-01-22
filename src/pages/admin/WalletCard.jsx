@@ -6,11 +6,11 @@ const WalletCard = ({ orders, pending, onView }) => {
       <h2 className="mb-3 text-sm font-semibold text-gray-700">Wallet Balances</h2>
       <div className="flex justify-between mb-1 text-sm text-gray-600">
         <span>Orders</span>
-        <span className="font-medium">${orders}</span>
+        <span className="font-medium">₹{orders}</span>
       </div>
       <div className="flex justify-between mb-3 text-sm text-gray-600">
         <span>Pending</span>
-        <span className="font-medium">${pending}</span>
+        <span className="font-medium">₹{pending}</span>
       </div>
       <button
         onClick={onView}

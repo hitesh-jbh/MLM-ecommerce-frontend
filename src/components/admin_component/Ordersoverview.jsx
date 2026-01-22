@@ -108,8 +108,8 @@ const OrdersOverview = () => {
           <div className="p-4 md:p-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
               <StatCard title="Total Orders" value={displayOrders.toLocaleString()} trend="Live" />
-              <StatCard title="Total Revenue" value={`$${displayRevenue.toLocaleString()}`} trend="Live" />
-              <StatCard title="Avg. Value" value={`$${displayOrders > 0 ? Math.round(displayRevenue / displayOrders) : 0}`} trend="Live" />
+              <StatCard title="Total Revenue" value={`₹${displayRevenue.toLocaleString()}`} trend="Live" />
+              <StatCard title="Avg. Value" value={`${displayOrders > 0 ? Math.round(displayRevenue / displayOrders) : 0}`} trend="Live" />
             </div>
 
             <div className="bg-white border border-gray-200 rounded-lg p-4 md:p-6">

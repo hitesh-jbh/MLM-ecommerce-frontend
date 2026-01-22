@@ -147,7 +147,7 @@ const YourOrder = () => {
             
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-gray-200">
                 <div className="flex gap-8 text-sm">
-                    {["Orders", "Buy Again", "Cancelled Orders"].map(tab => (
+                    {["Orders", "Cancelled Orders"].map(tab => (
                         <button 
                             key={tab} 
                             onClick={() => setActiveTab(tab)} 

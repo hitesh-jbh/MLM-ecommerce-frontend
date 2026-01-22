@@ -1,9 +1,8 @@
 import axios from "axios";
 
 export const api = axios.create({
-  // baseURL: 'http://localhost:3000/api',
   baseURL: 'https://mlm-ecommerce-backend.onrender.com',
-  timeout: 10000, // 10 second timeout
+  timeout: 5000, // 10 second timeout
 });
 
 export const fetcher = (url) => api.get(url).then(res => res.data);

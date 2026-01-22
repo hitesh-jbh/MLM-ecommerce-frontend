@@ -171,7 +171,7 @@ const SignUp =() => {
                 </div>
                 <input 
                   {...register("referralCode")} 
-                  placeholder="8-character code" 
+                  placeholder="enter referral code" 
                   className={`${inputStyle} uppercase placeholder:normal-case`} 
                   maxLength={8}
                 />

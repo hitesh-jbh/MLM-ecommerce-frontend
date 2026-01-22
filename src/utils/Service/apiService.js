@@ -1,4 +1,4 @@
-import { api } from "../Api/axiosInstance";
+import { api } from "../api/axiosInstance";
 
 // Auth
 export const login = (data) => api.post('/api/auth/login', data);
@@ -279,9 +279,13 @@ export const userNotification = (token) => api.get("/api/notification/user", {
     headers: { Authorization: `Bearerr ${token}`}
 })
 
-export const createNotification = (token, notificationData) => api.post("/api/admin/send-message", notificationData, { headers: { Authorization: `Bearer ${token}` } })
+export const createNotification = (token, notificationData) => api.post("/api/admin/send-message", notificationData, { 
+    headers: { Authorization: `Bearer ${token}` } 
+})
 
-
+export const viewNotification = (token, notificationId) => api.get(`/api/notification/${notificationId}`, { 
+    headers: { Authorization: `Bearer ${token}` } 
+})
 
 
 

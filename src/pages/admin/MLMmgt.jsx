@@ -12,7 +12,7 @@ import {
   Loader2
 } from "lucide-react";
 import UserManagementDashboard from "../../components/partials/widget/chart/Chart";
-import { fetcher } from "../../utils/Api/axiosInstance"; // Path to your axios config
+import { fetcher } from "../../utils/api/axiosInstance"; // Path to your axios config
 
 function MlMmgt() {
   // SWR Hook - Simple URL key because interceptor handles the token

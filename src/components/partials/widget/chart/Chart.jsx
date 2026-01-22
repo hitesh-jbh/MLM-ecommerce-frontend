@@ -166,14 +166,7 @@ const UserManagementDashboard = ({ chartData, recentActivity }) => {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap items-center gap-3">
-          <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-black text-white rounded-lg text-xs font-bold uppercase tracking-widest shadow-xl hover:bg-gray-800 active:scale-95 transition-all">
-            <FiPlus /> Add New User
-          </button>
-          <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-200 text-gray-700 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-gray-50 transition-all">
-            <FiMessageSquare className="text-blue-500" /> Broadcast Message
-          </button>
-        </div>
+        
 
       </div>
     </div>

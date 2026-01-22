@@ -39,7 +39,7 @@ export const Home = () => {
       <ScrollingBanner />
       <CoastalEdition />
       <IconButton />
-      <HappyCustomersCards />
+      {/* <HappyCustomersCards /> */}
       
       <div className="max-w-8xl mx-auto py-12">
         <div className="max-w-4xl mx-auto px-6 text-center">

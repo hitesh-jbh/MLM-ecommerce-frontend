@@ -34,14 +34,14 @@ const AddressModal = ({ isOpen, onClose, onSave, isSaving }) => {
                 <h2 className="text-xl font-black uppercase tracking-tighter mb-6">Add New Address</h2>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-left">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <InputGroup label="Full Name" name="full_name" register={register} error={errors.full_name} placeholder="Udit Kumar" />
-                        <InputGroup label="Phone" name="phone" register={register} error={errors.phone} placeholder="9999999222" />
+                        <InputGroup label="Full Name" name="full_name" register={register} error={errors.full_name} placeholder="" />
+                        <InputGroup label="Phone" name="phone" register={register} error={errors.phone} placeholder="" />
                     </div>
-                    <InputGroup label="Street Address" name="street_address" register={register} error={errors.street_address} placeholder="Kundan Colony" />
+                    <InputGroup label="Street Address" name="street_address" register={register} error={errors.street_address} placeholder="" />
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <InputGroup label="Flat/Apartment" name="apartment" register={register} error={errors.apartment} placeholder="Flat 404" />
-                        <InputGroup label="City" name="city" register={register} error={errors.city} placeholder="Delhi" />
-                        <InputGroup label="Zip" name="zip" register={register} error={errors.zip} placeholder="452021" />
+                        <InputGroup label="Flat/Apartment" name="apartment" register={register} error={errors.apartment} placeholder="" />
+                        <InputGroup label="City" name="city" register={register} error={errors.city} placeholder="" />
+                        <InputGroup label="Zip" name="zip" register={register} error={errors.zip} placeholder="" />
                     </div>
                     <button type="submit" disabled={isSaving} className="w-full bg-black text-white py-4 font-bold uppercase text-xs tracking-widest flex items-center justify-center gap-2 mt-4">
                         {isSaving ? <Loader2 className="animate-spin" size={16} /> : "Save Address"}

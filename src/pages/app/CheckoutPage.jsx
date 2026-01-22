@@ -3,8 +3,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useSWRConfig } from 'swr';
 import { toast } from 'react-toastify';
-import { CheckCircle2, ShieldCheck, Loader2, ArrowLeft, MapPin, CreditCard } from 'lucide-react';
-import { getAddress, createOrder } from '../../utils/service/apiService';
+import { CheckCircle2, ShieldCheck, Loader2, ArrowLeft, CreditCard, Plus } from 'lucide-react';
+import { getAddress, createOrder, saveAddress } from '../../utils/service/apiService'; 
+import AddressModal from '../../components/skeleton/AddressModal';
 
 const CheckoutPage = () => {
     const location = useLocation();
@@ -12,18 +13,19 @@ const CheckoutPage = () => {
     const { mutate } = useSWRConfig();
     const { token } = useSelector((state) => state.auth);
     
-    // Extract items, total, and source from navigation state
     const { checkoutItems = [], totalAmount = 0, source = "" } = location.state || {};
 
     const [addresses, setAddresses] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false); 
     const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
     const [orderPending, setOrderPending] = useState(false);
 
     useEffect(() => {
         if (!token) { navigate('/login'); return; }
-        if (checkoutItems.length === 0) { 
+        if (!location.state || checkoutItems.length === 0) { 
             toast.error("No items to checkout");
             navigate('/'); 
             return; 
@@ -35,8 +37,13 @@ const CheckoutPage = () => {
         try {
             const res = await getAddress(token);
             const data = res.data?.items || res.data?.data || res.data || [];
-            setAddresses(Array.isArray(data) ? data : []);
-            if (data.length > 0) setSelectedAddress(data[0]);
+            const addressList = Array.isArray(data) ? data : [];
+            
+            setAddresses(addressList);
+            
+            if (addressList.length > 0 && !selectedAddress) {
+                setSelectedAddress(addressList[0]);
+            }
         } catch (err) {
             toast.error("Could not load addresses");
         } finally {
@@ -46,14 +53,15 @@ const CheckoutPage = () => {
 
     const handlePlaceOrder = async () => {
         if (!selectedAddress) return toast.warning("Please select a delivery address");
-        if (!paymentMethod) return toast.warning("Please select a payment method");
         
         setOrderPending(true);
 
-        // FIX: Map UI strings to short Backend strings to avoid "Data Truncated" error
+        // FIX: Ensure these strings match your DB column length (VARCHAR)
+        // If your DB is set to VARCHAR(10), 'NETBANKING' will fail. 
+        // Use shorter codes if necessary.
         const paymentMap = {
             'Credit or Debit card': 'CARD',
-            'Net Banking': 'NETBANKING',
+            'Net Banking': 'NETBANKING', 
             'UPI / Scan & Pay': 'UPI',
             'Cash on Delivery': 'COD'
         };
@@ -66,29 +74,43 @@ const CheckoutPage = () => {
             address: {
                 full_name: selectedAddress.full_name,
                 street_address: selectedAddress.street_address,
-                apartment: selectedAddress.apartment,
+                apartment: selectedAddress.apartment || "",
                 city: selectedAddress.city,
                 zip: selectedAddress.zip,
                 phone: selectedAddress.phone
             },
             payment_method: paymentMap[paymentMethod] || 'COD',
-            source: source // Passing "CART" or "DIRECT"
+            source: source 
         };
 
         try {
             await createOrder(token, orderData);
             
-            // Clear SWR Cart Cache if source was from Cart
             if (source === "CART") {
-                await mutate(["/api/cart/", token], null, { revalidate: true });
+                await mutate(["/api/cart/", token]);
             }
 
             toast.success("Order Placed Successfully!");
             navigate('/', { replace: true });
         } catch (err) {
+            // This captures the "Data truncated" error from the server
             toast.error(err.response?.data?.message || "Order failed");
         } finally {
             setOrderPending(false);
+        }
+    };
+
+    const handleSaveNewAddress = async (formData) => {
+        setIsSaving(true);
+        try {
+            await saveAddress(token, formData);
+            toast.success("Address added");
+            setIsModalOpen(false);
+            await fetchAddresses(); 
+        } catch (err) {
+            toast.error("Failed to save address");
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -100,41 +122,62 @@ const CheckoutPage = () => {
 
     return (
         <div className="min-h-screen bg-white text-black p-4 md:p-12">
+            <AddressModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                onSave={handleSaveNewAddress} 
+                isSaving={isSaving} 
+            />
+            
             <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-16">
-                
-                {/* --- Left Column: Form Sections --- */}
                 <div className="lg:col-span-2 space-y-12">
                     <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-xs font-black uppercase tracking-widest">
                         <ArrowLeft size={16}/> Back
                     </button>
 
-                    {/* 1. Address Section */}
                     <section>
-                        <h2 className="flex items-center gap-2 text-sm font-black uppercase tracking-widest border-b-2 border-black pb-2 mb-6">
-                            <MapPin size={18} /> 1. Delivery Address
-                        </h2>
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-sm font-black uppercase tracking-widest">1. Delivery Address</h2>
+                            <button 
+                                onClick={() => setIsModalOpen(true)} 
+                                className="flex items-center gap-1 text-[10px] font-bold uppercase border border-black px-3 py-1.5 transition-all hover:bg-black hover:text-white"
+                            >
+                                <Plus size={14}/> Add New
+                            </button>
+                        </div>
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {addresses.map((addr) => (
-                                <div 
-                                    key={addr._id || addr.id} 
-                                    onClick={() => setSelectedAddress(addr)} 
-                                    className={`p-6 border-2 rounded-2xl cursor-pointer transition-all ${selectedAddress?._id === addr._id ? 'border-black bg-zinc-50' : 'border-zinc-100 opacity-60 hover:opacity-100'}`}
-                                >
-                                    <div className="flex justify-between items-start mb-2">
-                                        <p className="text-xs font-black uppercase">{addr.full_name}</p>
-                                        {selectedAddress?._id === addr._id && <CheckCircle2 size={18} className="text-black" />}
-                                    </div>
-                                    <p className="text-[11px] text-zinc-500 uppercase leading-relaxed">
-                                        {addr.street_address}, {addr.apartment}<br/>
-                                        {addr.city}, {addr.zip}<br/>
-                                        PH: {addr.phone}
-                                    </p>
+                            {addresses.length > 0 ? (
+                                addresses.map((addr) => {
+                                    const addrId = addr._id || addr.id;
+                                    const isSelected = (selectedAddress?._id || selectedAddress?.id) === addrId;
+                                    
+                                    return (
+                                        <div 
+                                            key={addrId} 
+                                            onClick={() => setSelectedAddress(addr)} 
+                                            className={`p-6 border-2 rounded-2xl cursor-pointer transition-all ${isSelected ? 'border-black bg-zinc-50' : 'border-zinc-100 opacity-60 hover:opacity-100'}`}
+                                        >
+                                            <div className="flex justify-between items-start mb-2">
+                                                <p className="text-xs font-black uppercase">{addr.full_name}</p>
+                                                {isSelected && <CheckCircle2 size={18} className="text-black" />}
+                                            </div>
+                                            <p className="text-[11px] text-zinc-500 uppercase leading-relaxed">
+                                                {addr.street_address}{addr.apartment ? `, ${addr.apartment}` : ''}<br/>
+                                                {addr.city}, {addr.zip}<br/>
+                                                PH: {addr.phone}
+                                            </p>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <div className="col-span-2 py-10 border-2 border-dashed rounded-2xl text-center text-zinc-400 text-xs font-bold uppercase">
+                                    No addresses found. Please add one.
                                 </div>
-                            ))}
+                            )}
                         </div>
                     </section>
 
-                    {/* 2. Payment Method Section */}
                     <section>
                         <h2 className="flex items-center gap-2 text-sm font-black uppercase tracking-widest border-b-2 border-black pb-2 mb-6">
                             <CreditCard size={18} /> 2. Payment Method
@@ -147,6 +190,7 @@ const CheckoutPage = () => {
                                 >
                                     <input 
                                         type="radio" 
+                                        name="payment"
                                         className="hidden" 
                                         onChange={() => setPaymentMethod(m)} 
                                         checked={paymentMethod === m} 
@@ -158,14 +202,10 @@ const CheckoutPage = () => {
                     </section>
                 </div>
 
-                {/* --- Right Column: Summary Box (UI from Screenshot) --- */}
                 <div className="lg:col-span-1">
                     <div className="border-2 border-black p-8 rounded-[1.5rem] sticky top-12 bg-white shadow-sm">
-                        
-                        {/* Summary Title */}
                         <h3 className="text-xs font-black uppercase mb-8 text-center border-b pb-4 tracking-[0.2em] text-zinc-300">ORDER SUMMARY</h3>
                         
-                        {/* Item List */}
                         <div className="space-y-6 mb-8 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
                             {checkoutItems.map((item, idx) => (
                                 <div key={idx} className="flex justify-between items-center gap-4 text-xs font-black">
@@ -178,12 +218,12 @@ const CheckoutPage = () => {
                                             <span className="text-zinc-400">QTY: {item.quantity}</span>
                                         </div>
                                     </div>
-                                    <span className="text-sm">₹{item.price * item.quantity}</span>
+                                    {/* FIX: Use Number() to prevent toFixed errors */}
+                                    <span className="text-sm">₹{(Number(item.price) * item.quantity).toFixed(2)}</span>
                                 </div>
                             ))}
                         </div>
 
-                        {/* Totals Section */}
                         <div className="border-t border-black pt-6 mb-8 space-y-6">
                             <div className="flex justify-between text-xs font-black uppercase">
                                 <span className="text-zinc-400">SHIPPING</span>
@@ -191,16 +231,15 @@ const CheckoutPage = () => {
                             </div>
                             <div className="flex justify-between items-center text-2xl font-black uppercase tracking-tighter">
                                 <span className="text-3xl">TOTAL</span>
-                                <span className="text-3xl">₹{totalAmount}</span>
+                                <span className="text-3xl">₹{Number(totalAmount).toFixed(2)}</span>
                             </div>
                         </div>
 
-                        {/* Final Place Order Button */}
                         <button 
                             onClick={handlePlaceOrder} 
-                            disabled={orderPending || !selectedAddress || !paymentMethod} 
+                            disabled={orderPending || !selectedAddress} 
                             className={`w-full py-6 rounded-2xl text-xs font-black uppercase tracking-[0.3em] transition-all flex items-center justify-center gap-2
-                            ${orderPending || !selectedAddress || !paymentMethod ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed' : 'bg-black text-white hover:bg-zinc-900 active:scale-95'}`}
+                            ${orderPending || !selectedAddress ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed' : 'bg-black text-white hover:bg-zinc-900 active:scale-95'}`}
                         >
                             {orderPending ? <Loader2 className="animate-spin" /> : "COMPLETE ORDER"}
                         </button>
@@ -210,7 +249,6 @@ const CheckoutPage = () => {
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     );

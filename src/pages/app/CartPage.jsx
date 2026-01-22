@@ -14,33 +14,25 @@ export default function Cart() {
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth?.token);
 
-  // Fetch Cart Data
   const { data, isLoading, mutate } = useSWR(
     token ? ["/api/cart/", token] : null,
     ([url, tkn]) => viewCartItem(tkn).then((res) => res.data)
   );
 
-  // Derive cart items from backend response structure
   const cartItems = useMemo(() => {
     return data?.data?.items || [];
   }, [data]);
 
   const totalAmount = data?.data?.totalAmount || "0.00";
 
-  // --- QUANTITY UPDATE (With Stock Limit Enforcement) ---
   const updateQty = async (productId, currentQty, delta, stockAvailable) => {
     const newQty = currentQty + delta;
-
-    // 1. Prevent going below 1
     if (newQty < 1) return;
-
-    // 2. STOCK LIMIT CHECK: Prevent increasing if stock is exceeded
     if (delta > 0 && newQty > stockAvailable) {
-      toast.warning(`Only ${stockAvailable} items available in stock`);
+      toast.warning(`Only ${stockAvailable} items available`);
       return;
     }
 
-    // Prepare Optimistic UI Data
     const optimisticItems = cartItems.map((item) =>
       item.productId === productId
         ? { ...item, quantity: newQty, total: (Number(item.price) * newQty).toFixed(2) }
@@ -68,7 +60,6 @@ export default function Cart() {
     }
   };
 
-  // --- REMOVE ITEM ---
   const remove = async (productId) => {
     try {
       await removeCartIem(token, productId);
@@ -79,7 +70,6 @@ export default function Cart() {
     }
   };
 
-  // --- CHECKOUT INTEGRATION ---
   const handleCheckout = () => {
     if (!token) return navigate("/login");
     if (cartItems.length === 0) return toast.error("Cart is empty");
@@ -104,10 +94,10 @@ export default function Cart() {
     return (
       <div className="h-[70vh] flex flex-col items-center justify-center px-4 text-center">
         <ShoppingBag size={64} className="text-gray-300 mb-6" />
-        <h2 className="text-2xl font-bold text-gray-900">Your cart is empty</h2>
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900">Your cart is empty</h2>
         <Link
           to="/"
-          className="mt-8 bg-black text-white px-10 py-4 rounded-xl font-bold uppercase tracking-widest"
+          className="mt-8 bg-black text-white px-8 py-3 md:px-10 md:py-4 rounded-xl font-bold uppercase tracking-widest text-sm"
         >
           Start Shopping
         </Link>
@@ -115,17 +105,19 @@ export default function Cart() {
     );
 
   return (
-    <div className="max-w-6xl mx-auto p-6 py-12">
-      <h1 className="text-3xl font-bold mb-10">Shopping Cart</h1>
+    <div className="max-w-6xl mx-auto p-4 md:p-6 py-8 md:py-12">
+      <h1 className="text-2xl md:text-3xl font-bold mb-6 md:mb-10">Shopping Cart</h1>
 
-      <div className="flex flex-col gap-10">
-        <div className="space-y-2">
+      <div className="flex flex-col lg:flex-row gap-8 lg:items-start">
+        {/* ITEMS LIST */}
+        <div className="flex-1 space-y-4">
           {cartItems.map((item) => (
             <div
               key={item.cartItemId || item.productId}
-              className="relative bg-white p-6 border-b border-gray-100 flex gap-6 items-start group"
+              className="relative bg-white p-4 md:p-6 border border-gray-100 rounded-2xl flex flex-row gap-4 md:gap-6 items-start shadow-sm"
             >
-              <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+              {/* Product Image - Scaled for mobile */}
+              <div className="w-20 h-20 md:w-24 md:h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                 <img
                   src={item.thumbnail || "https://via.placeholder.com/100"}
                   alt={item.name}
@@ -133,74 +125,290 @@ export default function Cart() {
                 />
               </div>
 
-              <div className="flex-1">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
-                    {/* Fixed Number conversion for price */}
-                    <p className="text-lg font-semibold mt-2">₹ {Number(item.price).toFixed(2)}</p>
-                    <p className="text-[10px] text-gray-400 uppercase mt-1">
-                      STOCK: {item.stock}
-                    </p>
+              <div className="flex-1 min-w-0">
+                <div className="flex justify-between items-start gap-2">
+                  <div className="truncate">
+                    <h3 className="text-base md:text-lg font-medium text-gray-900 truncate">
+                      {item.name}
+                    </h3>
+                    <p className="text-base md:text-lg font-semibold mt-1">₹ {Number(item.price).toFixed(2)}</p>
                   </div>
                   <button
                     onClick={() => remove(item.productId)}
-                    className="text-gray-300 hover:text-red-500 transition-colors"
+                    className="p-1 text-gray-300 hover:text-red-500 transition-colors"
                   >
-                    <Trash2 size={20} />
+                    <Trash2 size={18} />
                   </button>
                 </div>
 
-                <div className="flex justify-between items-center mt-4">
-                  <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                {/* Controls and Stock info */}
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-4 gap-4">
+                  <div className="flex items-center w-fit border border-gray-200 rounded-lg overflow-hidden bg-white">
                     <button
                       onClick={() => updateQty(item.productId, item.quantity, -1, item.stock)}
-                      className="px-3 py-1 hover:bg-gray-50 text-gray-500"
+                      className="px-3 py-1.5 hover:bg-gray-50 text-gray-500"
                     >
                       <Minus size={14} />
                     </button>
-                    <span className="px-4 py-1 text-sm font-bold min-w-[40px] text-center border-x border-gray-200">
+                    <span className="px-4 py-1.5 text-sm font-bold min-w-[40px] text-center border-x border-gray-200">
                       {item.quantity}
                     </span>
                     <button
                       onClick={() => updateQty(item.productId, item.quantity, 1, item.stock)}
                       disabled={item.quantity >= item.stock}
-                      className={`px-3 py-1 text-gray-500 ${
-                        item.quantity >= item.stock 
-                        ? 'opacity-20 cursor-not-allowed' 
-                        : 'hover:bg-gray-50'
+                      className={`px-3 py-1.5 text-gray-500 ${
+                        item.quantity >= item.stock ? 'opacity-20' : 'hover:bg-gray-50'
                       }`}
                     >
                       <Plus size={14} />
                     </button>
                   </div>
-                  <p className="text-sm text-gray-400">
-                    Total: <span className="text-gray-900 font-medium">₹ {item.total}</span>
-                  </p>
+                  
+                  <div className="flex justify-between items-center sm:block text-right">
+                    <p className="text-[10px] text-gray-400 uppercase sm:mb-1">
+                      STOCK: {item.stock}
+                    </p>
+                    <p className="text-sm text-gray-400">
+                      Total: <span className="text-gray-900 font-semibold">₹ {item.total}</span>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* SUMMARY SECTION */}
-        <div className="bg-gray-50/50 rounded-2xl p-8 max-w-lg mx-auto w-full border border-gray-100 mt-10">
-          <div className="flex justify-between items-center mb-8">
-            <span className="text-xl font-medium text-gray-900">Subtotal</span>
-            <span className="text-2xl font-bold">₹ {totalAmount}</span>
-          </div>
+        {/* SUMMARY SECTION - Sticky on desktop */}
+        <div className="lg:w-[380px] lg:sticky lg:top-8">
+          <div className="bg-gray-50 rounded-2xl p-6 md:p-8 border border-gray-100 shadow-sm">
+            <h2 className="text-lg font-bold mb-6">Order Summary</h2>
+            <div className="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
+              <span className="text-gray-600">Subtotal</span>
+              <span className="text-xl md:text-2xl font-bold">₹ {totalAmount}</span>
+            </div>
 
-          <button
-            onClick={handleCheckout}
-            className="w-full bg-black text-white py-5 rounded-xl text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-all shadow-lg active:scale-[0.98]"
-          >
-            PROCEED TO CHECKOUT
-          </button>
+            <button
+              onClick={handleCheckout}
+              className="w-full bg-black text-white py-4 md:py-5 rounded-xl text-xs md:text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-all shadow-lg active:scale-[0.98]"
+            >
+              Proceed to Checkout
+            </button>
+            
+            <p className="text-center text-xs text-gray-400 mt-4">
+              Shipping & taxes calculated at checkout
+            </p>
+          </div>
         </div>
       </div>
     </div>
   );
 }
+
+
+
+// import React, { useMemo } from "react";
+// import { Link, useNavigate } from "react-router-dom";
+// import { Minus, Plus, Trash2, Loader2, ShoppingBag } from "lucide-react";
+// import { useSelector } from "react-redux";
+// import useSWR from "swr";
+// import { 
+//   viewCartItem, 
+//   updateCartQuantity, 
+//   removeCartIem 
+// } from "../../utils/service/apiService";
+// import { toast } from "react-toastify";
+
+// export default function Cart() {
+//   const navigate = useNavigate();
+//   const token = useSelector((state) => state.auth?.token);
+
+//   // Fetch Cart Data
+//   const { data, isLoading, mutate } = useSWR(
+//     token ? ["/api/cart/", token] : null,
+//     ([url, tkn]) => viewCartItem(tkn).then((res) => res.data)
+//   );
+
+//   // Derive cart items from backend response structure
+//   const cartItems = useMemo(() => {
+//     return data?.data?.items || [];
+//   }, [data]);
+
+//   const totalAmount = data?.data?.totalAmount || "0.00";
+
+//   // --- QUANTITY UPDATE (With Stock Limit Enforcement) ---
+//   const updateQty = async (productId, currentQty, delta, stockAvailable) => {
+//     const newQty = currentQty + delta;
+
+//     // 1. Prevent going below 1
+//     if (newQty < 1) return;
+
+//     // 2. STOCK LIMIT CHECK: Prevent increasing if stock is exceeded
+//     if (delta > 0 && newQty > stockAvailable) {
+//       toast.warning(`Only ${stockAvailable} items available in stock`);
+//       return;
+//     }
+
+//     // Prepare Optimistic UI Data
+//     const optimisticItems = cartItems.map((item) =>
+//       item.productId === productId
+//         ? { ...item, quantity: newQty, total: (Number(item.price) * newQty).toFixed(2) }
+//         : item
+//     );
+
+//     const optimisticTotal = optimisticItems
+//       .reduce((acc, item) => acc + Number(item.total), 0)
+//       .toFixed(2);
+
+//     const optimisticData = {
+//       ...data,
+//       data: { ...data.data, items: optimisticItems, totalAmount: optimisticTotal },
+//     };
+
+//     try {
+//       await mutate(updateCartQuantity(token, productId, newQty), {
+//         optimisticData: optimisticData,
+//         rollbackOnError: true,
+//         revalidate: true,
+//         populateCache: false,
+//       });
+//     } catch (err) {
+//       toast.error("Failed to update quantity");
+//     }
+//   };
+
+//   // --- REMOVE ITEM ---
+//   const remove = async (productId) => {
+//     try {
+//       await removeCartIem(token, productId);
+//       mutate();
+//       toast.success("Item removed from cart");
+//     } catch (err) {
+//       toast.error("Could not remove item");
+//     }
+//   };
+
+//   // --- CHECKOUT INTEGRATION ---
+//   const handleCheckout = () => {
+//     if (!token) return navigate("/login");
+//     if (cartItems.length === 0) return toast.error("Cart is empty");
+
+//     navigate("/checkout", {
+//       state: {
+//         checkoutItems: cartItems, 
+//         totalAmount: totalAmount,
+//         source: "CART" 
+//       },
+//     });
+//   };
+
+//   if (isLoading)
+//     return (
+//       <div className="h-[60vh] flex items-center justify-center">
+//         <Loader2 className="animate-spin text-gray-400" size={40} />
+//       </div>
+//     );
+
+//   if (cartItems.length === 0)
+//     return (
+//       <div className="h-[70vh] flex flex-col items-center justify-center px-4 text-center">
+//         <ShoppingBag size={64} className="text-gray-300 mb-6" />
+//         <h2 className="text-2xl font-bold text-gray-900">Your cart is empty</h2>
+//         <Link
+//           to="/"
+//           className="mt-8 bg-black text-white px-10 py-4 rounded-xl font-bold uppercase tracking-widest"
+//         >
+//           Start Shopping
+//         </Link>
+//       </div>
+//     );
+
+//   return (
+//     <div className="max-w-6xl mx-auto p-6 py-12">
+//       <h1 className="text-3xl font-bold mb-10">Shopping Cart</h1>
+
+//       <div className="flex flex-col gap-10">
+//         <div className="space-y-2">
+//           {cartItems.map((item) => (
+//             <div
+//               key={item.cartItemId || item.productId}
+//               className="relative bg-white p-6 border-b border-gray-100 flex gap-6 items-start group"
+//             >
+//               <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+//                 <img
+//                   src={item.thumbnail || "https://via.placeholder.com/100"}
+//                   alt={item.name}
+//                   className="w-full h-full object-cover"
+//                 />
+//               </div>
+
+//               <div className="flex-1">
+//                 <div className="flex justify-between items-start">
+//                   <div>
+//                     <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
+//                     {/* Fixed Number conversion for price */}
+//                     <p className="text-lg font-semibold mt-2">₹ {Number(item.price).toFixed(2)}</p>
+//                     <p className="text-[10px] text-gray-400 uppercase mt-1">
+//                       STOCK: {item.stock}
+//                     </p>
+//                   </div>
+//                   <button
+//                     onClick={() => remove(item.productId)}
+//                     className="text-gray-300 hover:text-red-500 transition-colors"
+//                   >
+//                     <Trash2 size={20} />
+//                   </button>
+//                 </div>
+
+//                 <div className="flex justify-between items-center mt-4">
+//                   <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+//                     <button
+//                       onClick={() => updateQty(item.productId, item.quantity, -1, item.stock)}
+//                       className="px-3 py-1 hover:bg-gray-50 text-gray-500"
+//                     >
+//                       <Minus size={14} />
+//                     </button>
+//                     <span className="px-4 py-1 text-sm font-bold min-w-[40px] text-center border-x border-gray-200">
+//                       {item.quantity}
+//                     </span>
+//                     <button
+//                       onClick={() => updateQty(item.productId, item.quantity, 1, item.stock)}
+//                       disabled={item.quantity >= item.stock}
+//                       className={`px-3 py-1 text-gray-500 ${
+//                         item.quantity >= item.stock 
+//                         ? 'opacity-20 cursor-not-allowed' 
+//                         : 'hover:bg-gray-50'
+//                       }`}
+//                     >
+//                       <Plus size={14} />
+//                     </button>
+//                   </div>
+//                   <p className="text-sm text-gray-400">
+//                     Total: <span className="text-gray-900 font-medium">₹ {item.total}</span>
+//                   </p>
+//                 </div>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+
+//         {/* SUMMARY SECTION */}
+//         <div className="bg-gray-50/50 rounded-2xl p-8 max-w-lg mx-auto w-full border border-gray-100 mt-10">
+//           <div className="flex justify-between items-center mb-8">
+//             <span className="text-xl font-medium text-gray-900">Subtotal</span>
+//             <span className="text-2xl font-bold">₹ {totalAmount}</span>
+//           </div>
+
+//           <button
+//             onClick={handleCheckout}
+//             className="w-full bg-black text-white py-5 rounded-xl text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-all shadow-lg active:scale-[0.98]"
+//           >
+//             PROCEED TO CHECKOUT
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
 
 // import React, { useMemo } from "react";
 // import { Link, useNavigate } from "react-router-dom";

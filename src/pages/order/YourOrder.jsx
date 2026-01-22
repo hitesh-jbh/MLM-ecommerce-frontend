@@ -114,6 +114,7 @@ const YourOrder = () => {
             const status = order.order_status?.toLowerCase();
             switch (activeTab) {
                 case "Buy Again": return status === "delivered";
+                // case "Buy Again": return status === "BUY_NOW";
                 case "Cancelled Orders": return status === "cancelled";
                 default: return status !== "cancelled"; 
             }
@@ -159,7 +160,7 @@ const YourOrder = () => {
                 </div>
                 
                 {/* Search Bar */}
-                <div className="relative mb-2">
+                {/* <div className="relative mb-2">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                     <input 
                         type="text" 
@@ -168,7 +169,7 @@ const YourOrder = () => {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
-                </div>
+                </div> */}
             </div>
 
             <div className="space-y-6">

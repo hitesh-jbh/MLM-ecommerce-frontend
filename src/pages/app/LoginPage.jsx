@@ -42,7 +42,7 @@ const Login = () => {
           token: responseData.token 
         }));
         toast.success("Welcome back to MLM.",);
-        navigate('/profile');
+        navigate('/');
         // setTimeout(() => {
         //   navigate('/profile');
         // }, 2000);

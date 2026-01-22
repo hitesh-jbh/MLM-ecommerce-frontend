@@ -59,11 +59,17 @@ const CheckoutPage = () => {
         // FIX: Ensure these strings match your DB column length (VARCHAR)
         // If your DB is set to VARCHAR(10), 'NETBANKING' will fail. 
         // Use shorter codes if necessary.
+        // const paymentMap = {
+        //     'Credit or Debit card': 'CAR',
+        //     'Net Banking': 'NB', 
+        //     'UPI / Scan & Pay': 'UPI',
+        //     'Cash on Delivery': 'COD'
+        // };
         const paymentMap = {
-            'Credit or Debit card': 'CARD',
-            'Net Banking': 'NETBANKING', 
-            'UPI / Scan & Pay': 'UPI',
-            'Cash on Delivery': 'COD'
+            // 'Credit or Debit card': 'C',
+            // 'Net Banking': 'N',
+            // 'UPI / Scan & Pay': 'U',
+            'Cash on Delivery': 'COD' // Still use COD since you confirmed it works
         };
 
         const orderData = {

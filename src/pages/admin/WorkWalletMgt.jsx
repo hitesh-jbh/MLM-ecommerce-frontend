@@ -4,7 +4,7 @@ import KpiCard from "../../components/admin_component/KpiCards";
 import { GenericTable } from "../../components/partials/table/GenericTable";
 import TableActionFooter from "./TableActionFooter";
 import { workWalletTable } from "../../utils/Constants";
-import { fetcher } from "../../utils/Api/axiosInstance"; // Ensure this is your axios fetcher
+import { fetcher } from "../../utils/api/axiosInstance"; // Ensure this is your axios fetcher
 import { Loader2 } from "lucide-react";
 
 function WorkWalletMgt() {

@@ -113,7 +113,7 @@
 
 import { Plus, Minus } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { incrementCount, decrementCount } from '../../utils/Slice/countSlice';
+import { incrementCount, decrementCount } from '../../utils/slice/countSlice';
 
 export default function QuantityCounter({ productId, selectedSize }) {
   const dispatch = useDispatch();

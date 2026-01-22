@@ -11,7 +11,7 @@ import FeaturesSection from "../../components/ui/FeatureCard.jsx";
 import HomeShimmer from "../../components/shimmer/HomeShimmer.jsx";
 // Constants & Utils
 import { webSocialHandle, webSocialLink } from "../../utils/Constants.jsx";
-import { viewAllProducts } from "../../utils/service/apiService";
+import { viewAllProducts } from "../../utils/service/apiService.js";
 import useSWR from "swr";
 
 export const Home = () => {

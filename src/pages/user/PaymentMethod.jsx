@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addPaymentMethod, setDefaultPayment, removePaymentMethod } from '../../utils/Slice/paymentSlice';
+import { addPaymentMethod, setDefaultPayment, removePaymentMethod } from '../../utils/slice/paymentSlice';
 import Icons from '../../components/ui/Icon';
 
 const PaymentMethods = () => {

@@ -6,7 +6,7 @@ import { Search, Filter, X } from 'lucide-react';
 import { 
     setProducts, toggleBrand, toggleSize, 
     setPriceRange, setSearchQuery, setSortBy, clearFilters 
-} from "../../utils/Slice/productSlice.js";
+} from "../../utils/slice/productSlice.js";
 import { viewAllProducts } from '../../utils/service/apiService.js';
 
 // UI Components

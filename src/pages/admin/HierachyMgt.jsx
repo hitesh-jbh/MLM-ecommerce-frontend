@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import { useSelector } from 'react-redux';
 import { GenericTable } from '../../components/partials/table/GenericTable.jsx';
 import { hierachyTable } from '../../utils/Constants.jsx';
-import { userHierachy } from '../../utils/service/apiService'; // Adjust path as needed
+import { userHierachy } from '../../utils/service/apiService.js'; // Adjust path as needed
 import { Loader2 } from "lucide-react";
 
 const HierachyMgt = () => {

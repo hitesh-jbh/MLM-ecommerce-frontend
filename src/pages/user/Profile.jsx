@@ -18,7 +18,7 @@ import {
   userDashboardStats // Ensure this is imported
 } from "../../utils/service/apiService";
 import { fetcher } from "../../utils/api/axiosInstance";
-import { loginSuccess, logout } from "../../utils/Slice/authSlice";
+import { loginSuccess, logout } from "../../utils/slice/authSlice";
 
 const Profile = () => {
   const navigate = useNavigate();

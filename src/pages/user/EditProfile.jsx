@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { z } from "zod";
 import { editProfile } from "../../utils/service/apiService";
-import { loginSuccess } from "../../utils/Slice/authSlice";
+import { loginSuccess } from "../../utils/slice/authSlice";
 import { X, Phone, Calendar, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";

@@ -258,8 +258,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
-import { toggleWishlist } from '../../utils/Slice/WishList.js';
-import { initializeProduct } from '../../utils/Slice/countSlice.js';
+import { toggleWishlist } from '../../utils/slice/WishList.js';
+import { initializeProduct } from '../../utils/slice/countSlice.js';
 import { addToCart, addToWishlist, removeToWishlist, getWishlist } from '../../utils/service/apiService.js';
 import { toast } from 'react-toastify';
 

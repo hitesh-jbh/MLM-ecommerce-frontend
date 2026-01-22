@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import useSWR, { mutate } from 'swr';
-import { setAddresses, addAddress, updateAddress, setDefault, removeAddress } from '../../utils/Slice/addressSlice';
+import { setAddresses, addAddress, updateAddress, setDefault, removeAddress } from '../../utils/slice/addressSlice';
 import Icons from '../../components/ui/Icon';
 import { saveAddress, getAddress } from '../../utils/service/apiService';
 

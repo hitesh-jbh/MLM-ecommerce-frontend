@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { loginSuccess } from "../../utils/Slice/authSlice";
+import { loginSuccess } from "../../utils/slice/authSlice";
 import { registerUser, getProfile } from "../../utils/service/apiService";
 import { currentYear, dummyEmail, websiteName } from '../../utils/Constants';
 

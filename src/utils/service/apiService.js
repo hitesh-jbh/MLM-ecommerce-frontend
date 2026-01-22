@@ -1,4 +1,5 @@
-import ... from "../api/axiosInstance";
+
+import { api } from "../api/axiosInstance";
 
 // Auth
 export const login = (data) => api.post('/api/auth/login', data);

@@ -9,7 +9,7 @@ const WalletPage = () => {
   
   const { data: commissionData, isLoading } = useSWR(
     token ? ["/api/commission/commission-dashboard", token] : null,
-    ([_, tkn]) => userCommissionDashboaed(tkn).then(res => res.data.data)
+    ([ tkn]) => userCommissionDashboaed(tkn).then(res => res.data.data)
   );
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center font-black uppercase tracking-tighter">Initializing...</div>;

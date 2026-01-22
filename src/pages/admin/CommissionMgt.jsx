@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import { useSelector } from 'react-redux';
 import useSWR from 'swr';
 import KpiCard from "../../components/admin_component/KpiCards";
-import CompactCommissionConfig from "../../components/admin_component/Comission";
 import { GenericTable } from "../../components/partials/table/GenericTable";
 import { commissionTable } from "../../utils/Constants";
 import { commissionStats, userCommissionStats } from "../../utils/service/apiService";

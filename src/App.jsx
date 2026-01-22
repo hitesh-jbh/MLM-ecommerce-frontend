@@ -4,7 +4,7 @@ import { SWRConfig } from "swr";
 import { Provider } from "react-redux";
 
 // Static Logic Imports
-import { fetcher } from "./utils/api/axiosInstance.js";
+import { fetcher } from "./utils/api/axiosInstance";
 import appStore from "./utils/appStore.js";
 import ScrollToTop from "./utils/ScrollToTop.jsx";
 

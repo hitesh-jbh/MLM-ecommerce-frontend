@@ -1,4 +1,4 @@
-import { api } from "../api/axiosInstance";
+import ... from "../api/axiosInstance";
 
 // Auth
 export const login = (data) => api.post('/api/auth/login', data);
@@ -289,7 +289,7 @@ export const viewNotification = (token, notificationId) => api.get(`/api/notific
 
 
 
-// import { api } from "../Api/axiosInstance.js";
+// import ... from "../api/axiosInstance.js";
 
 // // User Api
 // export const registerUser = (userData) => {

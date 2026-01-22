@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Icons from '../../components/ui/Icon';
 import { GenericTable } from '../../components/partials/table/GenericTable';
 import KpiCard from "../../components/admin_component/KpiCards"
-import { referData, referTable } from '../../utils/Constants';
+import { referData, referTable } from '../../utils/constants';
 
 const ReferralCodeMgt = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

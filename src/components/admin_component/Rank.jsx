@@ -7,7 +7,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { Loader2, Trophy, Plus, Users, DollarSign, X, ArrowLeft, Award, Save, Home } from 'lucide-react';
 import { GenericTable } from '../../components/partials/table/GenericTable';
 import PageHeader from "../../components/partials/table/PageHeader";
-import { rankTable } from '../../utils/Constants';
+import { rankTable } from '../../utils/constants';
 
 const RankMgt = () => {
     const token = useSelector((state) => state.auth?.token);

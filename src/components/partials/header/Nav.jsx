@@ -14,7 +14,7 @@ import {
   viewNotification // Integrated from your service
 } from "../../../utils/service/apiService"; 
 import Icons from '../../ui/Icon';
-import { websiteName } from "../../../utils/Constants";
+import { websiteName } from "../../../utils/constants";
 import useSWR from 'swr';
 import Card3Modi from '../../ui/Card3Modi';
 import { CheckCheck, Loader2, X } from 'lucide-react';
@@ -380,7 +380,7 @@ export default function Nav() {
 //   markAllRead 
 // } from "../../../utils/service/apiService"; 
 // import Icons from '../../ui/Icon';
-// import { websiteName } from "../../../utils/Constants";
+// import { websiteName } from "../../../utils/constants";
 // import useSWR from 'swr';
 // import Card3Modi from '../../ui/Card3Modi';
 // import { CheckCheck, Loader2 } from 'lucide-react';

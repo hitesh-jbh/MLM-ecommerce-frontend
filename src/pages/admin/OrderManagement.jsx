@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import useSWR from 'swr';
 import StatCard from "../../components/admin_component/Statscard";
 import { GenericTable } from "../../components/partials/table/GenericTable";
-import { orderTable } from "../../utils/Constants";
+import { orderTable } from "../../utils/constants";
 import { statusUpdate, orderList, orderStats } from "../../utils/service/apiService"; // Updated import
 import FixedDateLabelWithDropdown from "../../components/admin_component/Date";
 import { toast, ToastContainer } from "react-toastify";

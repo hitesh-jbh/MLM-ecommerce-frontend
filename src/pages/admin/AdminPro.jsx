@@ -11,7 +11,7 @@ import HierachyGraph from '../../components/partials/widget/chart/HierachyGraph'
 // Logic & Data
 import { getProfile } from "../../utils/service/apiService";
 import { loginSuccess, logout } from "../../utils/slice/authSlice";
-import { salesData, treeData } from "../../utils/Constants";
+import { salesData, treeData } from "../../utils/constants";
 
 const AdminPro = () => {
   const navigate = useNavigate();

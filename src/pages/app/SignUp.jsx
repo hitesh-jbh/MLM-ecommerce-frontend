@@ -7,9 +7,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { loginSuccess } from "../../utils/slice/authSlice";
-import { registerUser, getProfile } from "../../utils/service/apiService";
-import { currentYear, dummyEmail, websiteName } from '../../utils/Constants';
+import { registerUser } from "../../utils/service/apiService";
+import { currentYear, dummyEmail, websiteName } from '../../utils/constants';
 
 const signUpSchema = z.object({
   firstName: z.string().min(2, 'First name is required'),

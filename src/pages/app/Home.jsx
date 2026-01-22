@@ -9,8 +9,8 @@ import HappyCustomersCards from "../../components/ui/HappyCustomersCards.jsx"
 import ImageShowcase from "../../components/ui/ImageShowcase.jsx"
 import FeaturesSection from "../../components/ui/FeatureCard.jsx";
 import HomeShimmer from "../../components/shimmer/HomeShimmer.jsx";
-// Constants & Utils
-import { webSocialHandle, webSocialLink } from "../../utils/Constants.jsx";
+// constants & Utils
+import { webSocialHandle, webSocialLink } from "../../utils/constants.jsx";
 import { viewAllProducts } from "../../utils/service/apiService.js";
 import useSWR from "swr";
 

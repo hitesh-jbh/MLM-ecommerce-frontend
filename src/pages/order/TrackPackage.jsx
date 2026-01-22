@@ -1,7 +1,7 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom';
 import StepBar from '../../components/ui/bar/StepBar.jsx';
-import { shippedProducts } from '../../utils/Constants.jsx';
+import { shippedProducts } from '../../utils/constants.jsx';
 
 const TrackPackage = () => {
     const { orderId } = useParams();

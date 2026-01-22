@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import useSWR from 'swr';
 import KpiCard from "../../components/admin_component/KpiCards";
 import { GenericTable } from "../../components/partials/table/GenericTable";
-import { commissionTable } from "../../utils/Constants";
+import { commissionTable } from "../../utils/constants";
 import { commissionStats, userCommissionStats } from "../../utils/service/apiService";
 import { Link } from "react-router-dom";
 import { Loader2, Wallet, CheckCircle, Clock, AlertCircle } from "lucide-react";

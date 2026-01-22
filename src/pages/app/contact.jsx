@@ -2,7 +2,7 @@ import { Facebook, Instagram } from 'lucide-react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { contactEmail, contactNumber } from '../../utils/Constants';
+import { contactEmail, contactNumber } from '../../utils/constants';
 
 // Define Zod schema for validation
 const contactFormSchema = z.object({

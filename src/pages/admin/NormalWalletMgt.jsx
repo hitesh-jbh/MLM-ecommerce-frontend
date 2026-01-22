@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import useSWR from 'swr';
 import { GenericTable } from "../../components/partials/table/GenericTable";
 import TableActionFooter from "./TableActionFooter";
-import { walletTable } from "../../utils/Constants";
+import { walletTable } from "../../utils/constants";
 import { walletTransaction } from "../../utils/service/apiService";
 import Icons from "../../components/ui/Icon";
 import { Loader2, Wallet, RotateCcw, Search } from "lucide-react";

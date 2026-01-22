@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Facebook, Instagram } from 'lucide-react';
 import FootersPage from './FooterPage.jsx';
 import { FooterPageData } from './FooterPageData.js';
-import { websiteName } from '../../../utils/Constants.jsx';
+import { websiteName } from '../../../utils/constants.jsx';
 
 export default function Footer() {
     const [email, setEmail] = useState('');

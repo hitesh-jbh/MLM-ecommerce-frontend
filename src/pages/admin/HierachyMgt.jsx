@@ -2,7 +2,7 @@ import React from 'react';
 import useSWR from 'swr';
 import { useSelector } from 'react-redux';
 import { GenericTable } from '../../components/partials/table/GenericTable.jsx';
-import { hierachyTable } from '../../utils/Constants.jsx';
+import { hierachyTable } from '../../utils/constants.jsx';
 import { userHierachy } from '../../utils/service/apiService.js'; // Adjust path as needed
 import { Loader2 } from "lucide-react";
 

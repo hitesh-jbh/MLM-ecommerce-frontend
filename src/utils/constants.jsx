@@ -1285,7 +1285,7 @@ export const profileMenuIcon = [
 //   },
 // ];
 
-// Inside your Constants.jsx or where hierachyTable is defined
+// Inside your constants.jsx or where hierachyTable is defined
 export const hierachyTable = [
   { 
     header: 'Level', 

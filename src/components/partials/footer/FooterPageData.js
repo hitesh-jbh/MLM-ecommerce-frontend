@@ -1,4 +1,4 @@
-import { contactEmail, contactNumber, websiteName } from "../../../utils/Constants";
+import { contactEmail, contactNumber, websiteName } from "../../../utils/constants";
 
 // policyContent.js
 export const FooterPageData = [

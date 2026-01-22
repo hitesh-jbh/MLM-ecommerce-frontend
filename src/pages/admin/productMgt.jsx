@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"; // Fixed: Use useNavigate hook
 import useSWR from "swr";
 import Icons from "../../components/ui/Icon";
 import { GenericTable } from "../../components/partials/table/GenericTable";
-import { productTable } from "../../utils/Constants";
+import { productTable } from "../../utils/constants";
 import { addProduct, editProduct, deleteProduct } from "../../utils/service/apiService"; 
 import { ToastContainer, toast } from "react-toastify";
 import PageHeader from "../../components/partials/table/PageHeader";

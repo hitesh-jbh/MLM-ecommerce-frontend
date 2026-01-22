@@ -9,7 +9,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login, forgotPassword } from "../../utils/service/apiService";
 import { loginSuccess } from "../../utils/slice/authSlice";
-import { currentYear, dummyEmail, websiteName } from '../../utils/Constants';
+import { currentYear, dummyEmail, websiteName } from '../../utils/constants';
 
 const signInSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email'),

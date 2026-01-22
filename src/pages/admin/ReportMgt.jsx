@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import useSWR from 'swr';
 import { GenericTable } from '../../components/partials/table/GenericTable';
-import { referTable } from '../../utils/Constants'; 
+import { referTable } from '../../utils/constants'; 
 import { fetcher } from "../../utils/api/axiosInstance";
 import Icons from '../../components/ui/Icon';
 import { Search, X, Loader2, AlertCircle, RefreshCw } from 'lucide-react';

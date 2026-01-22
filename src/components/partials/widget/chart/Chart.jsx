@@ -185,7 +185,7 @@ export default UserManagementDashboard;
 // import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 // import LineChart from './LineChart.jsx';
 // import Testimonial from "../../../admin_component/Testimonial.jsx";
-// import { mlmData } from '../../../../utils/Constants.jsx';
+// import { mlmData } from '../../../../utils/constants.jsx';
 
 // const UserManagementDashboard = () => {
 //   const [searchQuery, setSearchQuery] = useState('');

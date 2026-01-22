@@ -11,7 +11,7 @@
 
 // import { useDispatch } from 'react-redux';
 // import { viewProduct, viewAllProducts } from '../../utils/service/apiService.js';
-// import { websiteName } from '../../utils/Constants.jsx';
+// import { websiteName } from '../../utils/constants.jsx';
 // import ProductReview from '../../components/ui/ProductReview.jsx';
 
 // const InfoProd = () => {

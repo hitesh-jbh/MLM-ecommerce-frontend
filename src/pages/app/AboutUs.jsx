@@ -1,5 +1,5 @@
 import Breadcrumb from '../../components/ui/BreadCrumb.jsx';
-import { websiteName } from '../../utils/Constants.jsx';
+import { websiteName } from '../../utils/constants.jsx';
 
 
 const AboutUs = () => {

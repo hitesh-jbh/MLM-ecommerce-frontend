@@ -4,7 +4,6 @@ import { SWRConfig } from "swr";
 import { Provider } from "react-redux";
 
 // Static Logic Imports
-import { fetcher } from "./utils/api/axiosInstance";
 import appStore from "./utils/appStore.js";
 import ScrollToTop from "./utils/ScrollToTop.jsx";
 
@@ -13,6 +12,7 @@ import Nav from "./components/partials/header/Nav.jsx";
 import Footer from "./components/partials/footer/footer.jsx";
 import StickyComponent from "./components/ui/StickyComponent.jsx";
 import CheckoutPage from "./pages/app/CheckoutPage.jsx";
+import { fetcher } from "./utils/api/axiosInstance.js";
 
 // --- LAZY LOADED PAGES ---
 

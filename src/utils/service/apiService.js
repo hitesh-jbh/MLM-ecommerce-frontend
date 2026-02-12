@@ -8,6 +8,8 @@ export const forgotPassword = (data) => api.post('/api/auth/forgot-password', da
 
 export const resetPassword = (data) => api.post('/api/auth/reset-password', data);
 
+// Refresh Token
+export const refreshToken = (refreshToken) => api.post('/api/auth/refresh-token', { refreshToken });
 
 
 export const registerUser = (userData) => api.post('/api/user/register', userData);

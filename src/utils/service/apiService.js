@@ -12,6 +12,15 @@ export const resetPassword = (data) => api.post('/api/auth/reset-password', data
 
 export const registerUser = (userData) => api.post('/api/user/register', userData);
 
+// Check Email and Mobile
+// utils/service/apiService.js
+export const checkEmail = (email) => 
+  api.post('/api/user/check-email', { email }); // Axios sends this as the body
+
+export const checkMobile = (contact) => 
+  api.post('/api/user/check-mobile', { contact });
+
+
 export const getProfile = (token) => api.get('/api/user/me', {
     headers: { Authorization: `Bearer ${token}` }
 });
@@ -134,6 +143,11 @@ export const cancelOrder = (token, prodId) => api.patch(`/api/order/${prodId}/ca
 })
 
 
+// Add Bank Detail
+export const addBank = (bankDetail) => api.post("/api/bank-account/link", bankDetail);
+export const getBank = () => api.get("/api/bank-account/");
+export const updateBank = (bankId, bankDetail) => api.put(`/api/bank-account/update/${bankId}`, bankDetail);
+export const deleteBank = (bankId) => api.delete(`/api/bank-account/remove/${bankId}`);
 
 
 
@@ -154,6 +168,7 @@ export const getUsers = (token, type) => api.get(`/api/admin/all?userType=${type
     headers: { Authorization: `Bearer ${token}` }
 });
 
+
 // Commissions
 export const viewCommission = (token) => api.get("/api/admin/commission-level/", {
     headers: { Authorization: `Bearer ${token}` }
@@ -163,6 +178,7 @@ export const setCommission = (token, level, commissionData) => api.put(`/api/adm
     headers: { Authorization: `Bearer ${token}` }
 });
 
+
 // Ranks
 export const createRank = (token, rankData) => api.post("api/rank", rankData, {
     headers: { Authorization: `Bearer ${token}` }
@@ -171,6 +187,7 @@ export const createRank = (token, rankData) => api.post("api/rank", rankData, {
 export const viewRank = (token) => api.get("/api/rank", {
     headers: { Authorization: `Bearer ${token}` }
 });
+
 
 // Wallet
 export const getWallet = (token) => api.get('/api/wallet/', {
@@ -298,6 +315,10 @@ export const createNotification = (token, notificationData) => api.post("/api/ad
 export const viewNotification = (token, notificationId) => api.get(`/api/notification/${notificationId}`, { 
     headers: { Authorization: `Bearer ${token}` } 
 })
+
+
+
+
 
 
 

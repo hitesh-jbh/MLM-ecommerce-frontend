@@ -50,7 +50,7 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-14 lg:gap-20 mb-16">
 
                     {/* Newsletter */}
-                    <div className="max-w-sm">
+                    {/* <div className="max-w-sm">
                         <h2 className="text-xl md:text-2xl font-semibold text-black mb-3">
                             Let’s get in touch
                         </h2>
@@ -74,7 +74,7 @@ export default function Footer() {
                                 Subscribe
                             </button>
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* Quick Links */}
                     <div>

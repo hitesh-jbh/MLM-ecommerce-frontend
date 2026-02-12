@@ -1,3 +1,4 @@
+import Footer from '../../components/partials/footer/footer.jsx';
 import Breadcrumb from '../../components/ui/BreadCrumb.jsx';
 import { websiteName } from '../../utils/constants.jsx';
 
@@ -119,6 +120,7 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
+      <Footer />
     </main>
   );
 };

@@ -13,6 +13,7 @@ import HomeShimmer from "../../components/shimmer/HomeShimmer.jsx";
 import { webSocialHandle, webSocialLink } from "../../utils/constants.jsx";
 import { viewAllProducts } from "../../utils/service/apiService.js";
 import useSWR from "swr";
+import Footer from "../../components/partials/footer/footer.jsx";
 
 export const Home = () => {
   // 1. SWR Fetching
@@ -69,6 +70,8 @@ export const Home = () => {
       
       <ImageShowcase />
       <FeaturesSection />
+      <Footer />
+
     </>
   );
 };

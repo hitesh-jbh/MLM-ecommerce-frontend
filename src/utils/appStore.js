@@ -8,6 +8,7 @@ import wishlistReducer from "./slice/wishlistSlice.js"
 import authReducer from "./slice/authSlice.js"
 import searchReducer from "./slice/searchSlice.js"
 import productReducer from "./slice/productSlice.js"
+import bankReducer from "./slice/bankSlice.js"
 
 const appStore = configureStore({
     reducer: {
@@ -20,6 +21,7 @@ const appStore = configureStore({
         auth: authReducer,
         search: searchReducer,
         product: productReducer,
+        banks: bankReducer,
     },
 });
 

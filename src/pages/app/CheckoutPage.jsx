@@ -189,7 +189,7 @@ const CheckoutPage = () => {
                             <CreditCard size={18} /> 2. Payment Method
                         </h2>
                         <div className="space-y-3">
-                            {['Credit or Debit card', 'Net Banking', 'UPI / Scan & Pay', 'Cash on Delivery'].map((m) => (
+                            {['Cash on Delivery', 'Credit or Debit card', 'Net Banking', 'UPI / Scan & Pay'].map((m) => (
                                 <label 
                                     key={m} 
                                     className={`flex items-center p-5 border-2 rounded-2xl cursor-pointer transition-all ${paymentMethod === m ? 'border-black bg-zinc-50' : 'border-zinc-100 opacity-60'}`}

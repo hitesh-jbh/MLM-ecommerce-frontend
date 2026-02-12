@@ -13,6 +13,10 @@ import Footer from "./components/partials/footer/footer.jsx";
 import StickyComponent from "./components/ui/StickyComponent.jsx";
 import CheckoutPage from "./pages/app/CheckoutPage.jsx";
 import { fetcher } from "./utils/api/axiosInstance.js";
+import AddBankDetails from "./pages/user/AddBankDetail.jsx";
+import AddBankDetail from "./pages/user/AddBankDetail.jsx";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // --- LAZY LOADED PAGES ---
 
@@ -20,7 +24,9 @@ import { fetcher } from "./utils/api/axiosInstance.js";
 const Home = lazy(() => import("./pages/app/Home.jsx"));
 const AboutUS = lazy(() => import("./pages/app/AboutUs.jsx"));
 const Contact = lazy(() => import("./pages/app/contact.jsx"));
-const FilterProductPage = lazy(() => import("./pages/app/FilterProductPage.jsx"));
+const FilterProductPage = lazy(
+  () => import("./pages/app/FilterProductPage.jsx"),
+);
 const Luxria = lazy(() => import("./pages/app/Luxria.jsx"));
 const LoginPage = lazy(() => import("./pages/app/LoginPage.jsx"));
 const SignUp = lazy(() => import("./pages/app/SignUp.jsx"));
@@ -48,13 +54,19 @@ const ResetPassword = lazy(() => import("./pages/user/ResetPassword.jsx"));
 
 // Admin Layout & Protected Routes
 const AdminProtectedRoute = lazy(() => import("./AdminProtectedRoute.jsx"));
-const AdminProfile = lazy(() => import("./pages/admin/AdminProfile.jsx").then(m => ({ default: m.AdminProfile })));
+const AdminProfile = lazy(() =>
+  import("./pages/admin/AdminProfile.jsx").then((m) => ({
+    default: m.AdminProfile,
+  })),
+);
 const AdminDashboard = lazy(() => import("./pages/admin/Admindashboard.jsx"));
 const AdminPro = lazy(() => import("./pages/admin/AdminPro.jsx"));
 const OrderManagement = lazy(() => import("./pages/admin/OrderManagement.jsx"));
 const ProductMgt = lazy(() => import("./pages/admin/productMgt.jsx"));
 const CommissionMgt = lazy(() => import("./pages/admin/CommissionMgt.jsx"));
-const SetCommission = lazy(() => import("./components/admin_component/SetCommission.jsx"));
+const SetCommission = lazy(
+  () => import("./components/admin_component/SetCommission.jsx"),
+);
 const Rank = lazy(() => import("./components/admin_component/Rank.jsx"));
 const ReportMgt = lazy(() => import("./pages/admin/ReportMgt.jsx"));
 const NormalWalletMgt = lazy(() => import("./pages/admin/NormalWalletMgt.jsx"));
@@ -68,8 +80,12 @@ const HierachyMgt = lazy(() => import("./pages/admin/HierachyMgt.jsx"));
 
 // Utils/Misc
 const ErrorPage = lazy(() => import("./pages/error/Error.jsx"));
-const FootersPage = lazy(() => import("./components/partials/footer/FooterPage.jsx"));
-const HierachyGraph = lazy(() => import("./components/partials/widget/chart/HierachyGraph.jsx"));
+const FootersPage = lazy(
+  () => import("./components/partials/footer/FooterPage.jsx"),
+);
+const HierachyGraph = lazy(
+  () => import("./components/partials/widget/chart/HierachyGraph.jsx"),
+);
 const Modal = lazy(() => import("./components/ui/Modal.jsx"));
 
 const PageLoader = () => (
@@ -84,13 +100,25 @@ const AppLayout = () => {
       <Provider store={appStore}>
         <div className="app min-h-screen flex flex-col">
           <ScrollToTop />
+          <ToastContainer 
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored" // or "light" / "dark"
+          />
           <Nav />
           <main className="flex-grow">
             <Suspense fallback={<PageLoader />}>
               <Outlet />
             </Suspense>
           </main>
-          <Footer />
+          {/* <Footer /> */}
           <StickyComponent />
         </div>
       </Provider>
@@ -112,7 +140,8 @@ const appRouter = createBrowserRouter([
       { path: "signup", element: <SignUp /> },
       { path: "reset-password", element: <ResetPassword /> },
       { path: "edit-profile", element: <EditProfile /> },
-      
+      // { path: "payment", element: <PaymentMethods /> },
+
       // USER ROUTES
       {
         path: "profile",
@@ -127,7 +156,8 @@ const appRouter = createBrowserRouter([
           { path: "e-kyc", element: <EKYC /> },
           { path: "wishlist", element: <WishlistPage /> },
           { path: "edit", element: <EditProfile /> },
-        ]
+          { path: "bank-detail", element: <AddBankDetail /> },
+        ],
       },
 
       // ADMIN PROTECTED ROUTES (AdminProfile acts as Layout)
@@ -159,7 +189,7 @@ const appRouter = createBrowserRouter([
           { path: "setting", element: <Settings /> },
           { path: "referalcode", element: <ReferralCodeMgt /> },
           { path: "hierachy", element: <HierachyMgt /> },
-        ]
+        ],
       },
 
       // SHOPPING & ORDERS
@@ -176,10 +206,17 @@ const appRouter = createBrowserRouter([
       // MISC
       { path: "info/:id", element: <FootersPage /> },
       { path: "refer-graph", element: <HierachyGraph /> },
-      { path: "*", element: <ErrorPage /> }
-    ]
+      { path: "*", element: <ErrorPage /> },
+    ],
   },
-  { path: "/modal", element: <Suspense fallback={<PageLoader />}><Modal /></Suspense> }
+  {
+    path: "/modal",
+    element: (
+      <Suspense fallback={<PageLoader />}>
+        <Modal />
+      </Suspense>
+    ),
+  },
 ]);
 
 export default function App() {

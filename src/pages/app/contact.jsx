@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { contactEmail, contactNumber } from '../../utils/constants';
+import Footer from '../../components/partials/footer/footer';
 
 // Define Zod schema for validation
 const contactFormSchema = z.object({
@@ -51,6 +52,7 @@ export default function Contact() {
   };
 
   return (
+    <>
     <div className="min-h-screen bg-white px-6 md:px-12 lg:px-20 py-12 md:py-20">
       <div className="max-w-7xl mx-auto">
         
@@ -193,5 +195,7 @@ export default function Contact() {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }

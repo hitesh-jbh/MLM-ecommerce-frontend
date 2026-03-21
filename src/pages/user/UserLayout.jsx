@@ -8,8 +8,8 @@ const UserLayout = () => {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
-    // h-screen prevents the whole page from stretching
-    <div className="flex h-[500px] overflow-hidden bg-gray-50/50">
+    // Height calculated dynamically to fill the remaining screen space below navigation
+    <div className="flex h-[calc(100vh-80px)] overflow-hidden bg-gray-50/50">
       
       {/* Sidebar - Height is handled by the parent container */}
       <UserSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />

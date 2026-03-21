@@ -16,7 +16,7 @@ const statsFetcher = (token) => orderStats(token).then(res => res.data?.data || 
 
 function OrderManagement() {
     const token = useSelector((state) => state.auth?.token);
-    
+
     // --- State Management ---
     const [searchQuery, setSearchQuery] = useState("");
     const [statusFilter, setStatusFilter] = useState("ALL");
@@ -27,7 +27,7 @@ function OrderManagement() {
 
     // --- Data Fetching ---
     const { data: orders, isLoading: ordersLoading, mutate: mutateOrders } = useSWR(
-        token ? ["/api/orders", token] : null, 
+        token ? ["/api/orders", token] : null,
         () => orderFetcher(token)
     );
 
@@ -46,7 +46,7 @@ function OrderManagement() {
         if (!orders) return [];
         const query = searchQuery.toLowerCase().trim();
         return orders.filter((order) => {
-            const matchesSearch = 
+            const matchesSearch =
                 order.orderId?.toString().toLowerCase().includes(query) ||
                 order.buyerName?.toLowerCase().includes(query) ||
                 order.email?.toLowerCase().includes(query) ||
@@ -105,7 +105,7 @@ function OrderManagement() {
     return (
         <div className="p-4 max-w-[1600px] mx-auto min-h-screen bg-slate-50/50">
             <ToastContainer position="bottom-right" autoClose={2000} theme="colored" />
-  
+
             <div className="flex justify-between items-center px-1 mb-6">
                 <h1 className="text-2xl font-black text-gray-800 tracking-tight uppercase">
                     Order Management
@@ -134,28 +134,28 @@ function OrderManagement() {
             {/* Filter Bar */}
             <div className="flex flex-col lg:flex-row gap-4 items-end mb-6">
                 <div className="flex-1 w-full">
-                    <PageHeader 
+                    <PageHeader
                         itemCount={filteredOrders.length}
                         searchQuery={searchQuery}
                         onSearchChange={setSearchQuery}
                         title="Orders Found"
                     />
                 </div>
-                
+
                 <div className="flex gap-2 w-full lg:w-auto">
-                    <select 
+                    <select
                         className="flex-1 lg:w-56 h-[48px] border-2 border-white bg-white rounded-2xl px-4 text-xs font-bold uppercase tracking-wider outline-none focus:border-black shadow-sm transition-all cursor-pointer"
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
                     >
                         <option value="ALL">All Status</option>
                         <option value="CREATED">CREATED</option>
-                        <option value="PACKED">PACKED</option>
+                        {/* <option value="PACKED">PACKED</option> */}
                         <option value="SHIPPED">SHIPPED</option>
                         <option value="DELIVERED">DELIVERED</option>
                     </select>
-                    
-                    <button 
+
+                    <button
                         onClick={resetFilters}
                         className="p-3 bg-white border-2 border-white rounded-2xl shadow-sm hover:text-red-500 transition-colors"
                         title="Reset All Filters"
@@ -172,12 +172,12 @@ function OrderManagement() {
                         <Loader2 className="animate-spin text-black" size={40} />
                     </div>
                 ) : (
-                    <GenericTable 
-                        columns={orderTable(openStatusModal)} 
-                        data={filteredOrders} 
+                    <GenericTable
+                        columns={orderTable(openStatusModal)}
+                        data={filteredOrders}
                     />
                 )}
-                
+
                 {!ordersLoading && filteredOrders.length === 0 && (
                     <div className="flex flex-col items-center justify-center py-20 text-gray-400">
                         <X size={40} className="text-gray-200 mb-4" />
@@ -189,7 +189,7 @@ function OrderManagement() {
             {/* Modal - Keeping your existing modal logic */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                     <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
+                    <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
                         <div className="px-8 py-6 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
                             <h3 className="font-black text-gray-800 text-[10px] uppercase tracking-[0.2em]">
                                 Update Status #{selectedOrder?.orderId}
@@ -202,7 +202,7 @@ function OrderManagement() {
                             <label className="block text-[10px] font-bold text-gray-400 uppercase mb-3 tracking-widest">
                                 New Order Status
                             </label>
-                            <select 
+                            <select
                                 className="w-full border-2 border-gray-100 rounded-2xl p-4 text-sm font-bold outline-none focus:border-black appearance-none bg-gray-50/50 focus:bg-white transition-all cursor-pointer"
                                 value={newStatus}
                                 onChange={(e) => setNewStatus(e.target.value)}
@@ -214,7 +214,7 @@ function OrderManagement() {
                             </select>
                         </div>
                         <div className="px-8 pb-8">
-                            <button 
+                            <button
                                 onClick={handleUpdateSubmit}
                                 disabled={isSubmitting}
                                 className="w-full py-4 text-xs font-black uppercase bg-black text-white rounded-2xl shadow-xl shadow-black/20 hover:bg-zinc-800 disabled:bg-gray-200 transition-all"

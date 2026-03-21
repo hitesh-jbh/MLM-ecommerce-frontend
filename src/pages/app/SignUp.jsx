@@ -51,7 +51,7 @@ const signUpSchema = z
       ),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "MATCH ERROR",
+    message: "Passwords do not match",
     path: ["confirmPassword"],
   });
 
@@ -71,12 +71,17 @@ const SignUp = () => {
     watch,
     setError,
     clearErrors,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(signUpSchema),
     mode: "onChange",
     defaultValues: { countryCode: "+91" },
   });
+
+  const pwd = watch("password");
+  const cpwd = watch("confirmPassword");
+  const isMismatch = cpwd && pwd !== cpwd;
 
   // ---------------- UPDATED REMOTE VALIDATION ----------------
 
@@ -109,13 +114,14 @@ const SignUp = () => {
   );
 
   const checkMobileAvailability = useCallback(
-    debounce(async (mobile) => {
+    debounce(async (mobile, countryCode) => {
       // 1. Only check if it's exactly 10 digits and no other Zod errors
       if (mobile.length !== 10 || errors.contact) return;
 
       setIsCheckingMobile(true);
       try {
-        const response = await checkMobile(mobile);
+        const fullMobile = `${countryCode}${mobile}`;
+        const response = await checkMobile(fullMobile);
 
         // 2. If "available" is false, the phone number is taken
         if (response.data && response.data.available === true) {
@@ -271,12 +277,7 @@ const SignUp = () => {
                     <label className={labelStyle}>Password</label>
                     <input
                       type={showPassword ? "text" : "password"}
-                      {...register("password", {
-                        onChange: () => {
-                          if (watch("confirmPassword"))
-                            trigger("confirmPassword");
-                        },
-                      })}
+                      {...register("password")}
                       className={inputStyle}
                     />
                     <button
@@ -294,9 +295,7 @@ const SignUp = () => {
                     <label className={labelStyle}>Confirm</label>
                     <input
                       type={showConfirmPassword ? "text" : "password"}
-                      {...register("confirmPassword", {
-                        onChange: () => trigger("confirmPassword"),
-                      })}
+                      {...register("confirmPassword")}
                       className={inputStyle}
                     />
                     <button
@@ -312,11 +311,13 @@ const SignUp = () => {
                         <Eye size={16} />
                       )}
                     </button>
-                    {errors.confirmPassword && (
+                    {errors.confirmPassword ? (
                       <p className={errorStyle}>
                         {errors.confirmPassword.message}
                       </p>
-                    )}
+                    ) : isMismatch ? (
+                      <p className={errorStyle}>Passwords do not match</p>
+                    ) : null}
                   </div>
                 </div>
 
@@ -359,7 +360,7 @@ const SignUp = () => {
                       <input
                         {...register("contact", {
                           onChange: (e) =>
-                            checkMobileAvailability(e.target.value),
+                            checkMobileAvailability(e.target.value, getValues("countryCode")),
                         })}
                         maxLength={10}
                         placeholder="0000000000"

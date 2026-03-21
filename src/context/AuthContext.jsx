@@ -12,9 +12,9 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     if (token) {
       // Optional: Fetch user profile with the token
-      api.get('/auth/me')
+      api.get('/api/user/me')
         .then(res => setUser(res.data))
-        .catch(() => logout())
+        .catch((err) => console.error("Profile fetch failed:", err))
         .finally(() => setLoading(false));
     } else {
       setLoading(false);
@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (credentials) => {
-    const { data } = await api.post('/auth/login', credentials);
+    const { data } = await api.post('/api/auth/login', credentials);
     localStorage.setItem('token', data.accessToken);
     localStorage.setItem('refreshToken', data.refreshToken);
     setUser(data.user);

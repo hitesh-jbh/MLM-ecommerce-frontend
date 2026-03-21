@@ -32,6 +32,7 @@ const LoginPage = lazy(() => import("./pages/app/LoginPage.jsx"));
 const SignUp = lazy(() => import("./pages/app/SignUp.jsx"));
 const Cart = lazy(() => import("./pages/app/CartPage.jsx"));
 const WishlistPage = lazy(() => import("./pages/app/WishlistPage.jsx"));
+const OrderSuccess = lazy(() => import("./pages/app/OrderSuccess.jsx"));
 
 // Product & Orders
 const InfoProd = lazy(() => import("./pages/product/InfoProd.jsx"));
@@ -198,6 +199,7 @@ const appRouter = createBrowserRouter([
       { path: "view-order/:id", element: <ViewOrder /> },
       { path: "product/:id", element: <InfoProd /> },
       { path: "/checkout", element: <CheckoutPage /> },
+      { path: "/order-success", element: <OrderSuccess /> },
       { path: "your-order/:orderId", element: <TrackPackage /> },
       { path: "write-review/:productId", element: <WriteReview /> },
       { path: "wallet-balance", element: <WalletBalance /> },

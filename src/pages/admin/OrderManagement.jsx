@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useSelector } from 'react-redux';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
 import StatCard from "../../components/admin_component/Statscard";
 import { GenericTable } from "../../components/partials/table/GenericTable";
 import { orderTable } from "../../utils/constants";
@@ -26,15 +26,17 @@ function OrderManagement() {
     const [newStatus, setNewStatus] = useState("");
 
     // --- Data Fetching ---
-    const { data: orders, isLoading: ordersLoading, mutate: mutateOrders } = useSWR(
-        token ? ["/api/orders", token] : null,
-        () => orderFetcher(token)
-    );
+    const { data: orders, isLoading: ordersLoading, refetch: mutateOrders } = useQuery({
+        queryKey: ["/api/orders", token],
+        queryFn: () => orderFetcher(token),
+        enabled: !!token
+    });
 
-    const { data: stats, isLoading: statsLoading, mutate: mutateStats } = useSWR(
-        token ? ["/api/admin/dashboard/order", token] : null,
-        () => statsFetcher(token)
-    );
+    const { data: stats, isLoading: statsLoading, refetch: mutateStats } = useQuery({
+        queryKey: ["/api/admin/dashboard/order", token],
+        queryFn: () => statsFetcher(token),
+        enabled: !!token
+    });
 
     const refreshData = () => {
         mutateOrders();
@@ -208,7 +210,7 @@ function OrderManagement() {
                                 onChange={(e) => setNewStatus(e.target.value)}
                             >
                                 <option value="CREATED">CREATED</option>
-                                <option value="PACKED">PACKED</option>
+                                {/* <option value="PACKED">PACKED</option> */}
                                 <option value="SHIPPED">SHIPPED</option>
                                 <option value="DELIVERED">DELIVERED</option>
                             </select>

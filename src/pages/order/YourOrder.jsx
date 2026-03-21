@@ -88,7 +88,7 @@ import { Search, Loader2 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import OrderCard from '../../components/ui/order/OrderCard.jsx';
 import { useSelector } from 'react-redux';
-import useSWR from 'swr'; // Ensure you use 'swr' or 'use-swr'
+import { useQuery } from '@tanstack/react-query';
 import { getMyAllOrders } from '../../utils/service/apiService.js';
 import { Link } from 'react-router-dom';
 
@@ -97,10 +97,11 @@ const YourOrder = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeTab, setActiveTab] = useState('Orders');
 
-    const { data: response, isLoading } = useSWR(
-        token ? ["/api/order/", token] : null,
-        () => getMyAllOrders(token)
-    );
+    const { data: response, isLoading } = useQuery({
+        queryKey: ["order", token],
+        queryFn: () => getMyAllOrders(token),
+        enabled: !!token
+    });
 
     // FIX 1: Correct data extraction based on your console log
     // Your log shows an array of objects. We ensure it's an array.

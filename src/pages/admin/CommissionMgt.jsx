@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useSelector } from 'react-redux';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
 import KpiCard from "../../components/admin_component/KpiCards";
 import { GenericTable } from "../../components/partials/table/GenericTable";
 import { commissionTable } from "../../utils/constants";
@@ -14,15 +14,17 @@ const listFetcher = (token) => userCommissionStats(token).then(res => res.data?.
 function CommissionMgt() {
     const token = useSelector((state) => state.auth?.token);
 
-    const { data: stats, isLoading: statsLoading } = useSWR(
-        token ? ["commissionStats", token] : null,
-        () => statsFetcher(token)
-    );
+    const { data: stats, isLoading: statsLoading } = useQuery({
+        queryKey: ["commissionStats", token],
+        queryFn: () => statsFetcher(token),
+        enabled: !!token
+    });
 
-    const { data: commissions, isLoading: listLoading } = useSWR(
-        token ? ["commissionList", token] : null,
-        () => listFetcher(token)
-    );
+    const { data: commissions, isLoading: listLoading } = useQuery({
+        queryKey: ["commissionList", token],
+        queryFn: () => listFetcher(token),
+        enabled: !!token
+    });
 
     const KpiData = useMemo(() => [
         { id: "1", title: "Total Commission", value: `₹${stats?.totalCommission || "0.00"}`, icon: <Wallet size={18} className="text-white"/> },

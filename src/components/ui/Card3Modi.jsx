@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'; 
-import useSWR, { useSWRConfig } from 'swr'; 
+import { useQuery, useQueryClient } from '@tanstack/react-query'; 
 import { ShoppingBag, BellRing } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 const Card3Modi = ({ product }) => {
   const navigate = useNavigate();
-  const { mutate } = useSWRConfig(); 
+  const queryClient = useQueryClient(); 
   const token = useSelector((state) => state.auth?.token);
   
   // --- Throttling Refs ---
@@ -17,10 +17,11 @@ const Card3Modi = ({ product }) => {
   const lastCartClick = useRef(0);
   const THROTTLE_DELAY = 1000; // 1 second limit
 
-  const { data: wishlistData } = useSWR(
-    token ? ["/api/wishlist", token] : null,
-    () => getWishlist(token).then(res => res.data.items || res.data.data || [])
-  );
+  const { data: wishlistData } = useQuery({
+    queryKey: ["wishlist", token],
+    queryFn: () => getWishlist(token).then(res => res.data.items || res.data.data || []),
+    enabled: !!token
+  });
 
   const productId = product.product_id || product._id || product.id;
   const isOutOfStock = product?.stock <= 0;
@@ -53,7 +54,7 @@ const Card3Modi = ({ product }) => {
         await addToWishlist(token, productId);
         toast.update(toastId, { render: "Added!", type: "success", isLoading: false, autoClose: 2000, closeButton: true });
       }
-      mutate(["/api/wishlist", token]); 
+      queryClient.invalidateQueries({ queryKey: ["wishlist", token] }); 
     } catch (error) {
       toast.update(toastId, { render: "Action failed", type: "error", isLoading: false, autoClose: 3000, closeButton: true });
     }
@@ -76,7 +77,7 @@ const Card3Modi = ({ product }) => {
     const toastId = toast.loading("Adding to cart...");
     try {
       await addToCart(token, productId, 1);
-      mutate(["/api/cart", token]); 
+      queryClient.invalidateQueries({ queryKey: ["cart", token] }); 
       toast.update(toastId, { 
         render: "Added to cart!", 
         type: "success", 

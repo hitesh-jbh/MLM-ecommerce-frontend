@@ -339,7 +339,7 @@
 
 
 import React, { useState } from 'react';
-import useSWR from 'swr';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import { 
@@ -379,21 +379,23 @@ const Notifications = () => {
   });
 
   // 1. Fetch Stats
-  const { data: statsRes, mutate: mutateStats } = useSWR(
-    token ? ["/api/notification/stats", token] : null,
-    ([_, tkn]) => notificationStats(tkn).then(res => res.data),
-    { revalidateOnFocus: true }
-  );
+  const { data: statsRes, refetch: mutateStats } = useQuery({
+    queryKey: ["/api/notification/stats", token],
+    queryFn: () => notificationStats(token).then(res => res.data),
+    enabled: !!token,
+    refetchOnWindowFocus: true
+  });
 
   // 2. Fetch Notification List
   const { 
     data: notifRes, 
-    mutate: mutateNotifs, 
-    isValidating: isSyncing 
-  } = useSWR(
-    token ? ["/api/notification", token] : null,
-    ([_, tkn]) => adminNotification(tkn).then(res => res.data?.data || res.data || [])
-  );
+    refetch: mutateNotifs, 
+    isFetching: isSyncing 
+  } = useQuery({
+    queryKey: ["/api/notification", token],
+    queryFn: () => adminNotification(token).then(res => res.data?.data || res.data || []),
+    enabled: !!token
+  });
 
   const stats = statsRes?.counts || {};
   const pendingCount = statsRes?.pending || 0;

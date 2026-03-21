@@ -1,5 +1,5 @@
 import React from 'react';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
 import { GenericTable } from '../../components/partials/table/GenericTable.jsx';
 import { hierachyTable } from '../../utils/constants.jsx';
@@ -9,11 +9,12 @@ import { Loader2 } from "lucide-react";
 const HierachyMgt = () => {
   const { token } = useSelector((state) => state.auth);
 
-  // Fetching data using SWR
-  const { data: response, error, isLoading } = useSWR(
-    token ? ['/api/admin/hierarchy', token] : null,
-    ([_, tkn]) => userHierachy(tkn).then(res => res.data)
-  );
+  // Fetching data using React Query
+  const { data: response, error, isLoading } = useQuery({
+    queryKey: ['/api/admin/hierarchy', token],
+    queryFn: () => userHierachy(token).then(res => res.data),
+    enabled: !!token
+  });
 
   // Data Mapping: Convert API response to Table format
   const mappedData = React.useMemo(() => {

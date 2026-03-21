@@ -1,5 +1,5 @@
 import React from 'react';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
 import { userCommissionDashboaed } from '../../utils/service/apiService'; 
 import { Wallet as WalletIcon, Clock, CheckCircle, TrendingUp } from 'lucide-react';
@@ -7,10 +7,11 @@ import { Wallet as WalletIcon, Clock, CheckCircle, TrendingUp } from 'lucide-rea
 const WalletPage = () => {
   const token = useSelector((state) => state.auth.token);
   
-  const { data: commissionData, isLoading } = useSWR(
-    token ? ["/api/commission/commission-dashboard", token] : null,
-    ([ tkn]) => userCommissionDashboaed(tkn).then(res => res.data.data)
-  );
+  const { data: commissionData, isLoading } = useQuery({
+    queryKey: ["/api/commission/commission-dashboard", token],
+    queryFn: () => userCommissionDashboaed(token).then(res => res.data.data),
+    enabled: !!token
+  });
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center font-black uppercase tracking-tighter">Initializing...</div>;
 

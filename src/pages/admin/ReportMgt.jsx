@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
 import { GenericTable } from '../../components/partials/table/GenericTable';
 import { referTable } from '../../utils/constants'; 
 import { fetcher } from "../../utils/api/axiosInstance";
@@ -10,10 +10,10 @@ const ReportMgt = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   // 1. Fetching data from the API
-  const { data: response, error, isLoading, mutate } = useSWR(
-    "/api/admin/reports/referral-activity",
-    fetcher
-  );
+  const { data: response, error, isLoading, refetch: mutate } = useQuery({
+    queryKey: ["/api/admin/reports/referral-activity"],
+    queryFn: () => fetcher("/api/admin/reports/referral-activity")
+  });
 
   // 2. Safely Extracting Data (Handles different API response structures)
   const reportData = useMemo(() => {

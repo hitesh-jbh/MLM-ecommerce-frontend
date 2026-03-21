@@ -4,7 +4,7 @@ import { Navigation, Thumbs, FreeMode } from 'swiper/modules';
 import { ShoppingBag, X, CheckCircle2 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import useSWR, { useSWRConfig } from 'swr';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { toggleWishlist } from '../../utils/slice/WishList.js';
 import { initializeProduct } from '../../utils/slice/countSlice.js';
@@ -22,7 +22,7 @@ import 'swiper/css/thumbs';
 const ProdDetails = ({ product }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { mutate } = useSWRConfig(); 
+    const queryClient = useQueryClient(); 
 
     const token = useSelector((state) => state.auth?.token);
     const productId = product?.id || product?._id;
@@ -33,10 +33,11 @@ const ProdDetails = ({ product }) => {
     const THROTTLE_DELAY = 1000; // 1 second gap
 
     // Fetch Wishlist
-    const { data: wishlistData } = useSWR(
-        token ? ["/api/wishlist", token] : null,
-        () => getWishlist(token).then(res => res.data.items || res.data.data || [])
-    );
+    const { data: wishlistData } = useQuery({
+        queryKey: ["wishlist", token],
+        queryFn: () => getWishlist(token).then(res => res.data.items || res.data.data || []),
+        enabled: !!token
+    });
     
     const isLiked = useMemo(() => {
         return wishlistData?.some((item) => {
@@ -75,9 +76,9 @@ const ProdDetails = ({ product }) => {
                 await addToWishlist(token, productId);
             }
             
-            // Sync local redux and global SWR state
+            // Sync local redux and global React Query state
             dispatch(toggleWishlist(product));
-            mutate(["/api/wishlist", token]);
+            queryClient.invalidateQueries({ queryKey: ["wishlist", token] });
 
             toast.update(toastId, { 
                 render: isLiked ? "Removed from wishlist" : "Added to wishlist!", 
@@ -109,7 +110,7 @@ const ProdDetails = ({ product }) => {
         const toastId = toast.loading("Adding to cart...");
         try {
             await addToCart(token, productId, currentQuantity);
-            mutate(["/api/cart/", token]); 
+            queryClient.invalidateQueries({ queryKey: ["cart", token] }); 
 
             toast.update(toastId, { 
                 render: "Successfully added to cart!", 

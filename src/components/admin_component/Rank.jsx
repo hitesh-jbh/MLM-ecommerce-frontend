@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { createRank, viewRank } from '../../utils/service/apiService';
 import { toast, ToastContainer } from 'react-toastify';
@@ -8,6 +8,7 @@ import { Loader2, Trophy, Plus, Users, DollarSign, X, ArrowLeft, Award, Save, Ho
 import { GenericTable } from '../../components/partials/table/GenericTable';
 import PageHeader from "../../components/partials/table/PageHeader";
 import { rankTable } from '../../utils/constants';
+import Icons from '../ui/Icon';
 
 const RankMgt = () => {
     const token = useSelector((state) => state.auth?.token);
@@ -18,31 +19,30 @@ const RankMgt = () => {
     const [searchTerm, setSearchTerm] = useState("");
 
     // --- Data Fetching ---
-    const { data: rankData, isLoading, mutate } = useSWR(
-        token ? ["/api/rank", token] : null,
-        async () => {
+    const { data: rankData, isLoading, refetch: mutate } = useQuery({
+        queryKey: ["/api/rank", token],
+        queryFn: async () => {
             const res = await viewRank(token);
             console.log("Raw API Response:", res); // Check the structure here
-            
+
             // Fix: Try multiple common paths, fallback to empty array
             // If res.data is the array itself, use it.
             const rawData = res.data?.ranks || res.data?.data || (Array.isArray(res.data) ? res.data : []);
-            
+
             return rawData;
         },
-        {
-            revalidateOnFocus: false,
-            shouldRetryOnError: false
-        }
-    );
+        enabled: !!token,
+        refetchOnWindowFocus: false,
+        retry: false
+    });
 
     // --- Search Logic ---
     const filteredRanks = useMemo(() => {
         const baseData = Array.isArray(rankData) ? rankData : [];
-        
+
         if (!searchTerm.trim()) return baseData;
-        
-        return baseData.filter(item => 
+
+        return baseData.filter(item =>
             item.rank?.toLowerCase().includes(searchTerm.toLowerCase())
         );
     }, [rankData, searchTerm]);
@@ -50,7 +50,7 @@ const RankMgt = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
-        
+
         const payload = {
             rank: formData.get("rank"),
             referral_count: Number(formData.get("referral_count")),
@@ -62,7 +62,7 @@ const RankMgt = () => {
             const res = await createRank(token, payload);
             if (res.status === 200 || res.status === 201) {
                 toast.success("New Rank Created Successfully");
-                mutate(); 
+                mutate();
                 setIsModalOpen(false);
                 e.target.reset();
             }
@@ -85,7 +85,7 @@ const RankMgt = () => {
                             <ArrowLeft size={14} /> Back
                         </button>
                     </div>
-                    
+
                     <div className="flex items-center gap-3 mt-2">
                         <div className="p-3 bg-black text-white rounded-2xl">
                             <Trophy size={24} />
@@ -94,7 +94,7 @@ const RankMgt = () => {
                     </div>
                 </div>
 
-                <button 
+                <button
                     onClick={() => setIsModalOpen(true)}
                     className="flex items-center gap-2 bg-black text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-zinc-800 transition-all active:scale-95 shadow-xl shadow-black/10"
                 >
@@ -110,11 +110,11 @@ const RankMgt = () => {
                         <p className="text-[10px] font-black uppercase tracking-[0.3em]">Syncing Hierarchy...</p>
                     </div>
                 ) : (
-                    <GenericTable 
-                        title={searchTerm ? `Results for "${searchTerm}"` : "Active Tiers"} 
-                        columns={rankTable} 
+                    <GenericTable
+                        title={searchTerm ? `Results for "${searchTerm}"` : "Active Tiers"}
+                        columns={rankTable}
                         // PASSING FILTERED DATA
-                        data={filteredRanks} 
+                        data={filteredRanks}
                     />
                 )}
             </div>
@@ -154,16 +154,16 @@ const RankMgt = () => {
                                 <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Total Commission Target (₹)</label>
                                 <div className="relative">
                                     <input name="total_commission" type="number" required placeholder="0.00" className="w-full h-12 pl-12 pr-4 bg-gray-50 border border-gray-100 rounded-xl focus:border-black outline-none transition-all font-bold text-sm" />
-                                    <DollarSign size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                    <Icons icon="mdi:rupee" size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                                 </div>
                             </div>
 
-                            <button 
-                                type="submit" 
+                            <button
+                                type="submit"
                                 disabled={isSubmitting}
                                 className="w-full h-14 bg-black text-white rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-zinc-800 transition-all active:scale-[0.98] mt-4 flex items-center justify-center gap-2"
                             >
-                                {isSubmitting ? <Loader2 className="animate-spin" size={18}/> : <Save size={18}/>}
+                                {isSubmitting ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
                                 {isSubmitting ? "Processing..." : "Deploy Rank"}
                             </button>
                         </form>

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useSelector } from 'react-redux';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
 import { GenericTable } from "../../components/partials/table/GenericTable";
 import TableActionFooter from "./TableActionFooter";
 import { walletTable } from "../../utils/constants";
@@ -16,10 +16,11 @@ function NormalWalletMgt() {
     const token = useSelector((state) => state.auth?.token);
 
     // 1. Fetch Transaction Data
-    const { data: transactions, isLoading, mutate } = useSWR(
-        token ? ["/api/admin/wallets/transactions", token] : null,
-        () => transactionFetcher(token)
-    );
+    const { data: transactions, isLoading, refetch: mutate } = useQuery({
+        queryKey: ["/api/admin/wallets/transactions", token],
+        queryFn: () => transactionFetcher(token),
+        enabled: !!token
+    });
 
     // 2. Calculate Dynamic Stats for KPI Cards
     const stats = useMemo(() => {

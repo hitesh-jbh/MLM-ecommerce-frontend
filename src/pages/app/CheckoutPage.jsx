@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useSWRConfig } from 'swr';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { CheckCircle2, ShieldCheck, Loader2, ArrowLeft, CreditCard, Plus } from 'lucide-react';
 import { getAddress, createOrder, saveAddress } from '../../utils/service/apiService'; 
@@ -10,7 +10,7 @@ import AddressModal from '../../components/skeleton/AddressModal';
 const CheckoutPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { mutate } = useSWRConfig();
+    const queryClient = useQueryClient();
     const { token } = useSelector((state) => state.auth);
     
     const { checkoutItems = [], totalAmount = 0, source = "" } = location.state || {};
@@ -93,7 +93,7 @@ const CheckoutPage = () => {
             await createOrder(token, orderData);
             
             if (source === "CART") {
-                await mutate(["/api/cart/", token]);
+                queryClient.invalidateQueries({ queryKey: ["cart", token] });
             }
 
             toast.success("Order Placed Successfully!");

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Dropdown from '../../components/ui/Dropdown.jsx';
 import Card3Modi from '../../components/ui/Card3Modi.jsx';
 import FourCardButton from '../../components/ui/FourCardButton.jsx';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
+import { viewAllProducts } from '../../utils/service/apiService';
 
 const sortOptions = [
     { label: "Featured", value: "featured" },
@@ -11,8 +12,11 @@ const sortOptions = [
 ];
 
 const Luxria = () => {
-    // 1. Fetch data with SWR
-    const { data, error, isLoading } = useSWR('/api/product/');
+    // 1. Fetch data with React Query
+    const { data, error, isLoading } = useQuery({
+        queryKey: ["products-all"],
+        queryFn: () => viewAllProducts().then(res => res.data)
+    });
     
     // 2. Initialize with empty array to prevent .map() errors
     const [displayProducts, setDisplayProducts] = useState([]);

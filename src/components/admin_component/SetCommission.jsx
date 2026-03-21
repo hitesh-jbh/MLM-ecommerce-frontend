@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
 import { setCommission, viewCommission } from '../../utils/service/apiService';
 import { toast, ToastContainer } from 'react-toastify';
 import { Loader2, Percent, Save, ShieldCheck, Activity,ArrowLeft,  Lock } from 'lucide-react';
@@ -11,10 +11,11 @@ const SetCommission = () => {
     const navigate = useNavigate();
     
     // --- Data Fetching ---
-    const { data: commissionData, isLoading, mutate } = useSWR(
-        token ? ["/api/admin/commission-levels", token] : null,
-        () => viewCommission(token).then(res => res.data?.levels || []) // Access res.data.levels
-    );
+    const { data: commissionData, isLoading, refetch: mutate } = useQuery({
+        queryKey: ["/api/admin/commission-levels", token],
+        queryFn: () => viewCommission(token).then(res => res.data?.levels || []), // Access res.data.levels
+        enabled: !!token
+    });
 
     const levels = [1, 2, 3, 4, 5];
     const [commissionValues, setCommissionValues] = useState({});

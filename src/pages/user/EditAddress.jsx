@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import useSWR, { mutate } from 'swr';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { setAddresses } from '../../utils/slice/addressSlice';
 import Icons from '../../components/ui/Icon';
 import { saveAddress, getAddress, editAddress, deleteAddress } from '../../utils/service/apiService';
 import { toast } from 'react-toastify';
 
 const EditAddress = () => {
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token) || localStorage.getItem("token");
 
@@ -18,16 +19,16 @@ const EditAddress = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetching Data
-  const { data: response, isLoading } = useSWR(
-    token ? ['/api/addresses', token] : null,
-    ([_, tkn]) => getAddress(tkn),
-    {
-      revalidateOnFocus: false,
-      onSuccess: (res) => {
-        if (res.data?.success) dispatch(setAddresses(res.data.data));
-      }
-    }
-  );
+  const { data: response, isLoading } = useQuery({
+    queryKey: ['addresses', token],
+    queryFn: () => getAddress(token),
+    enabled: !!token,
+    refetchOnWindowFocus: false,
+  });
+
+  React.useEffect(() => {
+    if (response?.data?.success) dispatch(setAddresses(response.data.data));
+  }, [response, dispatch]);
 
   const addresses = response?.data?.data || [];
 
@@ -72,7 +73,7 @@ const EditAddress = () => {
 
       if (res.data?.success || res.status === 200) {
         toast.success(editingAddress ? "Address updated!" : "Address saved!");
-        mutate(['/api/addresses', token]);
+        queryClient.invalidateQueries({ queryKey: ['addresses', token] });
         closeModals();
       }
     } catch (err) {
@@ -88,7 +89,7 @@ const EditAddress = () => {
       const res = await deleteAddress(token, addressToDelete);
       if (res.data?.success || res.status === 200) {
         toast.success("Address removed", { theme: 'light' });
-        mutate(['/api/addresses', token]);
+        queryClient.invalidateQueries({ queryKey: ['addresses', token] });
         closeModals();
       }
     } catch (err) {

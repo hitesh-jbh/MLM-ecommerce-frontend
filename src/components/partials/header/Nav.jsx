@@ -284,7 +284,12 @@ export default function Nav() {
               </button>
 
               {/* PROFILE DROPDOWN */}
-              <div className="relative group py-2" ref={profileMenuRef}>
+              <div 
+                className="relative py-2" 
+                ref={profileMenuRef}
+                onMouseEnter={() => setIsProfileMenuOpen(true)}
+                onMouseLeave={() => setIsProfileMenuOpen(false)}
+              >
                 {isLoggedIn && user ? (
                   <>
                     <button onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)} className="p-1 focus:outline-none">
@@ -293,7 +298,7 @@ export default function Nav() {
                       </div>
                     </button>
 
-                    <div className={`absolute top-full right-0 mt-1 ${isProfileMenuOpen ? 'flex' : 'hidden'} group-hover:flex flex-col bg-white border border-gray-100 shadow-2xl rounded-sm p-5 min-w-[260px] z-[120]`}>
+                    <div className={`absolute top-full right-0 mt-1 ${isProfileMenuOpen ? 'flex' : 'hidden'} flex-col bg-white border border-gray-100 shadow-2xl rounded-sm p-5 min-w-[260px] z-[120]`}>
                       <div className="mb-4">
                         <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-bold mb-1">Account</p>
                         <p className="text-black font-bold text-sm truncate">{user.firstName} {user.lastName}</p>

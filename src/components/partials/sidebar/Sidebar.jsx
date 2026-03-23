@@ -19,7 +19,7 @@ import {
 } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 
-const Sidebar = () => {
+const Sidebar = ({ closeMobileMenu }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isWalletOpen, setIsWalletOpen] = useState(false); // State for dropdown
   const location = useLocation();
@@ -78,7 +78,13 @@ const Sidebar = () => {
             <div key={item.id}>
               {/* Main Menu Item */}
               <div
-                onClick={() => hasSubItems && !isCollapsed && setIsWalletOpen(!isWalletOpen)}
+                onClick={() => {
+                  if (hasSubItems && !isCollapsed) {
+                    setIsWalletOpen(!isWalletOpen);
+                  } else if (!hasSubItems && closeMobileMenu && window.innerWidth < 768) {
+                    closeMobileMenu();
+                  }
+                }}
                 className="relative"
               >
                 <Link
@@ -114,6 +120,11 @@ const Sidebar = () => {
                     <Link
                       key={sub.name}
                       to={sub.link}
+                      onClick={() => {
+                        if (closeMobileMenu && window.innerWidth < 768) {
+                          closeMobileMenu();
+                        }
+                      }}
                       className={`block p-2 pl-4 text-sm rounded-r-lg transition-colors ${
                         location.pathname === sub.link 
                         ? 'bg-gray-200 text-gray-900 font-bold' 

@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { CheckCircle2, ShieldCheck, Loader2, ArrowLeft, CreditCard, Plus } from 'lucide-react';
+import { CheckCircle2, ShieldCheck, Loader2, ArrowLeft, CreditCard, Plus, MapPin } from 'lucide-react';
 import { getAddress, createOrder, saveAddress, createPaymentOrder, verifyPaymentOrder } from '../../utils/service/apiService'; 
 import AddressModal from '../../components/skeleton/AddressModal';
 
@@ -56,11 +56,6 @@ const CheckoutPage = () => {
             
             if (addressList.length > 0 && !selectedAddress) {
                 setSelectedAddress(addressList[0]);
-            } else if (addressList.length === 0) {
-                toast.error("Please add a delivery address to proceed.", {
-                    toastId: "no-address-warning",
-                    position: "top-right"
-                });
             }
         } catch (err) {
             toast.error("Could not load addresses");
@@ -244,8 +239,20 @@ const CheckoutPage = () => {
                                     );
                                 })
                             ) : (
-                                <div className="col-span-2 py-10 border-2 border-dashed rounded-2xl text-center text-zinc-400 text-xs font-bold uppercase">
-                                    No addresses found. Please add one.
+                                <div className="col-span-1 md:col-span-2 p-8 border-2 border-red-200 bg-red-50 rounded-2xl flex flex-col items-center justify-center gap-3 text-center">
+                                    <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-500">
+                                        <MapPin className="w-6 h-6 animate-bounce" />
+                                    </div>
+                                    <div>
+                                        <p className="text-red-600 text-xs font-black uppercase tracking-widest mb-1">Address Required</p>
+                                        <p className="text-[10px] uppercase text-red-400 font-bold tracking-wider">Please add a delivery address to continue with your checkout.</p>
+                                    </div>
+                                    <button 
+                                        onClick={() => setIsModalOpen(true)} 
+                                        className="mt-2 text-[10px] font-black uppercase bg-red-600 text-white px-6 py-2 rounded-lg tracking-widest hover:bg-red-700 transition-colors"
+                                    >
+                                        Add Address Now
+                                    </button>
                                 </div>
                             )}
                         </div>

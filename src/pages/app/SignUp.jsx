@@ -13,6 +13,7 @@ import {
   registerUser,
   checkMobile,
   checkEmail,
+  checkReferralCode,
 } from "../../utils/service/apiService";
 import { currentYear, dummyEmail, websiteName } from "../../utils/constants";
 
@@ -61,6 +62,8 @@ const SignUp = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isCheckingEmail, setIsCheckingEmail] = useState(false);
   const [isCheckingMobile, setIsCheckingMobile] = useState(false);
+  const [isCheckingReferral, setIsCheckingReferral] = useState(false);
+  const [referralName, setReferralName] = useState("");
 
   const navigate = useNavigate();
 
@@ -141,10 +144,42 @@ const SignUp = () => {
     }, 600),
     [errors.contact, setError, clearErrors],
   );
+
+  const verifyReferralCode = useCallback(
+    debounce(async (code) => {
+      if (!code || code.length < 8) {
+        setReferralName("");
+        if (code && code.length > 0 && code.length < 8) {
+            setError("referralCode", { type: "manual", message: "Must be 8 chars" });
+        } else {
+            clearErrors("referralCode");
+        }
+        return;
+      }
+      setIsCheckingReferral(true);
+      try {
+        const response = await checkReferralCode(code);
+        
+        const fName = response.data?.first_name || "";
+        const lName = response.data?.last_name || "";
+        const fullName = `${fName} ${lName}`.trim() || "Valid Referral";
+        
+        setReferralName(fullName);
+        clearErrors("referralCode");
+      } catch (err) {
+        setReferralName("");
+        setError("referralCode", { type: "manual", message: "Invalid Referral Code" });
+      } finally {
+        setIsCheckingReferral(false);
+      }
+    }, 600),
+    [setError, clearErrors]
+  );
+
   const handleSignup = async (data) => {
     setAuthError("");
     // Final check for remote validation errors before submitting
-    if (errors.email || errors.contact) return;
+    if (errors.email || errors.contact || errors.referralCode) return;
 
     try {
       const formattedData = {
@@ -379,12 +414,27 @@ const SignUp = () => {
                   </div>
                   <div>
                     <label className={labelStyle}>Referral</label>
-                    <input
-                      {...register("referralCode")}
-                      maxLength={8}
-                      className={inputStyle}
-                      placeholder="Optional"
-                    />
+                    <div className="relative">
+                      <input
+                        {...register("referralCode", {
+                          onChange: (e) => verifyReferralCode(e.target.value)
+                        })}
+                        maxLength={8}
+                        className={inputStyle}
+                        placeholder="Optional"
+                      />
+                      {isCheckingReferral && (
+                        <Loader2
+                          className="absolute right-0 bottom-2 animate-spin text-gray-400"
+                          size={14}
+                        />
+                      )}
+                    </div>
+                    {referralName && !errors.referralCode && (
+                       <p className="text-[10px] md:text-[9px] text-green-600 font-bold mt-1 uppercase">
+                         Referred by: {referralName}
+                       </p>
+                    )}
                     {errors.referralCode && (
                       <p className={errorStyle}>
                         {errors.referralCode.message}

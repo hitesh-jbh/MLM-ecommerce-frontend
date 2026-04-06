@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { CheckCircle2, ShieldCheck, Loader2, ArrowLeft, CreditCard, Plus } from 'lucide-react';
-import { getAddress, createOrder, saveAddress } from '../../utils/service/apiService'; 
+import { getAddress, createOrder, saveAddress, createPaymentOrder, verifyPaymentOrder } from '../../utils/service/apiService'; 
 import AddressModal from '../../components/skeleton/AddressModal';
 
 const CheckoutPage = () => {
@@ -30,6 +30,19 @@ const CheckoutPage = () => {
             navigate('/'); 
             return; 
         }
+
+        // Load razorpay script
+        const loadRazorpay = async () => {
+            if (!document.getElementById("razorpay-checkout")) {
+                const script = document.createElement("script");
+                script.id = "razorpay-checkout";
+                script.src = "https://checkout.razorpay.com/v1/checkout.js";
+                script.async = true;
+                document.body.appendChild(script);
+            }
+        };
+        loadRazorpay();
+
         fetchAddresses();
     }, [token, checkoutItems, navigate]);
 
@@ -43,6 +56,11 @@ const CheckoutPage = () => {
             
             if (addressList.length > 0 && !selectedAddress) {
                 setSelectedAddress(addressList[0]);
+            } else if (addressList.length === 0) {
+                toast.error("Please add a delivery address to proceed.", {
+                    toastId: "no-address-warning",
+                    position: "top-right"
+                });
             }
         } catch (err) {
             toast.error("Could not load addresses");
@@ -56,21 +74,7 @@ const CheckoutPage = () => {
         
         setOrderPending(true);
 
-        // FIX: Ensure these strings match your DB column length (VARCHAR)
-        // If your DB is set to VARCHAR(10), 'NETBANKING' will fail. 
-        // Use shorter codes if necessary.
-        // const paymentMap = {
-        //     'Credit or Debit card': 'CAR',
-        //     'Net Banking': 'NB', 
-        //     'UPI / Scan & Pay': 'UPI',
-        //     'Cash on Delivery': 'COD'
-        // };
-        const paymentMap = {
-            // 'Credit or Debit card': 'C',
-            // 'Net Banking': 'N',
-            // 'UPI / Scan & Pay': 'U',
-            'Cash on Delivery': 'COD' // Still use COD since you confirmed it works
-        };
+        const isOnlinePayment = paymentMethod !== 'Cash on Delivery';
 
         const orderData = {
             items: checkoutItems.map(item => ({
@@ -85,23 +89,86 @@ const CheckoutPage = () => {
                 zip: selectedAddress.zip,
                 phone: selectedAddress.phone
             },
-            payment_method: paymentMap[paymentMethod] || 'COD',
+            payment_method: isOnlinePayment ? 'ONLINE' : 'COD',
             source: source 
         };
 
         try {
-            await createOrder(token, orderData);
+            const res = await createOrder(token, orderData);
             
             if (source === "CART") {
                 queryClient.invalidateQueries({ queryKey: ["cart", token] });
             }
 
-            toast.success("Order Placed Successfully!");
-            navigate('/', { replace: true });
+            if (isOnlinePayment) {
+                // Stronger fallback chain for orderId extraction from backend
+                const orderIdDb = res.data?.data?.orderId || res.data?.orderId || res.data?.data?._id || res.data?.data?.id || res.data?.id;
+
+                if (!orderIdDb) {
+                    toast.error("Order setup incomplete. Please try again.");
+                    setOrderPending(false);
+                    return;
+                }
+                
+                const prRes = await createPaymentOrder({
+                    orderId: orderIdDb,
+                    amount: Number(totalAmount)
+                });
+                
+                const rzpOrderId = prRes.data?.data?.id || prRes.data?.id || prRes.data?.razorpay_order_id || prRes.data?.order_id;
+                
+                if (!window.Razorpay) {
+                    toast.error("Payment SDK loading failed.");
+                    setOrderPending(false);
+                    return;
+                }
+
+                const options = {
+                    key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_placeholder", 
+                    amount: Number(totalAmount) * 100, 
+                    currency: "INR",
+                    name: "Checkout",
+                    description: `Order #${orderIdDb}`,
+                    order_id: rzpOrderId,
+                    handler: async function (response) {
+                        setOrderPending(true);
+                        try {
+                            await verifyPaymentOrder({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
+                                orderId: orderIdDb
+                            });
+                            toast.success("Payment Successful!");
+                            navigate('/', { replace: true });
+                        } catch (err) {
+                            toast.error("Verification failed");
+                            setOrderPending(false);
+                        }
+                    },
+                    modal: {
+                        ondismiss: function() {
+                           setOrderPending(false);
+                           toast.warning("Payment cancelled by user. Order is pending.");
+                        }
+                    },
+                    theme: { color: "#000000" }
+                };
+
+                const rzp = new window.Razorpay(options);
+                rzp.on('payment.failed', function (response){
+                    toast.error("Payment failed: " + response.error.description);
+                });
+                rzp.open();
+
+            } else {
+                toast.success("Order Placed Successfully!");
+                navigate('/', { replace: true });
+                setOrderPending(false);
+            }
+
         } catch (err) {
-            // This captures the "Data truncated" error from the server
             toast.error(err.response?.data?.message || "Order failed");
-        } finally {
             setOrderPending(false);
         }
     };
@@ -189,7 +256,7 @@ const CheckoutPage = () => {
                             <CreditCard size={18} /> 2. Payment Method
                         </h2>
                         <div className="space-y-3">
-                            {['Cash on Delivery', 'Credit or Debit card', 'Net Banking', 'UPI / Scan & Pay'].map((m) => (
+                            {['Cash on Delivery', 'Online Payment'].map((m) => (
                                 <label 
                                     key={m} 
                                     className={`flex items-center p-5 border-2 rounded-2xl cursor-pointer transition-all ${paymentMethod === m ? 'border-black bg-zinc-50' : 'border-zinc-100 opacity-60'}`}

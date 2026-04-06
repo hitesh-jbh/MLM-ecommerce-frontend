@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import NormalButton from "../ui/NormalButton.jsx";
 import Icons from "../ui/Icon.jsx";
 import Modal from "../ui/Modal.jsx";
@@ -7,10 +7,8 @@ import Modal from "../ui/Modal.jsx";
 const StickyComponent = () => {
   const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // function modalClick() {
-  //   navigate("/modal");
-  // }
   function modalClick() {
     navigate("/gentle");
   }
@@ -25,6 +23,8 @@ const StickyComponent = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  if (location.pathname === '/checkout' || location.pathname.startsWith('/admin')) return null;
 
   return (
     <div className="fixed mb-[10px] bottom-0 left-0 w-full bg-transparent pointer-events-none z-[999] flex flex-col sm:flex-row justify-between items-center sm:items-end p-4 md:p-8 lg:p-10 gap-4">

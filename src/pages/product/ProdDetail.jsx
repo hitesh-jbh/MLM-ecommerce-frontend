@@ -213,7 +213,7 @@ const ProdDetails = ({ product }) => {
                             {isOutOfStock ? "Sold Out" : "Add to Cart"}
                         </button>
                     </div>
-                    
+
                     <div className="w-full">
                         <BuyNowButton product={product} />
                     </div>

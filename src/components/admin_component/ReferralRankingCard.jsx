@@ -30,7 +30,7 @@ function ReferralRankingCard({ title, linkText, users }) {
               </div>
             </div>
 
-            <p className="text-sm font-medium">${user.amount}</p>
+            <p className="text-sm font-medium">₹{user.amount}</p>
           </div>
         ))}
       </div>

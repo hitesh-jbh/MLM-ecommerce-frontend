@@ -22,6 +22,7 @@ export const checkEmail = (email) =>
 export const checkMobile = (contact) => 
   api.post('/api/user/check-mobile', { contact });
 
+export const checkReferralCode = (referralCode) => api.get(`/api/referral/${referralCode}`);
 
 export const getProfile = (token) => api.get('/api/user/me', {
     headers: { Authorization: `Bearer ${token}` }
@@ -126,6 +127,11 @@ export const getMyAllOrders = (token) => api.get('/api/order/', {
 export const getOrderDetails = (token, orderId) => api.get(`/api/order/${orderId}`, {
     headers: { Authorization: `Bearer ${token}` }
 });
+
+// Payments
+export const createPaymentOrder = (paymentData) => api.post('/api/payment/create-order', paymentData);
+
+export const verifyPaymentOrder = (verificationData) => api.post('/api/payment/verify-payment', verificationData);
 
 // Admin Orders
 export const orderList = (token) => api.get("/api/order/all", {

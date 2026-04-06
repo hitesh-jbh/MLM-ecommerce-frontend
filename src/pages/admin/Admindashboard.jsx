@@ -7,12 +7,13 @@ import { Users, ShoppingCart, DollarSign, Clock,
   UserPlus, 
   Ticket } from "lucide-react";
 import OrdersOverview from "../../components/admin_component/Ordersoverview";
-import { dashboard_Stat, referalRanking } from "../../utils/service/apiService"; 
+import { dashboard_Stat, referalRanking, orderTrend } from "../../utils/service/apiService"; 
 import { FaRupeeSign } from "react-icons/fa";
 
 function AdminDashboard() {
     const [stats, setStats] = useState(null);
     const [rankings, setRankings] = useState([]); // State for live referral data
+    const [trend, setTrend] = useState([]); // State for live order trend
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -21,9 +22,10 @@ function AdminDashboard() {
                 const token = localStorage.getItem("token"); 
                 
                 // Fetching both APIs concurrently for better performance
-                const [statsRes, rankingsRes] = await Promise.all([
+                const [statsRes, rankingsRes, trendRes] = await Promise.all([
                     dashboard_Stat(token),
-                    referalRanking(token)
+                    referalRanking(token),
+                    orderTrend(token)
                 ]);
 
                 // Handle Global Stats
@@ -35,6 +37,11 @@ function AdminDashboard() {
                 // Based on your previous API structure: response.data.data is the array
                 if (rankingsRes.data && rankingsRes.data.success) {
                     setRankings(rankingsRes.data.data);
+                }
+
+                // Handle Order Trend
+                if (trendRes.data && trendRes.data.success) {
+                    setTrend(trendRes.data.data);
                 }
 
             } catch (error) {
@@ -129,7 +136,7 @@ function AdminDashboard() {
 
             {/* Orders Overview Chart/Section */}
             <div>
-                <OrdersOverview />
+                <OrdersOverview data={trend} />
             </div>
 
             {/* Referral Rankings Section - Now using LIVE data */}

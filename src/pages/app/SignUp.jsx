@@ -14,7 +14,7 @@ import {
   checkMobile,
   checkEmail,
   checkReferralCode,
-} from "../../utils/service/apiService";
+} from "../../utils/Service/apiService.js";
 import { currentYear, dummyEmail, websiteName } from "../../utils/constants";
 
 // ---------------- VALIDATION SCHEMA ----------------
@@ -70,7 +70,6 @@ const SignUp = () => {
   const {
     register,
     handleSubmit,
-    trigger,
     watch,
     setError,
     clearErrors,
@@ -168,7 +167,7 @@ const SignUp = () => {
         clearErrors("referralCode");
       } catch (err) {
         setReferralName("");
-        setError("referralCode", { type: "manual", message: "Invalid Referral Code" });
+        setError("referralCode", { error : err, type: "manual", message: "Invalid Referral Code" });
       } finally {
         setIsCheckingReferral(false);
       }

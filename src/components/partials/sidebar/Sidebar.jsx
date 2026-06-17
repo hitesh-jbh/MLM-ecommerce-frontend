@@ -37,8 +37,8 @@ const Sidebar = ({ closeMobileMenu }) => {
       count: null,
       isDropdown: true, // Identify as dropdown
       subItems: [
-        { name: 'Normal Wallet', link: '/admin/wallets/normal' },
-        { name: 'Work Wallet', link: '/admin/wallets/work' }
+        { name: 'Work Wallet', link: '/admin/wallets/work' },
+        { name: 'Withdrawal Requests', link: '/admin/withdrawals' }
       ]
     },
     { id: 'users', name: 'Users', icon: <FaUsers />, count: null, link: '/admin/user' },

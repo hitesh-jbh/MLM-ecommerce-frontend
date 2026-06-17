@@ -7,6 +7,17 @@ import { workWalletTable } from "../../utils/constants";
 import { fetcher } from "../../utils/api/axiosInstance"; // Ensure this is your axios fetcher
 import { Loader2 } from "lucide-react";
 
+const inrCurrencyFormatter = new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    minimumFractionDigits: 2,
+});
+
+const formatCurrency = (value) => {
+    const amount = Number(value);
+    return inrCurrencyFormatter.format(Number.isFinite(amount) ? amount : 0);
+};
+
 function WorkWalletMgt() {
     // 1. Fetch Overview Data (for KPI cards)
     const { data: overviewRes, isLoading: overviewLoading } = useSWR(
@@ -27,23 +38,23 @@ function WorkWalletMgt() {
     const KpiData = [
         { 
             id: "1", 
-            title: "Total MLM Income", 
-            value: overviewData.totalMLMIncome ? `₹${overviewData.totalMLMIncome}` : "₹0" 
+            title: "Total Commission Generated", 
+            value: formatCurrency(overviewData.totalMLMIncome)
         },
         { 
             id: "2", 
-            title: "Referral Income", 
-            value: overviewData.referralIncome ? `₹${overviewData.referralIncome}` : "₹0" 
+            title: "Withdrawable Income", 
+            value: formatCurrency(overviewData.withdrawableIncome)
         },
         { 
             id: "3", 
-            title: "Level Income", 
-            value: overviewData.levelIncome ? `₹${overviewData.levelIncome}` : "₹0" 
+            title: "Non-Withdrawable Income", 
+            value: formatCurrency(overviewData.nonWithdrawableIncome)
         },
         { 
             id: "4", 
-            title: "Pending Bonus", 
-            value: overviewData.pendingBonus ? `₹${overviewData.pendingBonus}` : "₹0" 
+            title: "Pending Commission", 
+            value: formatCurrency(overviewData.pendingCommission)
         },
     ];
 

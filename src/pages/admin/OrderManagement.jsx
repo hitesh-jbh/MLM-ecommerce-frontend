@@ -11,7 +11,15 @@ import { Loader2, X, RotateCcw, Users, ShoppingCart, Clock, CheckCircle, Truck, 
 import PageHeader from "../../components/partials/table/PageHeader";
 
 // Fetchers
-const orderFetcher = (token) => orderList(token).then(res => res.data?.data || []);
+// Normalize order status fields coming from different backend shapes
+const orderFetcher = (token) => orderList(token).then(res => {
+    const list = res.data?.data || [];
+    console.log("Fetched Orders:", list);
+    return list.map(o => ({
+        ...o,
+        orderStatus: o.orderStatus || o.status || o.order_status || 'CREATED'
+    }));
+});
 const statsFetcher = (token) => orderStats(token).then(res => res.data?.data || {});
 
 function OrderManagement() {
@@ -77,7 +85,7 @@ function OrderManagement() {
 
     const openStatusModal = (row) => {
         setSelectedOrder(row);
-        setNewStatus(row.orderStatus || "CREATED");
+        setNewStatus(row.orderStatus || row.status || row.order_status || 'CREATED');
         setIsModalOpen(true);
     };
 

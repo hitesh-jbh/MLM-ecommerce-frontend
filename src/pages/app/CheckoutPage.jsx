@@ -22,6 +22,8 @@ const CheckoutPage = () => {
     const [isSaving, setIsSaving] = useState(false); 
     const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
     const [orderPending, setOrderPending] = useState(false);
+    const [razorpayLoaded, setRazorpayLoaded] = useState(false);
+    const [debugInfo, setDebugInfo] = useState({ createRes: null, rzpOrderId: null, rzpAvailable: null });
 
     useEffect(() => {
         if (!token) { navigate('/login'); return; }
@@ -31,17 +33,55 @@ const CheckoutPage = () => {
             return; 
         }
 
-        // Load razorpay script
-        const loadRazorpay = async () => {
-            if (!document.getElementById("razorpay-checkout")) {
-                const script = document.createElement("script");
-                script.id = "razorpay-checkout";
-                script.src = "https://checkout.razorpay.com/v1/checkout.js";
-                script.async = true;
-                document.body.appendChild(script);
-            }
+        // Load razorpay script and track when it's ready
+        const loadRazorpay = () => {
+            return new Promise((resolve, reject) => {
+                if (window.Razorpay) {
+                    setRazorpayLoaded(true);
+                    setDebugInfo((p) => ({ ...p, rzpAvailable: true }));
+                    resolve(true);
+                    return;
+                }
+
+                if (!document.getElementById("razorpay-checkout")) {
+                    const script = document.createElement("script");
+                    script.id = "razorpay-checkout";
+                    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+                    script.async = true;
+                    script.onload = () => {
+                        setRazorpayLoaded(true);
+                        setDebugInfo((p) => ({ ...p, rzpAvailable: true }));
+                        resolve(true);
+                    };
+                    script.onerror = (e) => {
+                        setRazorpayLoaded(false);
+                        setDebugInfo((p) => ({ ...p, rzpAvailable: false }));
+                        console.error('Failed to load Razorpay script', e);
+                        reject(e);
+                    };
+                    document.body.appendChild(script);
+                } else {
+                    // script tag exists but SDK may not be initialized yet
+                    const checkInterval = setInterval(() => {
+                        if (window.Razorpay) {
+                            clearInterval(checkInterval);
+                            setRazorpayLoaded(true);
+                            setDebugInfo((p) => ({ ...p, rzpAvailable: true }));
+                            resolve(true);
+                        }
+                    }, 200);
+                    // timeout after 8s
+                    setTimeout(() => {
+                        clearInterval(checkInterval);
+                        if (!window.Razorpay) {
+                            setDebugInfo((p) => ({ ...p, rzpAvailable: false }));
+                            reject(new Error('Razorpay SDK load timeout'));
+                        }
+                    }, 8000);
+                }
+            });
         };
-        loadRazorpay();
+        loadRazorpay().catch(() => {});
 
         fetchAddresses();
     }, [token, checkoutItems, navigate]);
@@ -105,18 +145,31 @@ const CheckoutPage = () => {
                     return;
                 }
                 
-                const prRes = await createPaymentOrder({
-                    orderId: orderIdDb,
-                    amount: Number(totalAmount)
-                });
-                
-                const rzpOrderId = prRes.data?.data?.id || prRes.data?.id || prRes.data?.razorpay_order_id || prRes.data?.order_id;
-                
-                if (!window.Razorpay) {
-                    toast.error("Payment SDK loading failed.");
+                let prRes;
+                try {
+                    prRes = await createPaymentOrder({ orderId: orderIdDb, amount: Number(totalAmount) });
+                    console.log('createPaymentOrder response:', prRes);
+                    setDebugInfo((p) => ({ ...p, createRes: prRes?.data || prRes }));
+                } catch (err) {
+                    console.error('createPaymentOrder error:', err);
+                    toast.error(err?.response?.data?.message || err.message || 'Failed to create payment order');
                     setOrderPending(false);
+                    setDebugInfo((p) => ({ ...p, createRes: err?.response?.data || { message: err.message } }));
                     return;
                 }
+
+                const rzpOrderId = prRes?.data?.data?.id || prRes?.data?.id || prRes?.data?.razorpay_order_id || prRes?.data?.order_id;
+                console.log('Resolved razorpay order id:', rzpOrderId);
+                setDebugInfo((p) => ({ ...p, rzpOrderId }));
+
+                if (!window.Razorpay) {
+                    console.error('window.Razorpay is undefined');
+                    toast.error('Payment SDK loading failed. Check console for details.');
+                    setOrderPending(false);
+                    setDebugInfo((p) => ({ ...p, rzpAvailable: false }));
+                    return;
+                }
+                setDebugInfo((p) => ({ ...p, rzpAvailable: true }));
 
                 const options = {
                     key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_placeholder", 
@@ -155,6 +208,7 @@ const CheckoutPage = () => {
                     toast.error("Payment failed: " + response.error.description);
                 });
                 rzp.open();
+                setDebugInfo((p) => ({ ...p, rzpAvailable: true }));
 
             } else {
                 toast.success("Order Placed Successfully!");
@@ -317,12 +371,16 @@ const CheckoutPage = () => {
 
                         <button 
                             onClick={handlePlaceOrder} 
-                            disabled={orderPending || !selectedAddress} 
+                            disabled={orderPending || !selectedAddress || (paymentMethod === 'Online Payment' && !razorpayLoaded)} 
                             className={`w-full py-6 rounded-2xl text-xs font-black uppercase tracking-[0.3em] transition-all flex items-center justify-center gap-2
                             ${orderPending || !selectedAddress ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed' : 'bg-black text-white hover:bg-zinc-900 active:scale-95'}`}
                         >
                             {orderPending ? <Loader2 className="animate-spin" /> : "COMPLETE ORDER"}
                         </button>
+
+                        {paymentMethod === 'Online Payment' && !razorpayLoaded && (
+                            <div className="mt-2 text-[10px] text-center text-red-600 font-bold">Waiting for payment SDK to load — try again in a moment.</div>
+                        )}
 
                         <div className="mt-6 flex items-center justify-center gap-2 text-[10px] font-black uppercase text-zinc-300 tracking-widest">
                             <ShieldCheck size={14} /> 100% SECURE CHECKOUT
@@ -330,6 +388,17 @@ const CheckoutPage = () => {
                     </div>
                 </div>
             </div>
+
+            {import.meta.env.DEV && (
+                <div className="max-w-7xl mx-auto mt-6">
+                    <div className="p-4 border rounded bg-zinc-50 text-xs">
+                        <div className="font-black mb-2">Debug (dev only)</div>
+                        <div className="mb-2">createOrder response: <pre className="whitespace-pre-wrap">{JSON.stringify(debugInfo.createRes, null, 2)}</pre></div>
+                        <div className="mb-2">razorpay order id: <code>{String(debugInfo.rzpOrderId || '')}</code></div>
+                        <div>window.Razorpay available: <strong>{debugInfo.rzpAvailable === null ? 'unknown' : debugInfo.rzpAvailable ? 'yes' : 'no'}</strong></div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

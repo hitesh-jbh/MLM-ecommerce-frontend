@@ -202,6 +202,36 @@ export const getWallet = (token) => api.get('/api/wallet/', {
     headers: { Authorization: `Bearer ${token}` }
 });
 
+export const getUserWalletTransactions = (token, limit = 20) => api.get(`/api/wallet/transactions?limit=${limit}`, {
+    headers: { Authorization: `Bearer ${token}` }
+});
+
+// Withdrawals
+export const requestWithdrawal = (token, body) => api.post('/api/withdrawals/request', body, {
+    headers: { Authorization: `Bearer ${token}` }
+});
+
+export const getMyWithdrawals = (token) => api.get('/api/withdrawals/my', {
+    headers: { Authorization: `Bearer ${token}` }
+});
+
+// Admin withdrawals
+export const adminGetWithdrawals = (token, status) => api.get(`/api/admin/withdrawals?status=${status || ''}`, {
+    headers: { Authorization: `Bearer ${token}` }
+});
+
+export const adminApproveWithdrawal = (token, id) => api.patch(`/api/admin/withdrawals/${id}/approve`, {}, {
+    headers: { Authorization: `Bearer ${token}` }
+});
+
+export const adminRejectWithdrawal = (token, id) => api.patch(`/api/admin/withdrawals/${id}/reject`, {}, {
+    headers: { Authorization: `Bearer ${token}` }
+});
+
+export const adminMarkPaid = (token, id) => api.patch(`/api/admin/withdrawals/${id}/paid`, {}, {
+    headers: { Authorization: `Bearer ${token}` }
+});
+
 
 // Reviews
 export const addReview = (token, reviewData) => api.post('/api/review/', reviewData, {

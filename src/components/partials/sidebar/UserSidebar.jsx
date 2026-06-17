@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaTimes } from "react-icons/fa"; // Using FaTimes for the cross icon
+import { FaTimes, FaWallet } from "react-icons/fa"; // Using FaTimes for the cross icon
 import Icons from "../../ui/Icon";
 
 const UserSidebar = ({ isOpen, toggleSidebar }) => {
@@ -54,6 +54,12 @@ const UserSidebar = ({ isOpen, toggleSidebar }) => {
       name: "Bank Detail",
       icon: "heroicons:building-library",
       link: "/profile/bank-detail",
+    },
+    {
+      id: "wallet",
+      name: "Wallet",
+      icon: <FaWallet />,
+      link: "/profile/wallet",
     },
   ];
 
@@ -114,7 +120,11 @@ const UserSidebar = ({ isOpen, toggleSidebar }) => {
                         : "text-gray-500 group-hover:text-black"
                     }
                   >
-                    <Icons icon={item.icon} size={22} />
+                      {React.isValidElement(item.icon) ? (
+                        React.cloneElement(item.icon, { size: 20 })
+                      ) : (
+                        <Icons icon={item.icon} size={22} />
+                      )}
                   </div>
                   <span className="text-[12px] font-bold uppercase tracking-[0.15em]">
                     {item.name} 

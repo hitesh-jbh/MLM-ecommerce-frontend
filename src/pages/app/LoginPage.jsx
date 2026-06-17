@@ -76,6 +76,11 @@ const Login = () => {
       toast.info(`Recovery link sent to ${forgotEmail}`);
       setIsModalOpen(false);
       setForgotEmail("");
+      
+      // Navigate to reset password page so the user can enter the code they received
+      setTimeout(() => {
+        navigate("/reset-password");
+      }, 2000);
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to send link.");
     } finally {

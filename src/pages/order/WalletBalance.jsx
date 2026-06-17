@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { DollarSign, TrendingUp, Users, ArrowDownCircle, ArrowUpCircle } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { useQuery } from '@tanstack/react-query';
+import { getWallet, userCommissionDashboaed } from '../../utils/service/apiService';
 
 const WalletBalance = () => {
   const [activeTab, setActiveTab] = useState('All');
@@ -10,34 +13,32 @@ const WalletBalance = () => {
   // New state for level income view
   const [levelIncomeView, setLevelIncomeView] = useState('All');
 
+  const token = useSelector((state) => state.auth.token);
+
+  const { data: walletRes } = useQuery({
+    queryKey: ['wallet', token],
+    queryFn: () => getWallet(token).then(res => res.data),
+    enabled: !!token
+  });
+
+  const { data: commissionRes } = useQuery({
+    queryKey: ['commissionDashboard', token],
+    queryFn: () => userCommissionDashboaed(token).then(res => res.data.data),
+    enabled: !!token
+  });
+
   const walletData = {
-    totalBalance: 460.75,
-    availableBalance: 410.75,
-    pendingBalance: 50.00,
+    totalBalance: Number(walletRes?.withdrawable_balance || 0) + Number(walletRes?.non_withdrawable_balance || 0),
+    availableBalance: Number(walletRes?.withdrawable_balance || 0),
+    pendingBalance: Number(walletRes?.pending_commission || 0),
     earnings: {
-      directReferral: 120,
-      levelIncome: 210.75,
-      teamMatching: 80
+      directReferral: commissionRes?.referralIncome || 0,
+      levelIncome: commissionRes?.levelIncome || 0,
+      teamMatching: 0
     },
-    levelIncome: [
-      { level: 'Level 1', members: 12, earnings: 75.00, withdrawals: 25.00, netEarnings: 50.00 },
-      { level: 'Level 2', members: 38, earnings: 65.00, withdrawals: 10.00, netEarnings: 55.00 },
-      { level: 'Level 3', members: 40, earnings: 60.00, withdrawals: 15.00, netEarnings: 45.00 },
-      { level: 'Level 4', members: 25, earnings: 45.00, withdrawals: 20.00, netEarnings: 25.00 },
-      { level: 'Level 5', members: 15, earnings: 35.00, withdrawals: 10.00, netEarnings: 25.00 }
-    ],
-    levelWithdrawals: [
-      { level: 'Level 1', date: '22 Dec, 2025', amount: 10.00 },
-      { level: 'Level 2', date: '21 Dec, 2025', amount: 5.00 },
-      { level: 'Level 1', date: '20 Dec, 2025', amount: 15.00 },
-      { level: 'Level 3', date: '19 Dec, 2025', amount: 15.00 }
-    ],
-    recentTransactions: [
-      { type: 'Level 1 Referral Bonus', date: '22 Dec, 2025', amount: 75.00, isPositive: true },
-      { type: 'Withdrawal', date: '21 Dec, 2025', amount: 50.00, isPositive: false },
-      { type: 'Level 2 Bonus', date: '20 Dec, 2025', amount: 65.00, isPositive: true },
-      { type: 'Level 3 Bonus', date: '19 Dec, 2025', amount: 60.00, isPositive: true }
-    ]
+    levelIncome: commissionRes?.levels || [],
+    levelWithdrawals: [],
+    recentTransactions: []
   };
 
   // Calculate totals based on active view

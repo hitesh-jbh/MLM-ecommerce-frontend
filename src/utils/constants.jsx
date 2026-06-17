@@ -685,9 +685,11 @@ export const walletTable = [
     key: 'amount', 
     render: (val, row) => {
       const isCredit = row.type?.toLowerCase() === 'credit';
+      const num = Number(val || 0);
+      const formatted = num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       return (
         <span className={`font-black text-sm ${isCredit ? 'text-emerald-600' : 'text-red-600'}`}>
-          {isCredit ? '+' : '-'} ₹{val}
+          {isCredit ? '+' : '-'} ₹{formatted}
         </span>
       );
     }
@@ -752,13 +754,13 @@ export const workWalletTable = [
     )
   },
   { header: 'User ID', key: 'userId' },
-  { header: 'Referral Income', key: 'referralIncome', render: (val) => `₹${val}` },
-  { header: 'Level Income', key: 'levelIncome', render: (val) => `₹${val}` },
+  { header: 'Total MLM Income', key: 'totalMLMIncome', render: (val) => `₹${Number(val || 0).toFixed(2)}` },
+  { header: 'Withdrawable Income', key: 'withdrawableIncome', render: (val) => `₹${Number(val || 0).toFixed(2)}` },
+  { header: 'Non-Withdrawable Income', key: 'nonWithdrawableIncome', render: (val) => `₹${Number(val || 0).toFixed(2)}` },
   { 
-    header: 'Pending (₹)', 
-    // The API field is "pendingAmount", not "pending"
-    key: 'pendingAmount', 
-    render: (val) => `₹${val}` 
+    header: 'Pending Commission', 
+    key: 'pendingCommission', 
+    render: (val) => `₹${Number(val || 0).toFixed(2)}` 
   },
   // {
   //   header: 'Action',
@@ -773,16 +775,27 @@ export const workWalletTable = [
 ];
 
 export const workWalletData = [
-  { user: 'Priya Singh', userId: '5662', referralIncome: '500', levelIncome: '330', pending: '1,830', status: 'View Details', detailsUrl: '/transactions/5662' },
-  { user: 'Arjun Kumar', userId: '5658', referralIncome: '250', levelIncome: '310', pending: '810', status: 'View Details', detailsUrl: '/transactions/5658' },
-  { user: 'Ajay Kumar', userId: '5671', referralIncome: '150', levelIncome: '280', pending: '580', status: 'View Details', detailsUrl: '/transactions/5671' },
-  { user: 'Meera Desai', userId: '5660', referralIncome: '100', levelIncome: '210', pending: '370', status: 'View Details', detailsUrl: '/transactions/5660' },
-  { user: 'Ankit Sharma', userId: '5657', referralIncome: '150', levelIncome: '120', pending: '150', status: 'View Details', detailsUrl: '/transactions/5657' },
-  { user: 'Sonal Verma', userId: '5702', referralIncome: '400', levelIncome: '450', pending: '1,200', status: 'View Details', detailsUrl: '/transactions/5702' },
-  { user: 'Vikram Seth', userId: '5710', referralIncome: '300', levelIncome: '200', pending: '950', status: 'View Details', detailsUrl: '/transactions/5710' },
-  { user: 'Deepa Roy', userId: '5715', referralIncome: '200', levelIncome: '180', pending: '440', status: 'View Details', detailsUrl: '/transactions/5715' },
-  { user: 'Rahul Jain', userId: '5720', referralIncome: '600', levelIncome: '500', pending: '2,100', status: 'View Details', detailsUrl: '/transactions/5720' },
-  { user: 'Sneha Kapur', userId: '5730', referralIncome: '120', levelIncome: '90', pending: '210', status: 'View Details', detailsUrl: '/transactions/5730' },
+  { userName: 'Priya Singh', userId: '5662', totalMLMIncome: 830, withdrawableIncome: 500, nonWithdrawableIncome: 150, pendingCommission: 180 },
+  { userName: 'Arjun Kumar', userId: '5658', totalMLMIncome: 560, withdrawableIncome: 250, nonWithdrawableIncome: 100, pendingCommission: 210 },
+];
+
+// Commission Table (user view)
+export const userCommissionTable = [
+  {
+    header: 'Date',
+    key: 'created_at',
+    render: (val) => (
+      <span className="text-gray-500 font-medium text-xs">
+        {val ? new Date(val).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
+      </span>
+    )
+  },
+  { header: 'Commission ID', key: 'id', render: (val) => <span className="font-bold">#{val}</span> },
+  { header: 'Order ID', key: 'order_id' },
+  { header: 'Level', key: 'level' },
+  { header: 'Amount', key: 'amount', render: (val) => <span className="font-black">₹{Number(val || 0).toFixed(2)}</span> },
+  { header: 'Status', key: 'status', render: (val) => <span className="text-sm font-bold uppercase">{val}</span> },
+  { header: 'Release Date', key: 'release_date', render: (val) => (val ? new Date(val).toLocaleDateString('en-IN') : '—') }
 ];
 
 // Commission Table

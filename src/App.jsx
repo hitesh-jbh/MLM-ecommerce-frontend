@@ -70,8 +70,9 @@ const SetCommission = lazy(
 );
 const Rank = lazy(() => import("./components/admin_component/Rank.jsx"));
 const ReportMgt = lazy(() => import("./pages/admin/ReportMgt.jsx"));
-const NormalWalletMgt = lazy(() => import("./pages/admin/NormalWalletMgt.jsx"));
 const WorkWalletMgt = lazy(() => import("./pages/admin/WorkWalletMgt.jsx"));
+const WithdrawalsMgt = lazy(() => import("./pages/admin/WithdrawalsMgt.jsx"));
+const UserWallet = lazy(() => import("./pages/user/UserWallet.jsx"));
 const UserMgt = lazy(() => import("./pages/admin/UserMgt.jsx"));
 const MlMmgt = lazy(() => import("./pages/admin/MLMmgt.jsx"));
 const Notifications = lazy(() => import("./pages/admin/Notification.jsx"));
@@ -151,6 +152,7 @@ const appRouter = createBrowserRouter([
           { index: true, element: <Profile /> },
           { path: "me", element: <Profile /> },
           { path: "your-order", element: <YourOrder /> },
+              { path: "wallet", element: <UserWallet /> },
           { path: "address", element: <EditAddress /> },
           { path: "payment", element: <PaymentMethods /> },
           { path: "account-setting", element: <AccountSetting /> },
@@ -182,8 +184,8 @@ const appRouter = createBrowserRouter([
           { path: "comission/set", element: <SetCommission /> },
           { path: "comission/rank", element: <Rank /> },
           { path: "report", element: <ReportMgt /> },
-          { path: "wallets/normal", element: <NormalWalletMgt /> },
           { path: "wallets/work", element: <WorkWalletMgt /> },
+          { path: "withdrawals", element: <WithdrawalsMgt /> },
           { path: "user", element: <UserMgt /> },
           { path: "mlm", element: <MlMmgt /> },
           { path: "notifications", element: <Notifications /> },

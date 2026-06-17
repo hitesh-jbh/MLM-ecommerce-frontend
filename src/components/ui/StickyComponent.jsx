@@ -24,7 +24,13 @@ const StickyComponent = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  if (location.pathname === '/checkout' || location.pathname.startsWith('/admin')) return null;
+  if (
+    location.pathname === '/checkout' || 
+    location.pathname.startsWith('/admin') ||
+    location.pathname.startsWith('/profile') ||
+    location.pathname === '/login' ||
+    location.pathname === '/signup'
+  ) return null;
 
   return (
     <div className="fixed mb-[10px] bottom-0 left-0 w-full bg-transparent pointer-events-none z-[999] flex flex-col sm:flex-row justify-between items-center sm:items-end p-4 md:p-8 lg:p-10 gap-4">

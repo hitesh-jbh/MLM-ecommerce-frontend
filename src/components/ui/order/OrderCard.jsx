@@ -10,7 +10,7 @@ const OrderCard = ({ order, refreshOrders }) => {
   const token = useSelector((state) => state.auth?.token);
   
   // State management
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [setIsSubmitting] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
 

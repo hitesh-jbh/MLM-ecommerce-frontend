@@ -1,7 +1,6 @@
 import axios from "axios";
 
-// const BASE_URL = "https://mlm-ecommerce-backend-mme1.onrender.com";
-const BASE_URL = "http://13.50.55.165:3000";
+const BASE_URL = "https://mlm-ecommerce-backend-ldky.onrender.com";
 
 const api = axios.create({
   baseURL: BASE_URL,

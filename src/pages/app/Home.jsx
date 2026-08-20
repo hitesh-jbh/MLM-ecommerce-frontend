@@ -17,7 +17,7 @@ import Footer from "../../components/partials/footer/footer.jsx";
 import ErrorState from "./ErrorState.jsx";
 
 // Constants & Utils
-import { viewAllProducts } from "../../utils/service/apiService.js";
+import { viewAllProducts } from "../../utils/service/apiService";
 
 export const Home = () => {
   // 1. Fetch Main Categories (For Page Sections) सीधे API से

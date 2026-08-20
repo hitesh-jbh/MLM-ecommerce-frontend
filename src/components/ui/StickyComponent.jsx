@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import NormalButton from "../ui/NormalButton.jsx";
 import Icons from "../ui/Icon.jsx";
 import Modal from "../ui/Modal.jsx";
 
 const StickyComponent = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const location = useLocation();
 
-  function modalClick() {
-    navigate("/gentle");
-  }
+  // function modalClick() {
+  //   navigate("/gentle");
+  // }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,7 +35,7 @@ const StickyComponent = () => {
   return (
     <div className="fixed mb-[10px] bottom-0 left-0 w-full bg-transparent pointer-events-none z-[999] flex flex-col sm:flex-row justify-between items-center sm:items-end p-4 md:p-8 lg:p-10 gap-4">
       
-      <div className="pointer-events-auto w-full sm:w-auto order-2 sm:order-1">
+      {/* <div className="pointer-events-auto w-full sm:w-auto order-2 sm:order-1">
         <NormalButton 
           // content="BUY MORE, SAVE MORE | GET1FREE" 
           content="BUY NOW" 
@@ -44,7 +44,7 @@ const StickyComponent = () => {
           className="sm:w-auto text-[10px] md:text-[10px] lg:text-[12px] tracking-[0.15em] py-1 px-1 lg:px-4 shadow-2xl rounded-full md:rounded-lg cursor-pointer" 
           onClick={modalClick}
         />
-      </div>
+      </div> */}
 
       <div 
         className={`pointer-events-auto order-1 sm:order-2 self-end sm:self-auto transition-all duration-500 transform ${

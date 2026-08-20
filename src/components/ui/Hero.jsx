@@ -1,60 +1,119 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import api from "../../utils/api/axiosInstance.js";
+
+const fetchHero = async () => {
+  // 🚨 बस यहाँ ?type=hero जोड़ दिया है
+  const response = await api.get("/api/banners?type=hero");
+  return response.data.data;
+};
 
 const Hero = () => {
-  return (
-    <section className="relative w-full min-h-[70vh] md:min-h-[92vh] flex items-center overflow-hidden bg-ink">
-      {/* Background image */}
-      <div
-        className="absolute inset-0 bg-cover bg-[center_20%]"
-        style={{
-          backgroundImage:
-            "url('https://images.pexels.com/photos/19647000/pexels-photo-19647000.jpeg?auto=compress&cs=tinysrgb&w=1920')",
-        }}
-      />
-      {/* Gradient scrim for legibility */}
-      <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/55 to-ink/10" />
+  const {
+    data: heroSlides,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["heroContent"],
+    queryFn: fetchHero,
+  });
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 w-full">
-        <div className="max-w-xl">
-          <div className="flex items-center gap-3 mb-6">
-            <span className="gem-divider" />
-            <p className="text-[11px] md:text-xs tracking-[0.35em] uppercase text-champagne-light font-medium">
-              The Heritage Collection
-            </p>
-          </div>
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-          <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-light leading-[1.05] text-ivory mb-3">
-            Jewelry Worth
-          </h1>
-          <h1 className="font-display italic text-5xl md:text-6xl lg:text-7xl font-light leading-[1.05] text-champagne mb-8">
-            Passing Down.
-          </h1>
+  const activeSlides = Array.isArray(heroSlides) ? heroSlides : [];
 
-          <p className="text-sm md:text-base text-ivory/70 max-w-md mb-10 leading-relaxed">
-            Hallmarked gold and diamond pieces, handcrafted by India's finest
-            karigars — designed to be worn today and treasured for generations.
-          </p>
+  useEffect(() => {
+    if (activeSlides.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentIndex((prev) => (prev + 1) % activeSlides.length);
+      }, 7000);
+      return () => clearInterval(interval);
+    }
+  }, [activeSlides.length]);
 
-          <div className="flex items-center gap-5">
-            <Link to="/gentle">
-              <button className="bg-champagne text-ink px-9 py-3.5 text-xs tracking-[0.2em] uppercase font-semibold transition-all duration-300 hover:bg-champagne-light">
-                Shop Now
-              </button>
-            </Link>
-            <Link
-              to="/luxuria"
-              className="text-xs tracking-[0.2em] uppercase text-ivory border-b border-champagne/60 pb-1 hover:text-champagne transition-colors"
-            >
-              View Luxuria Edit
-            </Link>
-          </div>
-        </div>
+  if (isLoading) {
+    return (
+      <div className="max-w-9xl mx-auto px-4 my-6">
+        <div className="w-full h-[390px] md:h-[440px] bg-gray-200 animate-pulse rounded-[28px]"></div>
       </div>
+    );
+  }
 
-      {/* Thin gold baseline */}
-      <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-champagne to-transparent" />
-    </section>
+  if (isError || activeSlides.length === 0) return null;
+
+  const currentSlide = activeSlides[currentIndex];
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) =>
+      prev === 0 ? activeSlides.length - 1 : prev - 1,
+    );
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % activeSlides.length);
+  };
+
+  const targetLink = currentSlide.link || currentSlide.link_url || "/products";
+  const bgImage = currentSlide.image_url || currentSlide.image;
+
+  return (
+    <div className="max-w-9xl mx-auto px-4 my-6">
+      <section className="relative w-full h-[390px] md:h-[440px] flex items-center overflow-hidden rounded-[28px] bg-black shadow-lg">
+        
+        <Link to={targetLink} className="absolute inset-0 z-0">
+          <div
+            className="absolute inset-0 bg-cover bg-[center_20%] transition-all duration-1000 ease-in-out"
+            style={{ backgroundImage: `url('${bgImage}')` }}
+          />
+        </Link>
+        
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent pointer-events-none" />
+
+        <div className="relative z-10 max-w-3xl mx-6 md:mx-12 w-full">
+          <h1 className="font-serif text-3xl md:text-5xl font-light leading-tight text-white mb-4 uppercase tracking-wide">
+            {currentSlide.title}
+          </h1>
+          <p className="text-xs md:text-sm text-white/90 max-w-sm mb-8 leading-relaxed font-sans">
+            {currentSlide.subtitle}
+          </p>
+        </div>
+
+        {activeSlides.length > 1 && (
+          <>
+            <button
+              onClick={handlePrev}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-black flex items-center justify-center shadow-md transition-all"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <button
+              onClick={handleNext}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-black flex items-center justify-center shadow-md transition-all"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </>
+        )}
+
+        {activeSlides.length > 1 && (
+          <div className="absolute bottom-4 left-0 w-full flex items-center justify-center gap-2 z-20">
+            {activeSlides.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentIndex(idx)}
+                className={`transition-all duration-300 rounded-full ${
+                  idx === currentIndex
+                    ? "w-6 h-2 bg-white"
+                    : "w-2 h-2 bg-white/50"
+                }`}
+              />
+            ))}
+          </div>
+        )}
+      </section>
+    </div>
   );
 };
 

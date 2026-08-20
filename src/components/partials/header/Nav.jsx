@@ -1,9 +1,12 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../utils/slice/authSlice";
+import api from "../../../utils/api/axiosInstance.js";
+import logoImg from "../../../assets/Images/Dirora_logo.png";
+
 import {
   viewAllProducts,
   viewCartItem,
@@ -11,20 +14,19 @@ import {
   adminNotification,
   markRead,
   markAllRead,
-  viewNotification, // Integrated from your service
+  viewNotification,
 } from "../../../utils/service/apiService";
 import Icons from "../../ui/Icon";
-import { websiteName } from "../../../utils/constants";
 import { useQuery } from "@tanstack/react-query";
 import Card3Modi from "../../ui/Card3Modi";
-import { CheckCheck, Loader2, X } from "lucide-react";
+import { CheckCheck, Loader2, X, ChevronDown } from "lucide-react"; // Added ChevronDown for dropdowns
 
 export default function Nav() {
   // Rank Configurations
   const RANK_CONFIG = {
     gold: { icon: "solar:medal-ribbon-bold", color: "text-yellow-600" },
     silver: { icon: "solar:medal-star-bold", color: "text-gray-400" },
-    premium: { icon: "solar:star-bold", color: "text-purple-500" },
+    premium: { icon: "solar:star-bold", color: "text-dirora-purple" },
     default: { icon: "solar:user-bold", color: "text-gray-400" },
   };
 
@@ -34,7 +36,7 @@ export default function Nav() {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isActionLoading, setIsActionLoading] = useState(false);
 
-  // New States for Detail Modal
+  // States for Detail Modal
   const [selectedNotif, setSelectedNotif] = useState(null);
   const [isModalLoading, setIsModalLoading] = useState(false);
 
@@ -49,6 +51,23 @@ export default function Nav() {
 
   const isAdmin = user?.role === "super_admin" || user?.role === "admin";
   const isCustomer = user?.role === "user" || !isAdmin;
+
+  // --- DYNAMIC NESTED CATEGORIES LOGIC ---
+
+  // 1. Your Toggle Switch (Change to false when backend is ready)
+  const USE_MOCK_DATA = true;
+
+  const { data: categories = [], isLoading: isCategoriesLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const res = await api.get("/api/categories");
+      return res.data.data || res.data || [];
+    },
+  });
+
+  const activeCategories = useMemo(() => {
+    return categories;
+  }, [categories]);
 
   // --- NOTIFICATION LOGIC ---
   const { data: notifications = [], refetch: refreshNotifications } = useQuery({
@@ -74,10 +93,9 @@ export default function Nav() {
     try {
       const res = await viewNotification(token, notifId);
       setSelectedNotif(res.data?.data || res.data);
-      // Automatically refresh list to update unread status indicators
       refreshNotifications();
     } catch (error) {
-      toast.error("Failed to load details");
+      toast.error(error, "Failed to load details");
     } finally {
       setIsModalLoading(false);
     }
@@ -88,7 +106,7 @@ export default function Nav() {
       await markRead(token, notifId);
       refreshNotifications();
     } catch (error) {
-      toast.error("Failed to mark as read");
+      toast.error(error, "Failed to mark as read");
     }
   };
 
@@ -100,7 +118,7 @@ export default function Nav() {
       await refreshNotifications();
       toast.success(isAdmin ? "Admin alerts cleared" : "Notifications cleared");
     } catch (error) {
-      toast.error("Failed to update");
+      toast.error(error, "Failed to update");
     } finally {
       setIsActionLoading(false);
     }
@@ -135,14 +153,6 @@ export default function Nav() {
     );
   }, [searchQuery, allProducts]);
 
-  const dynamicCategories = useMemo(() => {
-    const set = new Set();
-    allProducts.forEach((p) => {
-      if (p.category) set.add(p.category);
-    });
-    return Array.from(set).slice(0, 4); // cap to keep the nav from getting crowded
-  }, [allProducts]);
-
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(e.target))
@@ -166,7 +176,7 @@ export default function Nav() {
   return (
     <div
       ref={searchRef}
-      className="sticky top-0 z-[100] w-full bg-white shadow-sm"
+      className="sticky top-0 z-[100] w-full bg-dirora-ivory shadow-sm"
     >
       <ToastContainer position="bottom-right" autoClose={2000} theme="light" />
 
@@ -175,18 +185,18 @@ export default function Nav() {
         <div className="fixed inset-0 z-[400] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div className="bg-white w-full max-w-lg rounded-sm shadow-2xl overflow-hidden border border-gray-100 animate-in fade-in zoom-in duration-200">
             <div className="p-6 border-b flex items-center justify-between">
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600">
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-dirora-purple">
                 Notification Detail
               </span>
               <button
                 onClick={() => setSelectedNotif(null)}
-                className="hover:rotate-90 transition-transform"
+                className="hover:rotate-90 transition-transform text-dirora-dark"
               >
                 <X size={20} />
               </button>
             </div>
             <div className="p-8">
-              <h2 className="text-xl font-bold mb-4 uppercase tracking-tight">
+              <h2 className="text-xl font-serif font-bold mb-4 uppercase tracking-tight text-dirora-dark">
                 {selectedNotif.title}
               </h2>
               <div className="bg-gray-50 p-5 border border-gray-100 rounded-sm mb-6">
@@ -203,7 +213,7 @@ export default function Nav() {
                 </p>
                 <button
                   onClick={() => setSelectedNotif(null)}
-                  className="px-8 py-2.5 bg-black text-white text-[10px] font-black uppercase tracking-widest hover:bg-zinc-800 transition-colors"
+                  className="px-8 py-2.5 bg-dirora-purple text-white text-[10px] font-black uppercase tracking-widest hover:bg-opacity-90 transition-colors"
                 >
                   Dismiss
                 </button>
@@ -224,18 +234,18 @@ export default function Nav() {
           <div className="flex flex-col h-full">
             <div className="p-6 border-b flex items-center justify-between">
               <div>
-                <h2 className="text-xs font-black uppercase tracking-[0.2em]">
+                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-dirora-dark">
                   {isAdmin ? "Admin Alerts" : "Notifications"}
                 </h2>
                 {pendingNotifications.length > 0 && (
-                  <p className="text-[10px] font-bold text-blue-600 uppercase mt-1">
+                  <p className="text-[10px] font-bold text-dirora-purple uppercase mt-1">
                     {pendingNotifications.length} New
                   </p>
                 )}
               </div>
               <button
                 onClick={() => setIsNotificationOpen(false)}
-                className="hover:rotate-90 transition-transform"
+                className="hover:rotate-90 transition-transform text-dirora-dark"
               >
                 <Icons icon="solar:close-circle-linear" size={24} />
               </button>
@@ -248,7 +258,7 @@ export default function Nav() {
                   disabled={
                     isActionLoading || pendingNotifications.length === 0
                   }
-                  className="text-[10px] font-bold uppercase text-blue-600 disabled:opacity-50 flex items-center gap-1"
+                  className="text-[10px] font-bold uppercase text-dirora-purple disabled:opacity-50 flex items-center gap-1"
                 >
                   {isActionLoading ? (
                     <Loader2 size={12} className="animate-spin" />
@@ -266,12 +276,12 @@ export default function Nav() {
                   <div
                     key={notif.id || notif._id}
                     onClick={() => handleViewDetails(notif.id || notif._id)}
-                    className={`p-4 rounded border cursor-pointer transition-all hover:border-blue-200 ${isUnread(notif) ? "bg-white border-blue-100 shadow-sm" : "bg-gray-50 opacity-60"}`}
+                    className={`p-4 rounded border cursor-pointer transition-all hover:border-dirora-purple/30 ${isUnread(notif) ? "bg-white border-dirora-purple/20 shadow-sm" : "bg-gray-50 opacity-60 border-transparent"}`}
                   >
                     <div className="flex justify-between items-start gap-2">
                       <div className="flex-1">
                         <p
-                          className={`text-xs font-bold mb-1 ${isUnread(notif) ? "text-black" : "text-gray-500"}`}
+                          className={`text-xs font-bold mb-1 ${isUnread(notif) ? "text-dirora-dark" : "text-gray-500"}`}
                         >
                           {notif.title}
                         </p>
@@ -282,10 +292,10 @@ export default function Nav() {
                       {isUnread(notif) && (
                         <button
                           onClick={(e) => {
-                            e.stopPropagation(); // Prevent opening modal when clicking just mark read
+                            e.stopPropagation();
                             handleMarkRead(notif.id || notif._id);
                           }}
-                          className="text-[9px] font-black text-blue-600 uppercase"
+                          className="text-[9px] font-black text-dirora-purple uppercase"
                         >
                           Read
                         </button>
@@ -302,7 +312,7 @@ export default function Nav() {
                       {isModalLoading && (
                         <Loader2
                           size={10}
-                          className="animate-spin text-blue-500"
+                          className="animate-spin text-dirora-purple"
                         />
                       )}
                     </div>
@@ -310,8 +320,12 @@ export default function Nav() {
                 ))
               ) : (
                 <div className="h-full flex flex-col items-center justify-center opacity-20">
-                  <Icons icon="solar:bell-bing-bold" size={48} />
-                  <p className="text-[10px] font-black uppercase mt-2">
+                  <Icons
+                    icon="solar:bell-bing-bold"
+                    size={48}
+                    className="text-dirora-dark"
+                  />
+                  <p className="text-[10px] font-black uppercase mt-2 text-dirora-dark">
                     Inbox Empty
                   </p>
                 </div>
@@ -321,69 +335,118 @@ export default function Nav() {
         </div>
       </div>
 
-      {/* NAV CONTENT */}
-      <nav className="border-b border-gray-100 px-4 sm:px-8 lg:px-16 py-4 bg-white">
+      {/* NAV CONTENT (DIRORA BRANDING & DYNAMIC SUB-CATEGORIES) */}
+      <nav className="border-b border-gray-200 px-4 sm:px-8 lg:px-16 py-4 bg-dirora-ivory relative z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
+          {/* DIRORA LOGO */}
           <span
             onClick={() => navigate("/")}
             className="flex items-center gap-3 cursor-pointer"
           >
-            <div className="w-10 h-10 bg-black rounded flex items-center justify-center text-white font-black text-sm">
-              {websiteName?.slice(0, 3).toUpperCase()}
+            <img
+              src={logoImg}
+              alt="Dirora.in"
+              className="h-[75px] w-auto object-contain"
+              onError={(e) => {
+                e.target.style.display = "none";
+                e.target.nextSibling.style.display = "flex";
+              }}
+            />
+            <div style={{ display: "none" }} className="items-center gap-2">
+              <div className="w-10 h-10 bg-dirora-purple rounded flex items-center justify-center text-white font-black text-sm">
+                D
+              </div>
+              <span className="font-serif font-bold text-xl uppercase tracking-widest text-dirora-dark">
+                Dirora.in
+              </span>
             </div>
-            <span className="font-bold text-xl hidden sm:block uppercase tracking-tight">
-              {websiteName}
-            </span>
           </span>
 
-          <div className="hidden md:flex items-center gap-8 text-[12px] font-bold uppercase tracking-widest text-gray-900">
+          {/* DYNAMIC CATEGORY MENU WITH DROPDOWNS */}
+          <div className="hidden md:flex items-center gap-8 text-[13px] font-serif uppercase tracking-widest text-dirora-dark">
+            {/* Home (Static) */}
             <span
               onClick={() => navigate("/")}
-              className="cursor-pointer hover:opacity-50 transition-opacity"
+              className="cursor-pointer hover:text-dirora-purple transition-colors duration-300"
             >
               Home
             </span>
+
+            {isCategoriesLoading ? (
+              <div className="flex gap-6">
+                <div className="w-20 h-4 bg-gray-200 animate-pulse rounded"></div>
+                <div className="w-24 h-4 bg-gray-200 animate-pulse rounded"></div>
+              </div>
+            ) : (
+              activeCategories.map((cat) => (
+                <div key={cat.id} className="relative group py-4">
+                  <span
+                    onClick={() => navigate(`/collections/${cat.slug}`)}
+                    className="flex items-center gap-1 cursor-pointer hover:text-dirora-purple transition-colors duration-300"
+                  >
+                    {cat.name}
+                    {cat.subCategories && cat.subCategories.length > 0 && (
+                      <ChevronDown
+                        size={14}
+                        className="group-hover:rotate-180 transition-transform duration-300"
+                      />
+                    )}
+                  </span>
+
+                  {/* Dropdown Menu for Subcategories */}
+                  {cat.subCategories && cat.subCategories.length > 0 && (
+                    <div className="absolute top-full left-0 hidden group-hover:flex flex-col bg-white border border-gray-100 shadow-xl rounded-sm min-w-[200px] py-2 z-50">
+                      {cat.subCategories.map((sub) => (
+                        <span
+                          key={sub.id}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/collections/${cat.slug}/${sub.slug}`);
+                          }}
+                          className="px-6 py-3 text-xs font-sans tracking-wide text-gray-700 hover:text-dirora-purple hover:bg-gray-50 cursor-pointer transition-colors"
+                        >
+                          {sub.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
+
+            {/* Sale (Static Link to Dynamic Banner/Page) */}
             <span
-              onClick={() => navigate("/gentle")}
-              className="cursor-pointer hover:opacity-50 transition-opacity"
+              onClick={() => navigate("/sale")}
+              className="cursor-pointer text-red-600 font-bold hover:text-red-700 transition-colors duration-300"
             >
-              Gentle Trends
+              Sale
             </span>
-            <span
-              onClick={() => navigate("/luxuria")}
-              className="cursor-pointer hover:opacity-50 transition-opacity"
-            >
-              Luxuria
-            </span>
+
+            {/* About (Static) */}
             <span
               onClick={() => navigate("/about")}
-              className="cursor-pointer hover:text-gray-500 transition-colors"
+              className="cursor-pointer hover:text-dirora-purple transition-colors duration-300"
             >
-              About Us
-            </span>
-            <span
-              onClick={() => navigate("/contact")}
-              className="cursor-pointer hover:text-gray-500 transition-colors"
-            >
-              Contact
+              About
             </span>
           </div>
 
-          <div className="flex items-center gap-5 sm:gap-7">
+          {/* RIGHT ACTIONS */}
+          <div className="flex items-center gap-5 sm:gap-7 text-dirora-dark">
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="hover:scale-110 transition-transform"
+              className="hover:text-dirora-purple hover:scale-110 transition-all"
             >
               <Icons icon="solar:magnifer-linear" size={24} />
             </button>
 
             <button
               onClick={() => setIsNotificationOpen(true)}
-              className="relative hover:scale-110 transition-transform"
+              className="relative hover:text-dirora-purple hover:scale-110 transition-all"
             >
               <Icons icon="solar:bell-linear" size={24} />
               {pendingNotifications.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] font-black w-4 h-4 flex items-center justify-center rounded-full border-2 border-white">
+                <span className="absolute -top-1 -right-1 bg-dirora-purple text-white text-[8px] font-black w-4 h-4 flex items-center justify-center rounded-full border-2 border-dirora-ivory">
                   {pendingNotifications.length}
                 </span>
               )}
@@ -402,7 +465,7 @@ export default function Nav() {
                     onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
                     className="p-1 focus:outline-none"
                   >
-                    <div className="w-9 h-9 rounded-full border-2 border-black p-0.5 bg-gray-50 overflow-hidden hover:scale-105 transition">
+                    <div className="w-9 h-9 rounded-full border-2 border-dirora-purple p-0.5 bg-white overflow-hidden hover:scale-105 transition">
                       {user.imageUrl ? (
                         <img
                           src={user.imageUrl}
@@ -410,7 +473,11 @@ export default function Nav() {
                           className="w-full h-full object-cover rounded-full"
                         />
                       ) : (
-                        <Icons icon="solar:user-bold" size={18} />
+                        <Icons
+                          icon="solar:user-bold"
+                          size={18}
+                          className="text-dirora-purple mx-auto mt-1"
+                        />
                       )}
                     </div>
                   </button>
@@ -422,7 +489,7 @@ export default function Nav() {
                       <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-bold mb-1">
                         Account
                       </p>
-                      <p className="text-black font-bold text-sm truncate">
+                      <p className="text-dirora-dark font-serif font-bold text-sm truncate">
                         {user.firstName} {user.lastName}
                       </p>
                       <div className="flex items-center gap-1.5 mt-1">
@@ -455,7 +522,7 @@ export default function Nav() {
                             navigate("/admin/dashboard");
                             setIsProfileMenuOpen(false);
                           }}
-                          className="cursor-pointer flex items-center gap-3 px-3 py-2 text-xs font-bold uppercase text-blue-600 hover:bg-blue-50 rounded"
+                          className="cursor-pointer flex items-center gap-3 px-3 py-2 text-xs font-bold uppercase text-dirora-purple hover:bg-purple-50 rounded"
                         >
                           <Icons icon="solar:widget-bold" size={16} />
                           <span>Admin Panel</span>
@@ -484,7 +551,7 @@ export default function Nav() {
               ) : (
                 <span
                   onClick={() => navigate("/login")}
-                  className="p-2 -m-2 block cursor-pointer"
+                  className="p-2 -m-2 block cursor-pointer hover:text-dirora-purple transition-colors"
                 >
                   <Icons icon="solar:user-linear" size={24} />
                 </span>
@@ -492,13 +559,13 @@ export default function Nav() {
             </div>
 
             {isLoggedIn && isCustomer && (
-              <span className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-gray-50 border rounded-full text-[11px] font-black transition-colors hover:bg-gray-100">
+              <span className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-full text-[11px] font-black transition-colors hover:bg-gray-50">
                 <Icons
                   icon="solar:wallet-2-bold"
                   size={18}
-                  className="text-zinc-700"
+                  className="text-dirora-purple"
                 />
-                <span>
+                <span className="text-dirora-dark">
                   ₹{(user.walletBalance || 0).toLocaleString("en-IN")}
                 </span>
               </span>
@@ -506,11 +573,11 @@ export default function Nav() {
 
             <span
               onClick={() => navigate("/cart")}
-              className="relative hover:scale-110 transition-transform cursor-pointer"
+              className="relative hover:text-dirora-purple hover:scale-110 transition-all cursor-pointer"
             >
               <Icons icon="solar:cart-large-2-linear" size={26} />
               {cartItemsLength > 0 && (
-                <span className="absolute -top-1 -right-1 bg-black text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full border-2 border-white">
+                <span className="absolute -top-1 -right-1 bg-dirora-purple text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full border-2 border-dirora-ivory">
                   {cartItemsLength}
                 </span>
               )}
@@ -525,43 +592,43 @@ export default function Nav() {
         onClick={() => setIsSearchOpen(false)}
       >
         <div
-          className={`absolute top-0 left-0 w-full bg-white shadow-2xl overflow-hidden transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] origin-top ${isSearchOpen ? "translate-y-0" : "-translate-y-full"}`}
+          className={`absolute top-0 left-0 w-full bg-dirora-ivory shadow-2xl overflow-hidden transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] origin-top ${isSearchOpen ? "translate-y-0" : "-translate-y-full"}`}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 pt-8 md:pt-12 pb-16 md:pb-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 pt-6 md:pt-8 pb-8 md:pb-12">
             {/* Header & Close */}
-            <div className="flex justify-between items-center mb-10 md:mb-16">
-              <span className="font-black text-xl uppercase tracking-tighter">
-                {websiteName}
+            <div className="flex justify-between items-center mb-6 md:mb-8">
+              <span className="font-serif font-black text-xl uppercase tracking-tighter text-dirora-dark">
+                Dirora.in
               </span>
               <button
                 onClick={() => setIsSearchOpen(false)}
-                className="group flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-black transition-colors"
+                className="group flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-dirora-purple transition-colors"
               >
                 <span>Close</span>
                 <Icons
                   icon="solar:close-circle-linear"
-                  size={28}
+                  size={24}
                   className="group-hover:rotate-90 transition-transform duration-300"
                 />
               </button>
             </div>
 
-            {/* Clean Input */}
-            <div className="relative group max-w-4xl mx-auto mb-12 md:mb-20">
+            {/* Clean Input (Resized for Sleek Look) */}
+            <div className="relative group max-w-3xl mx-auto mb-8 md:mb-10">
               <Icons
                 icon="solar:magnifer-linear"
-                size={28}
-                className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-300"
+                size={22}
+                className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400"
               />
               <input
                 autoFocus={isSearchOpen}
                 placeholder="What are you looking for?"
-                className="w-full text-2xl md:text-5xl font-light pl-12 md:pl-16 border-b border-gray-200 py-4 md:py-6 outline-none text-black placeholder-gray-300 transition-colors focus:border-black"
+                className="w-full bg-transparent text-lg md:text-2xl font-serif font-light pl-10 md:pl-12 border-b border-gray-300 py-3 md:py-4 outline-none text-dirora-dark placeholder-gray-400 transition-colors focus:border-dirora-purple"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <div className="absolute left-0 bottom-0 h-[2px] w-0 bg-black transition-all duration-700 ease-out group-focus-within:w-full"></div>
+              <div className="absolute left-0 bottom-0 h-[2px] w-0 bg-dirora-purple transition-all duration-700 ease-out group-focus-within:w-full"></div>
             </div>
 
             {/* Results Grid */}
@@ -584,7 +651,7 @@ export default function Nav() {
                     <Icons
                       icon="solar:box-minimalistic-linear"
                       size={48}
-                      className="mb-4 text-gray-300"
+                      className="mb-4 text-gray-400"
                     />
                     <p className="text-[10px] md:text-xs font-black uppercase tracking-widest text-gray-500 text-center">
                       {searchQuery.length < 2

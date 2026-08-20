@@ -1,5 +1,10 @@
 import React, { lazy, Suspense } from "react";
-import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Outlet,
+  useLocation,
+} from "react-router-dom"; // useLocation इम्पोर्ट किया
 import { SWRConfig } from "swr";
 import { Provider } from "react-redux";
 
@@ -15,8 +20,9 @@ import CheckoutPage from "./pages/app/CheckoutPage.jsx";
 import { fetcher } from "./utils/api/axiosInstance.js";
 import AddBankDetails from "./pages/user/AddBankDetail.jsx";
 import AddBankDetail from "./pages/user/AddBankDetail.jsx";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import SaleBanner from "./components/ui/SaleBanner.jsx";
 
 // --- LAZY LOADED PAGES ---
 
@@ -36,6 +42,7 @@ const OrderSuccess = lazy(() => import("./pages/app/OrderSuccess.jsx"));
 
 // Product & Orders
 const InfoProd = lazy(() => import("./pages/product/InfoProd.jsx"));
+const ProductListing = lazy(() => import("./pages/product/ProductListing.jsx"));
 const YourOrder = lazy(() => import("./pages/order/YourOrder.jsx"));
 const OrderHistory = lazy(() => import("./pages/order/OrderHistory.jsx"));
 const ViewOrder = lazy(() => import("./pages/order/ViewOrder.jsx"));
@@ -79,6 +86,7 @@ const Notifications = lazy(() => import("./pages/admin/Notification.jsx"));
 const Settings = lazy(() => import("./pages/admin/Settings.jsx"));
 const ReferralCodeMgt = lazy(() => import("./pages/admin/ReferralCodeMgt.jsx"));
 const HierachyMgt = lazy(() => import("./pages/admin/HierachyMgt.jsx"));
+const HeroBannersMgt = lazy(() => import("./pages/admin/HeroBannersMgt.jsx"));
 
 // Utils/Misc
 const ErrorPage = lazy(() => import("./pages/error/Error.jsx"));
@@ -89,6 +97,10 @@ const HierachyGraph = lazy(
   () => import("./components/partials/widget/chart/HierachyGraph.jsx"),
 );
 const Modal = lazy(() => import("./components/ui/Modal.jsx"));
+const CategoryStripMgt = lazy(
+  () => import("./pages/admin/CategoryStripMgt.jsx"),
+);
+const SaleBannersMgt = lazy(() => import("./pages/admin/SaleBannersMgt.jsx"));
 
 const PageLoader = () => (
   <div className="h-screen flex items-center justify-center bg-white font-black uppercase text-xs tracking-widest">
@@ -97,12 +109,16 @@ const PageLoader = () => (
 );
 
 const AppLayout = () => {
+  // 1. यहाँ से हम चेक कर रहे हैं कि यूज़र एडमिन पैनल में है या नहीं
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
   return (
     <SWRConfig value={{ refreshInterval: 3000, fetcher: fetcher }}>
       <Provider store={appStore}>
         <div className="app min-h-screen flex flex-col">
           <ScrollToTop />
-          <ToastContainer 
+          <ToastContainer
             position="top-right"
             autoClose={3000}
             hideProgressBar={false}
@@ -112,16 +128,21 @@ const AppLayout = () => {
             pauseOnFocusLoss
             draggable
             pauseOnHover
-            theme="colored" // or "light" / "dark"
+            theme="colored"
           />
-          <Nav />
+
+          {/* 2. अगर एडमिन राउट नहीं है, तभी ये पब्लिक चीज़ें दिखेंगी */}
+          {!isAdminRoute && <SaleBanner />}
+          {!isAdminRoute && <Nav />}
+
           <main className="flex-grow">
             <Suspense fallback={<PageLoader />}>
               <Outlet />
             </Suspense>
           </main>
+
           {/* <Footer /> */}
-          <StickyComponent />
+          {!isAdminRoute && <StickyComponent />}
         </div>
       </Provider>
     </SWRConfig>
@@ -142,7 +163,6 @@ const appRouter = createBrowserRouter([
       { path: "signup", element: <SignUp /> },
       { path: "reset-password", element: <ResetPassword /> },
       { path: "edit-profile", element: <EditProfile /> },
-      // { path: "payment", element: <PaymentMethods /> },
 
       // USER ROUTES
       {
@@ -152,7 +172,7 @@ const appRouter = createBrowserRouter([
           { index: true, element: <Profile /> },
           { path: "me", element: <Profile /> },
           { path: "your-order", element: <YourOrder /> },
-              { path: "wallet", element: <UserWallet /> },
+          { path: "wallet", element: <UserWallet /> },
           { path: "address", element: <EditAddress /> },
           { path: "payment", element: <PaymentMethods /> },
           { path: "account-setting", element: <AccountSetting /> },
@@ -163,12 +183,11 @@ const appRouter = createBrowserRouter([
         ],
       },
 
-      // ADMIN PROTECTED ROUTES (AdminProfile acts as Layout)
+      // ADMIN PROTECTED ROUTES
       {
         path: "admin",
         element: (
           <Suspense fallback={<PageLoader />}>
-            {/* <AdminProfile /> */}
             <AdminProtectedRoute>
               <AdminProfile />
             </AdminProtectedRoute>
@@ -180,6 +199,9 @@ const appRouter = createBrowserRouter([
           { path: "adminProfile", element: <AdminPro /> },
           { path: "orderoverview", element: <OrderManagement /> },
           { path: "product", element: <ProductMgt /> },
+          { path: "storefront/hero", element: <HeroBannersMgt /> },
+          { path: "storefront/categories", element: <CategoryStripMgt /> },
+          { path: "storefront/sales", element: <SaleBannersMgt /> },
           { path: "comission", element: <CommissionMgt /> },
           { path: "comission/set", element: <SetCommission /> },
           { path: "comission/rank", element: <Rank /> },
@@ -196,12 +218,15 @@ const appRouter = createBrowserRouter([
       },
 
       // SHOPPING & ORDERS
+      { path: "products", element: <ProductListing /> },
+      { path: "collections/:categorySlug", element: <ProductListing /> },
+      { path: "collections/:categorySlug/:subCategorySlug", element: <ProductListing /> },
       { path: "cart", element: <Cart /> },
       { path: "order-history", element: <OrderHistory /> },
       { path: "view-order/:id", element: <ViewOrder /> },
       { path: "product/:id", element: <InfoProd /> },
-      { path: "/checkout", element: <CheckoutPage /> },
-      { path: "/order-success", element: <OrderSuccess /> },
+      { path: "checkout", element: <CheckoutPage /> },
+      { path: "order-success", element: <OrderSuccess /> },
       { path: "your-order/:orderId", element: <TrackPackage /> },
       { path: "write-review/:productId", element: <WriteReview /> },
       { path: "wallet-balance", element: <WalletBalance /> },

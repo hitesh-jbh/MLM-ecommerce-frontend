@@ -111,7 +111,7 @@ const OrderCard = ({ order, refreshOrders }) => {
         <div className="text-right">
           <p className="text-[10px] text-black font-bold uppercase">Order ID: #{order.id}</p>
           <div className="flex items-center gap-4 mt-1">
-            <Link to={`/view-order/${order.id}`} className="text-xs text-blue-600 font-bold hover:text-blue-800 transition-colors">
+            <Link to={`/view-order/${order.id || order._id}`} className="text-xs text-blue-600 font-bold hover:text-blue-800 transition-colors">
               View Details
             </Link>
             <div className="h-3 w-[1px] bg-gray-300"></div>

@@ -30,19 +30,19 @@ const ProductCarousel = ({ title, products }) => {
 
       <Swiper
         modules={[Navigation]}
-        spaceBetween={12}
+        spaceBetween={16}
         slidesPerView={2}
+        breakpoints={{
+          640: { slidesPerView: 2.5, spaceBetween: 16 },
+          768: { slidesPerView: 3, spaceBetween: 20 },
+          1024: { slidesPerView: 4, spaceBetween: 20 },
+          1280: { slidesPerView: 5, spaceBetween: 24 },
+        }}
         navigation={{
           prevEl,
           nextEl,
         }}
-        breakpoints={{
-          768: { slidesPerView: 2, spaceBetween: 20 },
-          1024: { slidesPerView: 3, spaceBetween: 25 },
-          1280: { slidesPerView: 4, spaceBetween: 30 },
-        }}
         onInit={(swiper) => {
-          // Links custom buttons to Swiper instance on initialization
           swiper.params.navigation.prevEl = prevEl;
           swiper.params.navigation.nextEl = nextEl;
           swiper.navigation.init();

@@ -1,269 +1,207 @@
-import React, { useRef } from 'react'; 
-import { useQuery, useQueryClient } from '@tanstack/react-query'; 
-import { ShoppingBag, BellRing } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useMemo, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Heart, ShoppingCart, Loader2 } from 'lucide-react'; 
 import { useSelector } from 'react-redux';
-import Icons from '../ui/Icon.jsx';
-import { getWishlist, addToWishlist, removeToWishlist, addToCart } from '../../utils/service/apiService.js';
+import { useQueryClient, useQuery } from '@tanstack/react-query';
+import { addToCart, addToWishlist, removeToWishlist, getWishlist } from '../../utils/service/apiService.js';
 import { toast } from 'react-toastify';
 
-const Card3Modi = ({ product }) => {
+const ProductCard = ({ product }) => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient(); 
+  const queryClient = useQueryClient();
   const token = useSelector((state) => state.auth?.token);
+
+  const [isHovered, setIsHovered] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
   
-  // --- Throttling Refs ---
   const lastWishlistClick = useRef(0);
-  const lastCartClick = useRef(0);
-  const THROTTLE_DELAY = 1000; // 1 second limit
+  const THROTTLE_DELAY = 1000;
 
+  const defaultImage =
+    product?.thumbnail_url ||
+    product?.images?.[0]?.image_url ||
+    product?.images?.[0] ||
+    product?.image ||
+    "https://via.placeholder.com/400x500?text=No+Image";
+
+  const hoverImage =
+    product?.images?.[1]?.image_url ||
+    product?.images?.[1] ||
+    defaultImage;
+  
+  const productName = product?.name || "Product";
+  const productPrice = product?.price || 0;
+  const originalPrice = product?.mrp || null;
+  const productId = product?.id || product?._id;
+
+  const isOutOfStock = (product?.stock ?? 1) <= 0;
+
+  const discountPercent =
+    originalPrice && originalPrice > productPrice
+      ? Math.round(((originalPrice - productPrice) / originalPrice) * 100)
+      : null;
+
+  // --- Fetch Wishlist Data ---
   const { data: wishlistData } = useQuery({
-    queryKey: ["wishlist", token],
-    queryFn: () => getWishlist(token).then(res => res.data.items || res.data.data || []),
-    enabled: !!token
+      queryKey: ["wishlist", token],
+      queryFn: () => getWishlist(token).then(res => res.data.items || res.data.data || []),
+      enabled: !!token
   });
+  
+  // चेक करें कि क्या प्रोडक्ट पहले से विशलिस्ट में है
+  const isLiked = useMemo(() => {
+      return wishlistData?.some((item) => {
+          const itemID = item.product_id || item._id || item.id || item.product?.id;
+          return String(itemID) === String(productId);
+      }) ?? false;
+  }, [wishlistData, productId]);
 
-  const productId = product.product_id || product._id || product.id;
-  const isOutOfStock = product?.stock <= 0;
-
-  const isLiked = wishlistData?.some((item) => {
-    const itemID = item.product_id || item._id || item.id || item.product?.id;
-    return String(itemID) === String(productId);
-  }) ?? false;
-
-  // --- Throttled Wishlist Handler ---
+  // --- Wishlist Handler with Real API ---
   const handleWishlistToggle = async (e) => {
-    e.stopPropagation();
-    
+    e.preventDefault(); 
+    e.stopPropagation(); 
+
     const now = Date.now();
     if (now - lastWishlistClick.current < THROTTLE_DELAY) return;
     lastWishlistClick.current = now;
 
-    if (!token) {
-      toast.warning("Please login to manage wishlist");
-      return;
-    }
+    if (!token) return toast.warning("Please login first");
 
-    const toastId = toast.loading(isLiked ? "Removing..." : "Adding...");
+    const toastId = toast.loading(isLiked ? "Removing from wishlist..." : "Adding to wishlist...");
     
     try {
-      if (isLiked) {
-        await removeToWishlist(token, productId);
-        toast.update(toastId, { render: "Removed!", type: "success", isLoading: false, autoClose: 2000, closeButton: true });
-      } else {
-        await addToWishlist(token, productId);
-        toast.update(toastId, { render: "Added!", type: "success", isLoading: false, autoClose: 2000, closeButton: true });
-      }
-      queryClient.invalidateQueries({ queryKey: ["wishlist", token] }); 
+        if (isLiked) {
+            await removeToWishlist(token, productId);
+        } else {
+            await addToWishlist(token, productId);
+        }
+        
+        queryClient.invalidateQueries({ queryKey: ["wishlist", token] });
+
+        toast.update(toastId, { 
+          render: isLiked ? "Removed from wishlist" : "Added to wishlist!", 
+          type: "success", 
+          isLoading: false, 
+          autoClose: 2000, 
+          closeButton: true 
+        });
     } catch (error) {
-      toast.update(toastId, { render: "Action failed", type: "error", isLoading: false, autoClose: 3000, closeButton: true });
+        console.error("Wishlist Error:", error);
+        toast.update(toastId, { 
+          render: "Failed to update wishlist", 
+          type: "error", 
+          isLoading: false, 
+          autoClose: 2000, 
+          closeButton: true 
+        });
     }
   };
 
-  // --- Throttled Add to Cart Handler ---
-  const handleAddItem = async (e) => {
+  // --- Add to Cart Handler ---
+  const handleQuickAddToCart = async (e) => {
+    e.preventDefault(); 
     e.stopPropagation();
-    
-    const now = Date.now();
-    if (now - lastCartClick.current < THROTTLE_DELAY) return; // Prevent spamming cart
-    lastCartClick.current = now;
 
+    if (!token) return navigate("/login");
     if (isOutOfStock) return;
-    if (!token) {
-      toast.warning("Please login to add items to cart");
-      return;
-    }
 
+    setIsAdding(true);
     const toastId = toast.loading("Adding to cart...");
+
     try {
       await addToCart(token, productId, 1);
       queryClient.invalidateQueries({ queryKey: ["cart", token] }); 
+
       toast.update(toastId, { 
-        render: "Added to cart!", 
+        render: "Successfully added to cart!", 
         type: "success", 
         isLoading: false, 
-        autoClose: 2000,
-        closeButton: true 
+        autoClose: 2000, 
+        closeButton: true
       });
     } catch (error) {
+      console.error("Cart Error:", error);
       toast.update(toastId, { 
         render: "Failed to add item", 
         type: "error", 
-        isLoading: false, 
-        autoClose: 3000,
-        closeButton: true 
+        isLoading: false,
+        autoClose: 2000,
+        closeButton: true
       });
+    } finally {
+      setIsAdding(false);
     }
   };
 
   return (
-    <div className="group relative flex flex-col w-full bg-white rounded-[32px] border border-gray-100 shadow-sm transition-all duration-500 overflow-hidden hover:shadow-2xl hover:-translate-y-1">
-      {/* Product Image Section */}
-      <div onClick={() => navigate(`/product/${productId}`)} className="relative aspect-[4/5] m-2 overflow-hidden rounded-[24px] bg-[#F7F7F7] cursor-pointer">
+    <div 
+      className="relative flex flex-col bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* टॉप बैज */}
+      {discountPercent && (
+        <div className="absolute top-3 left-3 z-10">
+          <span className="bg-purple-50 text-purple-700 border border-purple-100 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">
+            {discountPercent}% OFF
+          </span>
+        </div>
+      )}
+      
+      {/* विशलिस्ट बटन - अब असली API और लाल रंग (isLiked) के साथ */}
+      <button 
+        onClick={handleWishlistToggle}
+        className={`absolute top-3 right-3 z-20 w-8 h-8 backdrop-blur-sm rounded-full flex items-center justify-center transition-all shadow-sm cursor-pointer ${isLiked ? 'bg-red-50 text-red-500' : 'bg-white/80 text-gray-400 hover:text-red-500 hover:bg-white'}`}
+      >
+        <Heart 
+          size={18} 
+          className={`transition-colors duration-300 ${isLiked ? "fill-red-500 text-red-500" : (isHovered ? "fill-red-50 text-red-400" : "")}`} 
+        />
+      </button>
+
+      {/* इमेज कंटेनर */}
+      <Link to={`/product/${product?.slug || product?.id}`} className="relative w-full aspect-[3/4] overflow-hidden bg-gray-50 block">
         <img 
-          src={product.thumbnail_url || 'https://dummyimage.com/400x500'} 
-          alt={product.name} 
-          className={`h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110 ${isOutOfStock ? 'grayscale-[0.5] opacity-80' : ''}`} 
+          src={isHovered ? hoverImage : defaultImage} 
+          alt={productName} 
+          className={`w-full h-full object-cover object-center transition-transform duration-700 ease-in-out ${isHovered ? 'scale-105' : 'scale-100'}`}
         />
         
-        {/* Wishlist Button */}
         <button 
-          onClick={handleWishlistToggle} 
-          className={`absolute top-4 right-4 p-2.5 backdrop-blur-md rounded-full transition-all z-20 ${
-            isLiked ? "bg-red-50 text-red-500" : "bg-white/90 text-gray-400"
-          }`}
+          onClick={handleQuickAddToCart}
+          disabled={isOutOfStock || isAdding}
+          className={`absolute bottom-3 right-3 z-20 w-11 h-11 flex items-center justify-center bg-white text-dirora-dark rounded-full shadow-lg hover:bg-dirora-purple hover:text-white transition-all duration-300 disabled:opacity-50 ${isHovered ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}
+          title="Add to Cart"
         >
-          <Icons icon={isLiked ? "solar:heart-bold" : "solar:heart-linear"} size={20} />
-        </button>
-        
-        {/* Throttled Cart Button */}
-        <div className="absolute inset-x-0 bottom-4 px-4 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 hidden lg:block z-20">
-          {isOutOfStock ? (
-            <div className="w-full bg-gray-100/90 backdrop-blur-sm py-3.5 rounded-xl flex items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-widest text-gray-500 border border-gray-200 cursor-not-allowed">
-              <BellRing size={16} /> Out of Stock
-            </div>
+          {isAdding ? (
+            <Loader2 size={20} className="animate-spin" />
           ) : (
-            <button 
-              onClick={handleAddItem} 
-              className="w-full bg-white py-3.5 rounded-xl flex items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-widest text-gray-900 shadow-2xl hover:bg-black hover:text-white transition-all border border-gray-100"
-            >
-              <ShoppingBag size={16} /> Add to Cart
-            </button>
+            <ShoppingCart size={20} className={isOutOfStock ? "opacity-50" : ""} />
           )}
-        </div>
-      </div>
+        </button>
+      </Link>
 
-      <div className="p-5 pt-2 flex-1 flex flex-col">
-        <h3 className="text-base font-bold text-gray-900 mb-1 line-clamp-2">{product.name}</h3>
-        <div className="mt-auto flex items-center justify-between">
-          <span className="text-lg font-black text-black">Rs. {product.price}</span>
-          
-          <div className={`text-[9px] font-bold px-2.5 py-1 rounded-full uppercase ${
-            !isOutOfStock ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
-          }`}>
-            {!isOutOfStock ? 'In Stock' : 'Out of Stock'}
-          </div>
+      {/* कॉम्पैक्ट प्रोडक्ट डिटेल्स */}
+      <div className="p-3 flex flex-col gap-1">
+        <Link to={`/product/${product?.slug || product?.id}`}>
+          <h3 className={`font-medium text-xs md:text-sm line-clamp-1 transition-colors ${isHovered ? 'text-dirora-purple' : 'text-gray-800'}`}>
+            {productName}
+          </h3>
+        </Link>
+        
+        <div className="flex items-center gap-1.5 mt-0.5">
+          <span className="text-gray-900 font-bold text-sm md:text-base">
+            ₹{Number(productPrice).toLocaleString()}
+          </span>
+          {originalPrice && (
+            <span className="text-gray-400 text-xs line-through">
+              ₹{Number(originalPrice).toLocaleString()}
+            </span>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default Card3Modi;
-
-
-// import React from 'react';
-// import useSWR, { useSWRConfig } from 'swr'; 
-// import { ShoppingBag, BellRing } from 'lucide-react'; // Added BellRing for Out of Stock feel
-// import { useNavigate } from 'react-router-dom';
-// import { useSelector } from 'react-redux';
-// import Icons from '../ui/Icon.jsx';
-// import { getWishlist, addToWishlist, removeToWishlist, addToCart } from '../../utils/service/apiService.js';
-// import { toast } from 'react-toastify';
-
-// const Card3Modi = ({ product }) => {
-//   const navigate = useNavigate();
-//   const { mutate } = useSWRConfig(); 
-//   const token = useSelector((state) => state.auth?.token);
-
-//   const { data: wishlistData } = useSWR(
-//     token ? ["/api/wishlist", token] : null,
-//     () => getWishlist(token).then(res => res.data.items || res.data.data || [])
-//   );
-
-//   const productId = product.product_id || product._id || product.id;
-//   const isOutOfStock = product?.stock <= 0; // Logic for Out of Stock
-
-//   const isLiked = wishlistData?.some((item) => {
-//     const itemID = item.product_id || item._id || item.id || item.product?.id;
-//     return String(itemID) === String(productId);
-//   }) ?? false;
-
-//   const handleWishlistToggle = async (e) => {
-//     e.stopPropagation();
-//     if (!token) {
-//       toast.warning("Please login to manage wishlist");
-//       return;
-//     }
-//     const loadingToast = toast.loading(isLiked ? "Removing..." : "Adding...");
-//     try {
-//       if (isLiked) {
-//         await removeToWishlist(token, productId);
-//         toast.update(loadingToast, { render: "Removed!", type: "success", isLoading: false, autoClose: 2000 });
-//       } else {
-//         await addToWishlist(token, productId);
-//         toast.update(loadingToast, { render: "Added!", type: "success", isLoading: false, autoClose: 2000 });
-//       }
-//       mutate(["/api/wishlist", token]); 
-//     } catch (error) {
-//       const errorMsg = error.response?.data?.message || "Action failed";
-//       toast.update(loadingToast, { render: errorMsg, type: "error", isLoading: false, autoClose: 3000 });
-//     }
-//   };
-
-//   const handleAddItem = async (e) => {
-//     e.stopPropagation();
-//     if (isOutOfStock) return; // Guard clause
-//     if (!token) {
-//       toast.warning("Please login to add items to cart");
-//       return;
-//     }
-//     const loadingToast = toast.loading("Adding to cart...");
-//     try {
-//       await addToCart(token, productId, 1);
-//       mutate(["/api/cart", token]); 
-//       toast.update(loadingToast, { render: "Added to cart!", type: "success", isLoading: false, autoClose: 2000 });
-//     } catch (error) {
-//       toast.update(loadingToast, { render: "Failed", type: "error", isLoading: false, autoClose: 3000 });
-//     }
-//   };
-
-//   return (
-//     <div className="group relative flex flex-col w-full bg-white rounded-[32px] border border-gray-100 shadow-sm transition-all duration-500 overflow-hidden hover:shadow-2xl hover:-translate-y-1">
-//       <div onClick={() => navigate(`/product/${productId}`)} className="relative aspect-[4/5] m-2 overflow-hidden rounded-[24px] bg-[#F7F7F7] cursor-pointer">
-//         <img 
-//           src={product.thumbnail_url || 'https://dummyimage.com/400x500'} 
-//           alt={product.name} 
-//           className={`h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110 ${isOutOfStock ? 'grayscale-[0.5] opacity-80' : ''}`} 
-//         />
-        
-//         <button 
-//           onClick={handleWishlistToggle} 
-//           className={`absolute top-4 right-4 p-2.5 backdrop-blur-md rounded-full transition-all z-20 ${
-//             isLiked ? "bg-red-50 text-red-500" : "bg-white/90 text-gray-400"
-//           }`}
-//         >
-//           <Icons icon={isLiked ? "solar:heart-bold" : "solar:heart-linear"} size={20} />
-//         </button>
-        
-//         {/* ACTION BUTTONS ON HOVER */}
-//         <div className="absolute inset-x-0 bottom-4 px-4 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 hidden lg:block z-20">
-//           {isOutOfStock ? (
-//             <div className="w-full bg-gray-100/90 backdrop-blur-sm py-3.5 rounded-xl flex items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-widest text-gray-500 border border-gray-200 cursor-not-allowed">
-//               <BellRing size={16} /> Out of Stock
-//             </div>
-//           ) : (
-//             <button onClick={handleAddItem} className="w-full bg-white py-3.5 rounded-xl flex items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-widest text-gray-900 shadow-2xl hover:bg-black hover:text-white transition-all border border-gray-100">
-//               <ShoppingBag size={16} /> Add to Cart
-//             </button>
-//           )}
-//         </div>
-//       </div>
-
-//       <div className="p-5 pt-2 flex-1 flex flex-col">
-//         <h3 className="text-base font-bold text-gray-900 mb-1 line-clamp-2">{product.name}</h3>
-//         <div className="mt-auto flex items-center justify-between">
-//           <span className="text-lg font-black text-black">Rs. {product.price}</span>
-          
-//           <div className={`text-[9px] font-bold px-2.5 py-1 rounded-full uppercase ${
-//             !isOutOfStock ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
-//           }`}>
-//             {!isOutOfStock ? 'In Stock' : 'Out of Stock'}
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Card3Modi;
+export default ProductCard;

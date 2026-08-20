@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import Footer from '../../components/partials/footer/footer.jsx';
 
 // API Services
 import { 
@@ -14,9 +15,7 @@ import {
 // UI Components
 import ProductDetails from './ProdDetail.jsx';
 import Breadcrumb from '../../components/ui/BreadCrumb.jsx';
-import Tabs from '../../components/ui/Tabs.jsx';
 import ProductCarousel from '../../components/ui/ProductCarousel.jsx';
-import AnnouncementBar from "../../components/ui/AnnouncementBar.jsx";
 import ProductInfoShimmer from '../../components/shimmer/ProductInfoShimmer.jsx';
 import ProductReview from '../../components/ui/ProductReview.jsx';
 
@@ -28,11 +27,10 @@ const InfoProd = () => {
     const [product, setProduct] = useState(null);
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('description');
     const [selectedSize, setSelectedSize] = useState(null);
     
     // Review States
-    const [allReviews, setAllReviews] = useState([]); 
+    const [setAllReviews] = useState([]); 
     const [userReview, setUserReview] = useState(null);
 
     const fetchReviewsData = async () => {
@@ -62,7 +60,7 @@ const InfoProd = () => {
             setUserReview(null);
             fetchReviewsData(); 
         } catch (err) {
-            toast.error("Failed to delete review");
+            toast.error(err, "Failed to delete review");
         }
     };
 
@@ -93,20 +91,7 @@ const InfoProd = () => {
     }, [id, token, user]);
 
     if (loading) return <ProductInfoShimmer />;
-    if (!product) return <div className="text-center py-20 font-bold text-red-500">Product not found.</div>;
-
-    const productTabs = [
-        { 
-            id: 'description', 
-            label: 'Product Description', 
-            content: <div className="p-4 text-gray-600 leading-relaxed">{product.description}</div> 
-        },
-        { 
-            id: 'shipping', 
-            label: 'Shipping & Return', 
-            content: <div className="p-4 text-gray-600">Free shipping on orders over ₹100. Returns accepted within 30 days.</div> 
-        }
-    ];
+    if (!product) return <div className="text-center py-20 font-serif text-xl font-bold text-red-500">Product not found.</div>;
 
     return (
         <div className="bg-white min-h-screen">
@@ -122,23 +107,18 @@ const InfoProd = () => {
                 setSelectedVariant={setSelectedSize} 
             />
 
-            {/* 3. Description Tabs */}
-            <div className="max-w-7xl mx-auto px-4 py-12">
-                 <Tabs tabs={productTabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+            {/* 3. Related Products (With extra spacing for clean look) */}
+            <div className="py-12 md:py-16 bg-gray-50/30">
+                <ProductCarousel title="You Might Also Like" products={relatedProducts} />  
             </div>
-             
-            <AnnouncementBar />
 
-            {/* 4. Related Products */}
-            <ProductCarousel title="You Might Also Like" products={relatedProducts} />  
-
-            {/* 5. USER SPECIFIC ACTIONS (Write or Delete) */}
-            {/* <div className="max-w-4xl mx-auto px-4 pt-16 pb-8 border-t border-gray-100">
-                <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-xl font-bold text-gray-900 tracking-tight">Your Experience</h2>
+            {/* 4. USER SPECIFIC ACTIONS */}
+            <div className="max-w-5xl mx-auto px-4 pt-16 pb-10">
+                <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                    <h2 className="text-3xl md:text-4xl font-serif font-black text-dirora-dark tracking-tight">Your Experience</h2>
                     {!userReview && token && (
                         <Link to={`/write-review/${id}`}>
-                            <button className="bg-black text-white px-8 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition-all">
+                            <button className="bg-[#9333ea] text-white px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-[#7e22ce] shadow-md hover:shadow-lg hover:shadow-purple-200 transition-all">
                                 Write a review
                             </button>
                         </Link>
@@ -146,53 +126,26 @@ const InfoProd = () => {
                 </div>
 
                 {userReview ? (
-                    <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
-                        <p className="text-[10px] text-green-600 font-bold uppercase mb-4 tracking-widest">Your Posted Review</p>
+                    <div className="bg-[#f8f5ff] p-6 rounded-3xl border border-purple-100 shadow-sm">
+                        <p className="text-[10px] text-dirora-purple font-black uppercase mb-4 tracking-widest">Your Posted Review</p>
                         <ProductReview data={[userReview]} />
                         <div className="mt-6 flex justify-end">
-                            <button onClick={handleDeleteReview} className="text-red-500 hover:text-red-700 text-[10px] font-bold uppercase tracking-tighter">
+                            <button onClick={handleDeleteReview} className="text-red-500 hover:text-red-700 text-[10px] font-bold uppercase tracking-widest transition-colors">
                                 Remove Review
                             </button>
                         </div>
                     </div>
                 ) : !token ? (
-                    <div className="text-center py-8 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
-                        <p className="text-sm text-gray-500">Please <Link to="/login" className="text-black font-bold underline">Login</Link> to share your feedback.</p>
+                    <div className="text-center py-10 bg-gray-50 rounded-3xl border border-dashed border-gray-300">
+                        <p className="text-sm text-gray-500 font-medium">Please <Link to="/login" className="text-dirora-purple font-black hover:underline">Login</Link> to share your feedback.</p>
                     </div>
                 ) : (
-                    <div className="text-center py-8 bg-blue-50/30 rounded-2xl border border-dashed border-blue-200">
-                        <p className="text-sm text-blue-600 font-medium italic">Help others by sharing your thoughts on this item!</p>
+                    <div className="text-center py-10 bg-[#f8f5ff] rounded-3xl border border-dashed border-purple-200">
+                        <p className="text-sm text-dirora-purple font-bold tracking-wide">Help others by sharing your thoughts on this item!</p>
                     </div>
                 )}
-            </div> */}
-
-            {/* 6. ALL PRODUCT REVIEWS (The Last Component) */}
-            <section className="max-w-5xl mx-auto px-4 py-10 border-t border-gray-50">
-                <div className="flex flex-col md:flex-row justify-between items-baseline mb-6 gap-2">
-                    <div>
-                        <h2 className="text-xl font-bold text-gray-900">Customer Feedback</h2>
-                        <p className="text-[11px] text-gray-400 uppercase tracking-widest font-medium">
-                            {allReviews.length} Verified Reviews
-                        </p>
-                    </div>
-                    <div className="h-px flex-1 bg-gray-100 mx-4 hidden md:block"></div>
-                </div>
-
-                {allReviews.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-4">
-                        {/* Wrapped in a smaller container with minimal padding 
-                        to prevent the "large empty box" look 
-                        */}
-                        <div className="bg-white rounded-xl p-1 md:p-4">
-                            <ProductReview data={allReviews} />
-                        </div>
-                    </div>
-                ) : (
-                    <div className="text-center py-10 bg-gray-50/50 rounded-xl border border-dashed border-gray-200">
-                        <p className="text-sm text-gray-400 italic">No reviews yet for this product.</p>
-                    </div>
-                )}
-            </section>
+            </div>
+            <Footer />
         </div>
     );
 };

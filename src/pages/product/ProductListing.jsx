@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { SlidersHorizontal, ChevronDown, Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import ProductCard from "../../components/ui/card3Modi.jsx";
+import ProductCard from "../../components/ui/Card3Modi.jsx";
 import api from "../../utils/api/axiosInstance.js"; 
 
 const ProductListing = () => {

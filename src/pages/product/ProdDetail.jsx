@@ -19,7 +19,7 @@ import {
   addToWishlist,
   removeToWishlist,
   getWishlist,
-} from "../../utils/service/apiService.js";
+} from "../../utils/service/apiService";
 import { toast } from "react-toastify";
 
 import Icons from "../../components/ui/Icon.jsx";

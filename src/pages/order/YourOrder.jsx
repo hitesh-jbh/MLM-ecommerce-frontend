@@ -4,7 +4,7 @@
 // import { Link } from 'react-router-dom';
 // import { useSelector } from 'react-redux';
 // import useSWR from 'swr';
-// import { getMyAllOrders } from '../../utils/service/apiService.js';
+// import { getMyAllOrders } from '../../utils/service/apiService';
 
 // const YourOrder = () => {
 //     const token = useSelector((state) => state.auth?.token);
@@ -89,12 +89,12 @@ import { useState, useMemo } from 'react';
 import OrderCard from '../../components/ui/order/OrderCard.jsx';
 import { useSelector } from 'react-redux';
 import { useQuery } from '@tanstack/react-query';
-import { getMyAllOrders } from '../../utils/service/apiService.js';
+import { getMyAllOrders } from '../../utils/service/apiService';
 import { Link } from 'react-router-dom';
 
 const YourOrder = () => {
     const token = useSelector((state) => state.auth?.token);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery] = useState('');
     const [activeTab, setActiveTab] = useState('Orders');
 
     const { data: response, isLoading } = useQuery({
@@ -110,8 +110,8 @@ const YourOrder = () => {
         return Array.isArray(data) ? data : [];
     }, [response]);
 
-    const getTabFilteredOrders = (orders) => {
-        return orders.filter(order => {
+    const filteredOrders = useMemo(() => {
+        const tabFiltered = allOrders.filter(order => {
             const status = order.order_status?.toLowerCase();
             switch (activeTab) {
                 case "Buy Again": return status === "delivered";
@@ -120,16 +120,14 @@ const YourOrder = () => {
                 default: return status !== "cancelled"; 
             }
         });
-    };
 
-    const filteredOrders = useMemo(() => {
-        return getTabFilteredOrders(allOrders).filter(order => {
-            // FIX 2: Search by product_name or id
+        return tabFiltered.filter(order => {
             const matchesSearch = 
                 order.id?.toString().includes(searchQuery) || 
                 order.product_name?.toLowerCase().includes(searchQuery.toLowerCase());
             return matchesSearch;
         }).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        
     }, [allOrders, activeTab, searchQuery]);
 
     if (isLoading) return <div className="h-96 flex items-center justify-center"><Loader2 className="animate-spin text-orange-600" size={40} /></div>;

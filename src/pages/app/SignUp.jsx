@@ -14,7 +14,7 @@ import {
   checkMobile,
   checkEmail,
   checkReferralCode,
-} from "../../utils/service/apiService.js";
+} from "../../utils/service/apiService";
 import { currentYear, dummyEmail, websiteName } from "../../utils/constants";
 
 // ---------------- VALIDATION SCHEMA ----------------

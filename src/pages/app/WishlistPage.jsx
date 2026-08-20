@@ -7,7 +7,7 @@ import {
   getWishlist, 
   removeToWishlist, 
   addToCart 
-} from "../../utils/service/apiService.js";
+} from "../../utils/service/apiService";
 import { toast } from "react-toastify";
 
 export default function WishlistPage() {
@@ -59,7 +59,7 @@ export default function WishlistPage() {
       await removeToWishlist(token, productId);
       mutate(["/api/wishlist", token]);
       toast.update(loadingToast, { render: "Removed", type: "success", isLoading: false, autoClose: 2000 });
-    } catch (error) {
+    } catch {
       toast.update(loadingToast, { render: "Error removing item", type: "error", isLoading: false, autoClose: 2000 });
     }
   };

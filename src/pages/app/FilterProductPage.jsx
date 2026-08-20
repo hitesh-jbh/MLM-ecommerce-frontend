@@ -7,7 +7,7 @@ import {
     setProducts, toggleBrand, toggleSize, 
     setPriceRange, setSearchQuery, setSortBy, clearFilters 
 } from "../../utils/slice/productSlice.js";
-import { viewAllProducts } from '../../utils/service/apiService.js';
+import { viewAllProducts } from '../../utils/service/apiService';
 
 // UI Components
 import Card3Modi from '../../components/ui/Card3Modi.jsx';

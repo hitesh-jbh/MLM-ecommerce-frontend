@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Heart, ShoppingCart, Loader2 } from 'lucide-react'; 
 import { useSelector } from 'react-redux';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
-import { addToCart, addToWishlist, removeToWishlist, getWishlist } from '../../utils/service/apiService.js';
+import { addToCart, addToWishlist, removeToWishlist, getWishlist } from '../../utils/service/apiService';
 import { toast } from 'react-toastify';
 
 const ProductCard = ({ product }) => {

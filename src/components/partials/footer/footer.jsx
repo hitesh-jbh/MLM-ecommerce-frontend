@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram } from 'lucide-react';
 import FootersPage from './FooterPage.jsx';
@@ -6,13 +6,7 @@ import { FooterPageData } from './FooterPageData.js';
 import { websiteName } from '../../../utils/constants.jsx';
 
 export default function Footer() {
-    const [email, setEmail] = useState('');
     const date = new Date().getFullYear();
-
-    const handleSubscribe = () => {
-        console.log('Subscribed with email:', email);
-        setEmail('');
-    };
 
     const routeLink = [
         {

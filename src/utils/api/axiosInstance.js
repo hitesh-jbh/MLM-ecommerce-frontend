@@ -4,7 +4,7 @@ const BASE_URL = "https://mlm-ecommerce-backend-ldky.onrender.com";
 const BASE_URL_LOCAL = "http://localhost:3000/";
 
 const api = axios.create({
-  baseURL: BASE_URL_LOCAL,
+  baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },
 });
 

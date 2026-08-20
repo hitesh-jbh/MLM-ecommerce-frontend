@@ -4,13 +4,14 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Footer from '../../components/partials/footer/footer.jsx';
 
+
 // API Services
 import { 
     viewProduct, 
     viewAllProducts, 
     productReview, 
     deleteReview 
-} from '../../utils/service/apiService.js';
+} from '../../utils/service/apiService';
 
 // UI Components
 import ProductDetails from './ProdDetail.jsx';

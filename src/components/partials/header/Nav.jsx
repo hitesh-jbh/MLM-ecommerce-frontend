@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +19,7 @@ import {
 import Icons from "../../ui/Icon";
 import { useQuery } from "@tanstack/react-query";
 import Card3Modi from "../../ui/Card3Modi";
-import { CheckCheck, Loader2, X, ChevronDown } from "lucide-react"; // Added ChevronDown for dropdowns
+import { CheckCheck, Loader2, X, ChevronDown } from "lucide-react";
 
 export default function Nav() {
   // Rank Configurations
@@ -36,6 +36,9 @@ export default function Nav() {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isActionLoading, setIsActionLoading] = useState(false);
 
+  // Mobile Menu State
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   // States for Detail Modal
   const [selectedNotif, setSelectedNotif] = useState(null);
   const [isModalLoading, setIsModalLoading] = useState(false);
@@ -45,6 +48,7 @@ export default function Nav() {
   const notificationRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { user, isLoggedIn } = useSelector((state) => state.auth);
   const token = useSelector((state) => state.auth?.token);
@@ -52,9 +56,6 @@ export default function Nav() {
   const isAdmin = user?.role === "super_admin" || user?.role === "admin";
   const isCustomer = user?.role === "user" || !isAdmin;
 
-  // --- DYNAMIC NESTED CATEGORIES LOGIC ---
-
-  // 1. Your Toggle Switch (Change to false when backend is ready)
   const USE_MOCK_DATA = true;
 
   const { data: categories = [], isLoading: isCategoriesLoading } = useQuery({
@@ -87,7 +88,6 @@ export default function Nav() {
     n.is_read === 0 || n.status === "unread" || n.status === "pending";
   const pendingNotifications = safeNotifications.filter(isUnread);
 
-  // VIEW SPECIFIC NOTIFICATION LOGIC
   const handleViewDetails = async (notifId) => {
     setIsModalLoading(true);
     try {
@@ -173,6 +173,13 @@ export default function Nav() {
     navigate("/");
   };
 
+  if (
+    location.pathname === "/profile" ||
+    location.pathname.startsWith("/admin")
+  ) {
+    return null;
+  }
+
   return (
     <div
       ref={searchRef}
@@ -181,6 +188,7 @@ export default function Nav() {
       <ToastContainer position="bottom-right" autoClose={2000} theme="light" />
 
       {/* NOTIFICATION DETAIL MODAL */}
+      {/* ... (Modal Code Same) ... */}
       {selectedNotif && (
         <div className="fixed inset-0 z-[400] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div className="bg-white w-full max-w-lg rounded-sm shadow-2xl overflow-hidden border border-gray-100 animate-in fade-in zoom-in duration-200">
@@ -224,6 +232,7 @@ export default function Nav() {
       )}
 
       {/* NOTIFICATION SIDEBAR */}
+      {/* ... (Sidebar Code Same) ... */}
       <div
         className={`fixed inset-0 bg-black/20 z-[200] transition-opacity duration-300 ${isNotificationOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
       >
@@ -335,36 +344,52 @@ export default function Nav() {
         </div>
       </div>
 
-      {/* NAV CONTENT (DIRORA BRANDING & DYNAMIC SUB-CATEGORIES) */}
-      <nav className="border-b border-gray-200 px-4 sm:px-8 lg:px-16 py-4 bg-dirora-ivory relative z-50">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* DIRORA LOGO */}
-          <span
-            onClick={() => navigate("/")}
-            className="flex items-center gap-3 cursor-pointer"
-          >
-            <img
-              src={logoImg}
-              alt="Dirora.in"
-              className="h-[75px] w-auto object-contain"
-              onError={(e) => {
-                e.target.style.display = "none";
-                e.target.nextSibling.style.display = "flex";
-              }}
-            />
-            <div style={{ display: "none" }} className="items-center gap-2">
-              <div className="w-10 h-10 bg-dirora-purple rounded flex items-center justify-center text-white font-black text-sm">
-                D
-              </div>
-              <span className="font-serif font-bold text-xl uppercase tracking-widest text-dirora-dark">
-                Dirora.in
-              </span>
-            </div>
-          </span>
+      {/* NAV CONTENT */}
+      {/* NAV CONTENT (अब कम चौड़ा और लोगो लेफ्ट के करीब है) */}
+      {/* 🚨 बदलाव: py-4 को py-2 किया (हाइट कम करने के लिए), और lg:px-16 को lg:px-4 किया (लोगो को लेफ्ट खिसकाने के लिए) */}
+      <nav className="border-b border-gray-200 px-3 sm:px-4 lg:px-6 py-1 md:py-0.5 bg-dirora-ivory relative z-50">
+        <div className="max-w-7xl mx-auto flex items-center justify-between w-full">
+          
+          {/* DIRORA LOGO & HAMBURGER (Left Side) */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Hamburger Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden text-dirora-dark hover:text-dirora-purple focus:outline-none"
+            >
+              <Icons 
+                icon={isMobileMenuOpen ? "solar:close-circle-linear" : "solar:hamburger-menu-linear"} 
+                size={26} 
+              />
+            </button>
 
-          {/* DYNAMIC CATEGORY MENU WITH DROPDOWNS */}
+            {/* Logo */}
+            <span
+              onClick={() => navigate("/")}
+              className="cursor-pointer shrink-0"
+            >
+              <img
+                src={logoImg}
+                alt="Dirora.in"
+                // 🚨 बदलाव: लोगो की हाइट h-[75px] से घटाकर h-[50px] या h-[55px] कर दी
+                className="h-7 sm:h-9 md:h-[50px] w-auto object-contain transition-all duration-300" 
+                onError={(e) => {
+                  e.target.style.display = "none";
+                  e.target.nextSibling.style.display = "flex";
+                }}
+              />
+              <div style={{ display: "none" }} className="items-center gap-2">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-dirora-purple rounded flex items-center justify-center text-white font-black text-sm">
+                  D
+                </div>
+              </div>
+            </span>
+          </div>
+
+          {/* ... इसके नीचे का Desktop Menu और Right Actions वाला कोड सेम रहेगा ... */}
+
+          {/* DYNAMIC CATEGORY MENU (HIDDEN ON MOBILE) */}
           <div className="hidden md:flex items-center gap-8 text-[13px] font-serif uppercase tracking-widest text-dirora-dark">
-            {/* Home (Static) */}
             <span
               onClick={() => navigate("/")}
               className="cursor-pointer hover:text-dirora-purple transition-colors duration-300"
@@ -393,7 +418,6 @@ export default function Nav() {
                     )}
                   </span>
 
-                  {/* Dropdown Menu for Subcategories */}
                   {cat.subCategories && cat.subCategories.length > 0 && (
                     <div className="absolute top-full left-0 hidden group-hover:flex flex-col bg-white border border-gray-100 shadow-xl rounded-sm min-w-[200px] py-2 z-50">
                       {cat.subCategories.map((sub) => (
@@ -414,7 +438,6 @@ export default function Nav() {
               ))
             )}
 
-            {/* Sale (Static Link to Dynamic Banner/Page) */}
             <span
               onClick={() => navigate("/sale")}
               className="cursor-pointer text-red-600 font-bold hover:text-red-700 transition-colors duration-300"
@@ -422,7 +445,6 @@ export default function Nav() {
               Sale
             </span>
 
-            {/* About (Static) */}
             <span
               onClick={() => navigate("/about")}
               className="cursor-pointer hover:text-dirora-purple transition-colors duration-300"
@@ -431,8 +453,8 @@ export default function Nav() {
             </span>
           </div>
 
-          {/* RIGHT ACTIONS */}
-          <div className="flex items-center gap-5 sm:gap-7 text-dirora-dark">
+          {/* RIGHT ACTIONS (Ab mobile par bhi dikhenge, gap thoda adjust kiya) */}
+          <div className="flex items-center gap-3 sm:gap-6 text-dirora-dark">
             <button
               onClick={() => setIsSearchOpen(true)}
               className="hover:text-dirora-purple hover:scale-110 transition-all"
@@ -452,7 +474,7 @@ export default function Nav() {
               )}
             </button>
 
-            {/* PROFILE DROPDOWN */}
+            {/* PROFILE DROPDOWN - Ab Mobile aur Desktop dono par chalega */}
             <div
               className="relative py-2"
               ref={profileMenuRef}
@@ -465,7 +487,7 @@ export default function Nav() {
                     onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
                     className="p-1 focus:outline-none"
                   >
-                    <div className="w-9 h-9 rounded-full border-2 border-dirora-purple p-0.5 bg-white overflow-hidden hover:scale-105 transition">
+                    <div className="w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-dirora-purple p-0.5 bg-white overflow-hidden hover:scale-105 transition">
                       {user.imageUrl ? (
                         <img
                           src={user.imageUrl}
@@ -476,14 +498,14 @@ export default function Nav() {
                         <Icons
                           icon="solar:user-bold"
                           size={18}
-                          className="text-dirora-purple mx-auto mt-1"
+                          className="text-dirora-purple mx-auto mt-0.5 md:mt-1"
                         />
                       )}
                     </div>
                   </button>
 
                   <div
-                    className={`absolute top-full right-0 mt-1 ${isProfileMenuOpen ? "flex" : "hidden"} flex-col bg-white border border-gray-100 shadow-2xl rounded-sm p-5 min-w-[260px] z-[120]`}
+                    className={`absolute top-full right-0 mt-1 ${isProfileMenuOpen ? "flex" : "hidden"} flex-col bg-white border border-gray-100 shadow-2xl rounded-sm p-5 min-w-[220px] md:min-w-[260px] z-[120]`}
                   >
                     <div className="mb-4">
                       <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-bold mb-1">
@@ -551,7 +573,7 @@ export default function Nav() {
               ) : (
                 <span
                   onClick={() => navigate("/login")}
-                  className="p-2 -m-2 block cursor-pointer hover:text-dirora-purple transition-colors"
+                  className="p-1 block cursor-pointer hover:text-dirora-purple transition-colors"
                 >
                   <Icons icon="solar:user-linear" size={24} />
                 </span>
@@ -575,18 +597,125 @@ export default function Nav() {
               onClick={() => navigate("/cart")}
               className="relative hover:text-dirora-purple hover:scale-110 transition-all cursor-pointer"
             >
-              <Icons icon="solar:cart-large-2-linear" size={26} />
+              <Icons icon="solar:cart-large-2-linear" size={24} />
               {cartItemsLength > 0 && (
                 <span className="absolute -top-1 -right-1 bg-dirora-purple text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full border-2 border-dirora-ivory">
                   {cartItemsLength}
                 </span>
               )}
             </span>
+
+            {/* MOBILE HAMBURGER BUTTON */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden ml-1 text-dirora-dark hover:text-dirora-purple transition-colors focus:outline-none"
+            >
+              <Icons
+                icon={
+                  isMobileMenuOpen
+                    ? "solar:close-circle-linear"
+                    : "solar:hamburger-menu-linear"
+                }
+                size={26}
+              />
+            </button>
+          </div>
+        </div>
+
+        {/* MOBILE MENU DROPDOWN CONTENT (With Subcategories Accordion) */}
+        <div
+          className={`md:hidden absolute top-full left-0 w-full bg-white border-b border-gray-200 shadow-xl transition-all duration-300 ${isMobileMenuOpen ? "max-h-[80vh] opacity-100 visible py-6 overflow-y-auto" : "max-h-0 opacity-0 invisible overflow-hidden"}`}
+        >
+          <div className="flex flex-col px-6 space-y-6 text-[13px] font-serif uppercase tracking-widest text-dirora-dark">
+            <span
+              onClick={() => {
+                navigate("/");
+                setIsMobileMenuOpen(false);
+              }}
+              className="block cursor-pointer hover:text-dirora-purple font-bold"
+            >
+              Home
+            </span>
+
+            {/* Mobile Categories list with Subcategories Accordion */}
+            <div className="space-y-4">
+              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest border-b pb-1 block">
+                Categories
+              </span>
+              {activeCategories.map((cat) => (
+                <div key={cat.id} className="border-b border-gray-50 pb-2">
+                  {cat.subCategories && cat.subCategories.length > 0 ? (
+                    <details className="group">
+                      <summary className="flex justify-between items-center cursor-pointer list-none hover:text-dirora-purple text-gray-700 font-bold">
+                        <span>{cat.name}</span>
+                        <ChevronDown
+                          size={14}
+                          className="group-open:rotate-180 transition-transform duration-300"
+                        />
+                      </summary>
+                      <div className="flex flex-col pl-4 mt-3 space-y-3 border-l-2 border-gray-100 ml-1">
+                        <span
+                          onClick={() => {
+                            navigate(`/collections/${cat.slug}`);
+                            setIsMobileMenuOpen(false);
+                          }}
+                          className="block cursor-pointer text-[11px] text-gray-500 hover:text-dirora-purple font-medium"
+                        >
+                          View All {cat.name}
+                        </span>
+                        {cat.subCategories.map((sub) => (
+                          <span
+                            key={sub.id}
+                            onClick={() => {
+                              navigate(`/collections/${cat.slug}/${sub.slug}`);
+                              setIsMobileMenuOpen(false);
+                            }}
+                            className="block cursor-pointer text-[11px] text-gray-500 hover:text-dirora-purple"
+                          >
+                            {sub.name}
+                          </span>
+                        ))}
+                      </div>
+                    </details>
+                  ) : (
+                    <span
+                      onClick={() => {
+                        navigate(`/collections/${cat.slug}`);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="block cursor-pointer hover:text-dirora-purple text-gray-700 font-bold"
+                    >
+                      {cat.name}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <span
+              onClick={() => {
+                navigate("/sale");
+                setIsMobileMenuOpen(false);
+              }}
+              className="block cursor-pointer text-red-600 font-bold hover:text-red-700 pt-2"
+            >
+              Sale
+            </span>
+            <span
+              onClick={() => {
+                navigate("/about");
+                setIsMobileMenuOpen(false);
+              }}
+              className="block cursor-pointer hover:text-dirora-purple"
+            >
+              About
+            </span>
           </div>
         </div>
       </nav>
 
       {/* SEARCH TOP DRAWER - MEGA MENU STYLE */}
+      {/* ... (Search Code Same) ... */}
       <div
         className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-[200] transition-opacity duration-300 ${isSearchOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         onClick={() => setIsSearchOpen(false)}
@@ -596,7 +725,6 @@ export default function Nav() {
           onClick={(e) => e.stopPropagation()}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 pt-6 md:pt-8 pb-8 md:pb-12">
-            {/* Header & Close */}
             <div className="flex justify-between items-center mb-6 md:mb-8">
               <span className="font-serif font-black text-xl uppercase tracking-tighter text-dirora-dark">
                 Dirora.in
@@ -614,7 +742,6 @@ export default function Nav() {
               </button>
             </div>
 
-            {/* Clean Input (Resized for Sleek Look) */}
             <div className="relative group max-w-3xl mx-auto mb-8 md:mb-10">
               <Icons
                 icon="solar:magnifer-linear"
@@ -631,7 +758,6 @@ export default function Nav() {
               <div className="absolute left-0 bottom-0 h-[2px] w-0 bg-dirora-purple transition-all duration-700 ease-out group-focus-within:w-full"></div>
             </div>
 
-            {/* Results Grid */}
             <div className="max-h-[50vh] overflow-y-auto scrollbar-hide px-2">
               {filteredProducts.length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8 animate-in fade-in slide-in-from-bottom-8 duration-700">

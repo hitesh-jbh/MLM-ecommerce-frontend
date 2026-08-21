@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram } from 'lucide-react';
-import FootersPage from './FooterPage.jsx';
+import { Facebook, Instagram, Twitter } from 'lucide-react';
 import { FooterPageData } from './FooterPageData.js';
 import { websiteName } from '../../../utils/constants.jsx';
 
@@ -9,80 +8,54 @@ export default function Footer() {
     const date = new Date().getFullYear();
 
     const routeLink = [
-        {
-            id: 1,
-            link: "/",
-            text: "Home",
-        },
-        {
-            id: 2,
-            link: "/gentle",
-            text: "Gentle Trends",
-        },
-        {
-            id: 3,
-            link: "/luxuria",
-            text: "Luxria",
-        },
-        {
-            id: 4,
-            link: "/contact",
-            text: "Contact Us",
-        },
-        {
-            id: 5,
-            link: "/about",
-            text: "About Us",
-        },
-    ]
+        { id: 1, link: "/", text: "Home" },
+        { id: 2, link: "/gentle", text: "Gentle Trends" },
+        { id: 3, link: "/luxuria", text: "Luxuria" },
+        { id: 4, link: "/contact", text: "Contact Us" },
+        { id: 5, link: "/about", text: "About Us" },
+    ];
 
     return (
-        <footer className="bg-gray-100 px-6 md:px-12 lg:px-20 py-14 md:py-18">
-            <div className="max-w-7xl mx-auto">
+        <footer className="bg-gray-50 border-t border-gray-100 pt-12 pb-6 md:pt-16 md:pb-8">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                {/* Main Footer Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-14 lg:gap-20 mb-16">
+                {/* Main Footer Grid (4 Balanced Columns) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 mb-12">
 
-                    {/* Newsletter */}
-                    {/* <div className="max-w-sm">
-                        <h2 className="text-xl md:text-2xl font-semibold text-black mb-3">
-                            Let’s get in touch
-                        </h2>
-                        <p className="text-gray-600 text-sm leading-relaxed mb-5">
-                            Subscribe to our newsletter and get 10% off your first order.
+                    {/* 1. Brand Info & Socials (Replaced Newsletter to fill the gap) */}
+                    <div className="flex flex-col items-start">
+                        <span onClick={() => window.scrollTo(0, 0)} className="cursor-pointer mb-4 block">
+                            <h2 className="font-serif font-black text-2xl uppercase tracking-tighter text-gray-900">
+                                {websiteName || "Dirora.in"}
+                            </h2>
+                        </span>
+                        <p className="text-gray-500 text-sm leading-relaxed mb-6 pr-4 font-sans">
+                            Elevating your everyday style with premium, carefully curated collections. Wrapped with love, delivered with care.
                         </p>
-
-                        <div className="space-y-3">
-                            <input
-                                type="email"
-                                placeholder="Your email address"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-md text-sm text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400"
-                            />
-
-                            <button
-                                onClick={handleSubscribe}
-                                className="inline-flex bg-black text-white px-6 py-3 text-sm font-medium rounded-md hover:bg-gray-900 transition"
-                            >
-                                Subscribe
-                            </button>
+                        
+                        <div className="flex items-center gap-3">
+                            <a href="#" className="w-9 h-9 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-purple-600 hover:text-white hover:border-purple-600 transition-all shadow-sm">
+                                <Facebook size={18} />
+                            </a>
+                            <a href="#" className="w-9 h-9 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-purple-600 hover:text-white hover:border-purple-600 transition-all shadow-sm">
+                                <Instagram size={18} />
+                            </a>
                         </div>
-                    </div> */}
+                    </div>
 
-                    {/* Quick Links */}
+                    {/* 2. Quick Links */}
                     <div>
-                        <h3 className="text-base font-semibold text-black mb-5">
+                        <h3 className="font-serif text-base font-bold text-gray-900 mb-5 tracking-wide uppercase">
                             Quick links
                         </h3>
                         <ul className="space-y-3">
-                            {/* {['Home', 'Gentle Trends', 'Luxuria', 'Contact Us', 'About Us'].map((item) => ( */}
                             {routeLink.map((item) => (
                                 <li key={item.id}>
                                     <Link
                                         to={item.link}
-                                        className="text-gray-600 text-sm hover:text-black transition"
+                                        className="text-gray-500 text-sm hover:text-purple-600 transition-colors flex items-center gap-2 group"
                                     >
+                                        <span className="w-1.5 h-1.5 rounded-full bg-gray-300 group-hover:bg-purple-600 transition-colors"></span>
                                         {item.text}
                                     </Link>
                                 </li>
@@ -90,17 +63,19 @@ export default function Footer() {
                         </ul>
                     </div>
 
-                    {/* Information */}
+                    {/* 3. Information */}
                     <div>
-                        <h3 className="text-base font-semibold text-black mb-5">Information</h3>
+                        <h3 className="font-serif text-base font-bold text-gray-900 mb-5 tracking-wide uppercase">
+                            Information
+                        </h3>
                         <ul className="space-y-3">
                             {FooterPageData.map((item) => (
                                 <li key={item.id}>
                                     <Link
-                                        // Links to /info/shipping-cancellation etc.
                                         to={`/info/${item.id}`}
-                                        className="text-gray-600 text-sm hover:text-black transition capitalize"
+                                        className="text-gray-500 text-sm hover:text-purple-600 transition-colors capitalize flex items-center gap-2 group"
                                     >
+                                        <span className="w-1.5 h-1.5 rounded-full bg-gray-300 group-hover:bg-purple-600 transition-colors"></span>
                                         {item.id.replace(/-/g, ' ')}
                                     </Link>
                                 </li>
@@ -108,83 +83,44 @@ export default function Footer() {
                         </ul>
                     </div>
 
-                    {/* Social */}
+                    {/* 4. Store Contact */}
                     <div>
-                        <h3 className="text-base font-semibold text-black mb-5">
-                            Our store
+                        <h3 className="font-serif text-base font-bold text-gray-900 mb-5 tracking-wide uppercase">
+                            Get In Touch
                         </h3>
-                        <div className="flex items-center gap-4">
-                            <a href="#" className="hover:text-gray-600 transition">
-                                <Facebook size={22} />
-                            </a>
-                            <a href="#" className="hover:text-gray-600 transition">
-                                <Instagram size={22} />
-                            </a>
-                        </div>
+                        <ul className="space-y-3 text-sm text-gray-500 font-sans">
+                            <li><strong className="text-gray-700 font-medium">Email:</strong> support@dirora.in</li>
+                            <li><strong className="text-gray-700 font-medium">Phone:</strong> +91 12345 67890</li>
+                            <li><strong className="text-gray-700 font-medium">Hours:</strong> Mon - Fri, 9AM - 6PM</li>
+                        </ul>
                     </div>
 
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="border-t border-gray-300 pt-6">
-                    <div className="flex flex-col-reverse md:flex-row md:items-center md:justify-between gap-4">
+                <div className="border-t border-gray-200 pt-6 flex flex-col-reverse md:flex-row items-center justify-between gap-4">
 
-                        {/* Copyright */}
-                        <div className="text-center md:text-left text-xs md:text-sm text-gray-500">
-                            © {date} {websiteName}. All rights reserved.
-                            
+                    {/* Copyright */}
+                    <div className="text-center md:text-left text-xs text-gray-400 font-medium">
+                        © {date} {websiteName}. All rights reserved.
+                    </div>
+
+                    {/* Payment Icons (Sleek & Clean) */}
+                    <div className="flex justify-center md:justify-end items-center gap-2 flex-wrap opacity-60 hover:opacity-100 transition-opacity duration-300 grayscale hover:grayscale-0">
+                        <div className="w-10 h-6 bg-white border border-gray-200 rounded flex items-center justify-center p-1 shadow-sm">
+                            <img src="https://www.nacha.org/sites/default/files/2024-10/Stripe%20wordmark%20-%20blurple%20%28large%29.png" alt="Stripe" className="w-full h-full object-contain" />
                         </div>
-
-                        {/* Payment Icons */}
-                        <div className="flex justify-center md:justify-end items-center gap-3 flex-wrap">
-
-                            {/* Stripe */}
-                            <div className="w-14 h-10 bg-white border border-gray-200 rounded-md flex items-center justify-center">
-                                <img
-                                    src="https://www.nacha.org/sites/default/files/2024-10/Stripe%20wordmark%20-%20blurple%20%28large%29.png"
-                                    alt="Stripe"
-                                    className="w-10 h-6 object-contain"
-                                />
-                            </div>
-
-                            {/* MasterCard */}
-                            <div className="w-14 h-10 bg-white border border-gray-200 rounded-md flex items-center justify-center">
-                                <img
-                                    src="https://cyberinnovate.ie/wp-content/uploads/2024/02/mastercard.webp"
-                                    alt="MasterCard"
-                                    className="w-10 h-6 object-contain"
-                                />
-                            </div>
-
-                            {/* Visa */}
-                            <div className="w-14 h-10 bg-white border border-gray-200 rounded-md flex items-center justify-center">
-                                <img
-                                    src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png"
-                                    alt="Visa"
-                                    className="w-10 h-6 object-contain"
-                                />
-                            </div>
-
-                            {/* Google Pay */}
-                            <div className="w-14 h-10 bg-white border border-gray-200 rounded-md flex items-center justify-center">
-                                <img
-                                    src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg"
-                                    alt="Google Pay"
-                                    className="w-10 h-6 object-contain"
-                                />
-                            </div>
-
-                            {/* Apple Pay */}
-                            <div className="w-14 h-10 bg-white border border-gray-200 rounded-md flex items-center justify-center">
-                                <img
-                                    src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_logo.svg"
-                                    alt="Apple Pay"
-                                    className="w-10 h-6 object-contain"
-                                />
-                            </div>
-
+                        <div className="w-10 h-6 bg-white border border-gray-200 rounded flex items-center justify-center p-1 shadow-sm">
+                            <img src="https://cyberinnovate.ie/wp-content/uploads/2024/02/mastercard.webp" alt="MasterCard" className="w-full h-full object-contain" />
+                        </div>
+                        <div className="w-10 h-6 bg-white border border-gray-200 rounded flex items-center justify-center p-1 shadow-sm">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" className="w-full h-full object-contain" />
+                        </div>
+                        <div className="w-10 h-6 bg-white border border-gray-200 rounded flex items-center justify-center p-1 shadow-sm">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="Google Pay" className="w-full h-full object-contain" />
                         </div>
                     </div>
+
                 </div>
             </div>
         </footer>
